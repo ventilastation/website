@@ -1,191 +1,194 @@
 ---
 layout: landing
 ---
-<!-- div id="arriba">
-    <a href="/en/">English</a>
-</div -->
-				<video autoplay loop muted poster="images/banner.jpg" id="bgvid">
-				    <source src="images/banner.mp4" type="video/mp4">
-				    <!--source src="images/banner.webm" type="video/webm"-->
-				</video>
-				<!-- Banner -->
+        <!-- div id="arriba">
+            <a href="/en/">English</a>
+        </div -->
+        <video autoplay loop muted poster="images/banner.jpg" id="bgvid">
+            <source src="images/banner.mp4" type="video/mp4">
+            <!--source src="images/banner.webm" type="video/webm"-->
+        </video>
 
-					<section id="banner">
-						<div class="inner">
-							<h2>{{ site.title }}</h2>
-							<p>{{ site.description | markdownify }}</p>
-							<ul class="actions">
-                                <li><a href="#que" class="scrolly button">¿Qué es?</a></li>
-								<li><a href="#como" class="scrolly button">¿Cómo jugar?</a></li>
-								<li><a href="#juegos" class="scrolly button">Hacé un juego</a></li>
-								<li><a href="#hardware" class="scrolly button">Armate una</a></li>
-							</ul>
-						</div>
-						<a href="#one" class="more scrolly">Más Info</a>
-					</section>
+          <!-- Banner -->
+          <section id="banner">
+            <div class="inner">
+              <h2>{{ site.title }}</h2>
+              <p>{{ site.description | markdownify }}</p>
+              <ul class="actions">
+                <li><a href="#que" class="scrolly button">¿Qué es?</a></li>
+                <li><a href="#como" class="scrolly button">¿Cómo jugar?</a></li>
+                <li><a href="#juegos" class="scrolly button">Hacé un juego</a></li>
+                <li><a href="#hardware" class="scrolly button">Armate una</a></li>
+              </ul>
+            </div>
+            <a href="#one" class="more scrolly">Más Info</a>
+          </section>
 
-				<!-- One -->
-					<section id="que" class="wrapper style3 special">
-						<div class="inner">
-							<header class="major">
-                                <h2>¿Qué es Ventilastation?</h2>
-                                <p>
-								Es una consola open source, para poder hacer y jugar videojuegos circulares.<br/>
-                                Integramente creada y fabricada en Argentina.
-                                </p>
-								<p>
-								<br />
-								Es la sucesora espiritual de <a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015) y
-                                <a href="https://reflektor.protocultura.net/">Reflektor</a> (2013), <br />
-                                los juegos electromecánicos del Club de Jaqueo.
-								</p>
-                                <!--
-								<div class='embed-container'>
-									<iframe src='http://www.youtube.com/embed/EkVrdfTI3RM?rel=0&amp;showinfo=0' frameborder='0' allowfullscreen></iframe>
-								</div>
-                                -->
-							</header>
-							<!--ul class="icons major">
-								<li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
-								<li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
-								<li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
-							</ul -->
-						</div>
-					</section>
+          <!-- One -->
+          <section id="que" class="wrapper style3 special">
+            <div class="inner">
+              <header class="major">
+                <h2>¿Qué es Ventilastation?</h2>
+                <p>
+                    Es una consola open source, para poder hacer y jugar videojuegos circulares.<br/>
+                    Integramente creada y fabricada en Argentina.
+                </p>
+                <p>
+                    Es la sucesora espiritual de <a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015) y
+                    <a href="https://reflektor.protocultura.net/">Reflektor</a> (2013), <br />
+                    los juegos electromecánicos del Club de Jaqueo.
+                </p>
+                <!--
+                <div class='embed-container'>
+                  <iframe src='http://www.youtube.com/embed/EkVrdfTI3RM?rel=0&amp;showinfo=0' frameborder='0' allowfullscreen></iframe>
+                </div>
+                -->
+              </header>
+              <!--ul class="icons major">
+                <li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
+                <li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
+                <li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
+              </ul -->
+            </div>
+          </section>
 
-				<!-- Two -->
-					<section id="two" class="wrapper alt style2">
-						<section class="spotlight">
-							<div class="image"><img src="images/pic01.jpg" alt="" /></div><div class="content">
-								<h2>Un chip ESP32 y 107 leds,<br />
-								girando a 600RPM</h2>
-								<p>El código de los juegos está hecho en Micropython, y montado en la hélice de un ventilador.</p>
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="image"><img src="images/pic02.jpg" alt="" /></div><div class="content">
-								<h2>Un anillo colector<br />
-								</h2>
-								<p>La alimentación eléctrica y las señales de datos cruzan por un Slip Ring hacia la base, que usa una Raspberry Pi para reproducir la música y los efectos sonoros.</p>
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="image"><img src="images/pic03.jpg" alt="" /></div><div class="content">
-								<h2>El código y hardware<br />
-								son libres y abiertos</h2>
-								<p>Si tenés un ventilador o lavarropa que ya no uses, podés armarte una ventilastation en tu casa visitando nuestra página en <a href="https://github.com/alecu/ventilastation">GitHub</a>.</p>
-							</div>
-						</section>
-					</section>
+          <!-- Two -->
+          <section id="two" class="wrapper alt style2">
+            <section class="spotlight">
+              <div class="image"><img src="images/pic01.jpg" alt="" /></div><div class="content">
+                <h2>Un chip ESP32 y 107 leds,<br />
+                girando a 600RPM</h2>
+                <p>El código de los juegos está hecho en Micropython, y montado en la hélice de un ventilador.</p>
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="image"><img src="images/pic02.jpg" alt="" /></div><div class="content">
+                <h2>Un anillo colector<br />
+                </h2>
+                <p>La alimentación eléctrica y las señales de datos cruzan por un Slip Ring hacia la base, que usa una Raspberry Pi para reproducir la música y los efectos sonoros.</p>
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="image"><img src="images/pic03.jpg" alt="" /></div><div class="content">
+                <h2>El código y hardware<br />
+                son libres y abiertos</h2>
+                <p>Si tenés un ventilador o lavarropa que ya no uses, podés armarte una ventilastation en tu casa visitando nuestra página en <a href="https://github.com/alecu/ventilastation">GitHub</a>.</p>
+              </div>
+            </section>
+          </section>
 
-                <!-- Como jugar -->
-					<section id="como" class="wrapper style1 special">
-						<div class="inner">
-							<header class="major">
-                                <h2>¿Cómo jugar Ventilastation?</h2>
-                                <p>
-                                En eventos relacionados a los juegos y al open source suele estar presente Ventilastation. <br />
-                                Podés jugar ahí, o fabricarte una en tu casa.
-                                </p>
-                                <p>
-                                Ventilastation tiene un joystick y una consola con botones, que se usan para distintos tipos de juegos:
-                                </p>
-							</header>
-						</div>
-					</section>
+          <!-- Como jugar -->
+          <section id="como" class="wrapper style1 special">
+            <div class="inner">
+              <header class="major">
+                <h2>¿Cómo jugar Ventilastation?</h2>
+                <p>
+                En eventos relacionados a los juegos y al open source suele estar presente Ventilastation. <br />
+                Podés jugar ahí, o fabricarte una en tu casa.
+                </p>
+                <p>
+                Ventilastation tiene un joystick y una consola con botones, que se usan para distintos tipos de juegos:
+                </p>
+              </header>
+            </div>
+          </section>
 
-				<!-- Two -->
-					<section id="two" class="wrapper alt style2">
-						<section class="spotlight">
-							<div class="fanshot">
-                                <img src="images/vermu.png" alt="" />
-                            </div>
-                            <div class="content">
-                                <img src="images/vermu-control.png" width="60%" alt="" />
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="fanshot">
-                                <img src="images/vyruss.png" alt="" />
-                            </div>
-                            <div class="content">
-                                <img src="images/vyruss-control.png" width="60%" alt="" />
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="fanshot">
-                                <img src="images/ventilagon.png" alt="" />
-                            </div>
-                            <div class="content">
-                                <img src="images/ventilagon-control.png" width="70%" alt="" />
-							</div>
-						</section>
-					</section>
-				<!-- Three -->
-					<section id="three" class="wrapper style3 special">
-						<div class="inner">
-							<header class="major">
-								<h2>Que opinan los medios</h2>
-							</header>
-							<ul class="features">
-								{% include media.html %}
-							</ul>
-						</div>
-					</section>
+          <!-- Two -->
+          <section id="two" class="wrapper alt style2">
+            <section class="spotlight">
+              <div class="fanshot">
+                  <img src="images/vermu.png" alt="" />
+              </div>
+              <div class="content">
+                  <img src="images/vermu-control.png" width="60%" alt="" />
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="fanshot">
+                  <img src="images/vyruss.png" alt="" />
+              </div>
+              <div class="content">
+                  <img src="images/vyruss-control.png" width="60%" alt="" />
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="fanshot">
+                  <img src="images/ventilagon.png" alt="" />
+              </div>
+              <div class="content">
+                  <img src="images/ventilagon-control.png" width="70%" alt="" />
+              </div>
+            </section>
+          </section>
 
-                <!-- Como jugar -->
-					<section id="juegos" class="wrapper style1 special">
-						<div class="inner">
-							<header class="major">
-                                <h2>¿Cómo hacer juegos para Ventilastation?</h2>
-                                <p>
-                                Para simplificar la creación de juegos para esta consola, se eligió el lenguaje <a href="https://micropython.org/">Micropython</a>.
-                                </p>
-                                <p>
-                                Como ejemplo, el juego Vyruss consta de menos de 700 líneas, y se puede ver en el <a href="https://github.com/alecu/ventilastation/blob/master/vyruss/python/vyruss.py">repositorio del proyecto</a>.
-                                </p>
-							</header>
-						</div>
-					</section>
-                <!-- Como jugar -->
-					<section id="hardware" class="wrapper style3 special">
-						<div class="inner">
-							<header class="major">
-                                <h2>¿Cómo fabricar una Ventilastation?</h2>
-                                <p>
-                                Todo el código fuente, los esquemáticos y los planos para armar Ventilastation están disponibles abiertamente, como software y hardware libre.
-                                </p>
-								<p>Si tenés un ventilador o lavarropa que ya no uses, podés armarte una ventilastation en tu casa visitando nuestra página en <a href="https://github.com/alecu/ventilastation">GitHub</a>.</p>
-							</header>
-						</div>
-					</section>
-				<!-- CTA -->
-					<section id="cta" class="wrapper style4">
-						<div class="inner">
-							<header>
-                                <h2>Una consola hecha por alecu</h2>
-								<p>
-                                Con la colaboración de muchos amigues:
-                                    <ul>
-                                        <li>Python Argentina</li>
-                                        <li>GameOn!</li>
-                                        <li>ArsGames</li>
-                                        <li>EspacioTec</li>
-                                        <li>Cybercirujas</li>
-                                        <li>FlashParty</li>
-                                    </ul>
-								</p>
-								<p>
-                                    Algunos juegos anteriores:
-                                    <ul>
-                                        <li><a href="http://reflektor.protocultura.net/">Reflektor</a> (2013)</li>
-                                        <li><a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015)</li>
-                                        <li><a href="https://www.megajuegos.com.ar/">Vigilen los Cielos</a> (2016)</li>
-                                    </ul>
-								</p>
-							</header>
-							<ul class="actions vertical">
-								<li><a href="mailto:ventilagon@protocultura.net" class="button fit special">Contactanos</a></li>
-							</ul>
-						</div>
-					</section>
+          <!-- Three -->
+          <section id="three" class="wrapper style3 special">
+            <div class="inner">
+              <header class="major">
+                <h2>Que opinan los medios</h2>
+              </header>
+              <ul class="features">
+                {% include media.html %}
+              </ul>
+            </div>
+          </section>
+
+          <!-- Como jugar -->
+          <section id="juegos" class="wrapper style1 special">
+            <div class="inner">
+              <header class="major">
+                <h2>¿Cómo hacer juegos para Ventilastation?</h2>
+                <p>
+                Para simplificar la creación de juegos para esta consola, se eligió el lenguaje <a href="https://micropython.org/">Micropython</a>.
+                </p>
+                <p>
+                Como ejemplo, el juego Vyruss consta de menos de 700 líneas, y se puede ver en el <a href="https://github.com/alecu/ventilastation/blob/master/vyruss/python/vyruss.py">repositorio del proyecto</a>.
+                </p>
+              </header>
+            </div>
+          </section>
+
+          <!-- Como jugar -->
+          <section id="hardware" class="wrapper style3 special">
+            <div class="inner">
+              <header class="major">
+                <h2>¿Cómo fabricar una Ventilastation?</h2>
+                <p>
+                  Todo el código fuente, los esquemáticos y los planos para armar Ventilastation están disponibles abiertamente, como software y hardware libre.
+                </p>
+                <p>Si tenés un ventilador o lavarropa que ya no uses, podés armarte una ventilastation en tu casa visitando nuestra página en <a href="https://github.com/alecu/ventilastation">GitHub</a>.</p>
+              </header>
+            </div>
+          </section>
+          
+          <!-- CTA -->
+          <section id="cta" class="wrapper style4">
+            <div class="inner">
+              <header>
+                <h2>Una consola hecha por alecu</h2>
+                <p>
+                  Con la colaboración de muchos amigues:
+                  <ul>
+                    <li>Tecnoestructuras</li>
+                    <li>Python Argentina</li>
+                    <li>GameOn!</li>
+                    <li>ArsGames</li>
+                    <li>EspacioTec</li>
+                    <li>Cybercirujas</li>
+                    <li>FlashParty</li>
+                  </ul>
+                </p>
+                <p>
+                  Algunos juegos anteriores:
+                  <ul>
+                    <li><a href="http://reflektor.protocultura.net/">Reflektor</a> (2013)</li>
+                    <li><a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015)</li>
+                    <li><a href="https://www.megajuegos.com.ar/">Vigilen los Cielos</a> (2016)</li>
+                  </ul>
+                </p>
+              </header>
+              <ul class="actions vertical">
+                <li><a href="mailto:ventilagon@protocultura.net" class="button fit special">Contactanos</a></li>
+              </ul>
+            </div>
+          </section>
