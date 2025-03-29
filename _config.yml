@@ -13,13 +13,13 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://ventilastation.protocultura.net" # the base hostname & protocol for your site
 social:
   #twitter: https://twitter.com/<username>
-  github: https://github.com/alecu/ventilastation
+  github: https://github.com/ventilastation/vsdk
   #facebook-official: https://facebook.com/<username>
   #linkedin-square: https://linkedin.com/in/<username>
   #google-plus-square: https://plus.google.com/u/0/+<username>
   #email: /contact/
   #flickr:
-  #instagram:
+  instagram: https://instagram.com/alecura83
   #youtube-square:
   #spotify:
   #stack-overflow:

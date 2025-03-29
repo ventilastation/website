@@ -1,107 +1,125 @@
 ---
 layout: landing
 ---
-<div id="arriba">
-    <a href="/">Spanish</a>
-</div>
-				<video autoplay loop muted poster="/images/banner.jpg" id="bgvid">
-				    <source src="/images/banner.mp4" type="video/mp4">
-				    <!--source src="/images/banner.webm" type="video/webm"-->
-				</video>
-				<!-- Banner -->
+		<div id="arriba">
+			<a href="/">Spanish</a>
+		</div>
+		<video autoplay loop muted poster="/images/banner.jpg" id="bgvid">
+			<source src="/images/banner.mp4" type="video/mp4">
+			<!--source src="/images/banner.webm" type="video/webm"-->
+		</video>
 
-					<section id="banner">
-						<div class="inner">
-							<h2>{{ site.title }}</h2>
-							<p>An open hardware<br />
-							electromechanical game.</p>
-							<ul class="actions">
-								<li><a href="#two" class="scrolly button special">Build one!</a></li>
-							</ul>
-						</div>
-						<a href="#one" class="more scrolly">More Info</a>
-					</section>
+		<!-- Banner -->
+		<section id="banner">
+		<div class="inner">
+			<h2>{{ site.title }}</h2>
+			<p>An open hardware<br />
+				electromechanical game.</p>
+			<ul class="actions">
+			<li><a href="#what" class="scrolly button">What is it?</a></li>
+			<li><a href="#how" class="scrolly button">How to play?</a></li>
+			<li><a href="#games" class="scrolly button">Create games</a></li>
+			<li><a href="#hardware" class="scrolly button">Build one</a></li>
+			</ul>
+		</div>
+		<a href="#one" class="more scrolly">More Info</a>
+		</section>
 
-				<!-- One -->
-					<section id="one" class="wrapper style1 special">
-						<div class="inner">
-							<header class="major">
-								<h2>Guide your spaceship,<br />
-								avoiding a labyrinth made of light.</h2>
-								<p>
-								The second game by Club de Jaqueo,
-								<br />
-								inspired by <a href="http://superhexagon.com/">Super Hexagon</a> (2012).
-								</p>
-								<div class='embed-container'>
-									<iframe src='http://www.youtube.com/embed/NlVo3YanlqQ?rel=0&amp;showinfo=0' frameborder='0' allowfullscreen></iframe>
-								</div>
-							</header>
+          <!-- One -->
+          <section id="what" class="wrapper style3 special">
+            <div class="inner">
+              <header class="major">
+                <h2>What's Ventilastation?</h2>
+                <p>
+					It's an open source game console with an odd display, for creating and playing circular video games. <br/>
+					Fully designed, published and built in Argentina.
+                </p>
+                <p>
+					The evolution of <a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015),
+					it builds on its predecesor's circular display by adding sprite based 8-bit like graphics,
+					and super easy programmability with Micropython.
+                </p>
+                <!--
+                <div class='embed-container'>
+                  <iframe src='http://www.youtube.com/embed/EkVrdfTI3RM?rel=0&amp;showinfo=0' frameborder='0' allowfullscreen></iframe>
+                </div>
+                -->
+              </header>
+              <!--ul class="icons major">
+                <li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
+                <li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
+                <li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
+              </ul -->
+            </div>
+          </section>
 
-							<!-- ul class="icons major">
-								<li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
-								<li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
-								<li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
-							</ul -->
-						</div>
-					</section>
+          <!-- Two -->
+          <section id="two" class="wrapper alt style2">
+            <section class="spotlight">
+              <div class="image"><img src="/images/pic01.jpg" alt="" /></div><div class="content">
+                <h2>An ESP32 chip plus 107 leds,<br />
+                spinning at 600RPM</h2>
+                <p>The code for the games is bolted to the propeller of a big-ass fan.</p>
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="image"><img src="/images/pic02.jpg" alt="" /></div><div class="content">
+                <h2>Slip Ring<br />
+                </h2>
+                <p>Power supply and data signals coss thru a Slip Ring towards the base, that uses a Raspberry Pi to
+					play back the game music and sound effects.
+				</p>
+              </div>
+            </section>
+            <section class="spotlight">
+              <div class="image"><img src="/images/pic03.jpg" alt="" /></div><div class="content">
+                <h2>Open Source <br/> and Open Hardware</h2>
+                <p>If you have a washing machine or a fan you are no longer using, you can build your own Ventilastation. Find more in our <a href="https://github.com/ventilastation/vsdk">Github repository</a>.</p>
+              </div>
+            </section>
+          </section>
 
-				<!-- Two -->
-					<section id="two" class="wrapper alt style2">
-						<section class="spotlight">
-							<div class="image"><img src="/images/pic01.jpg" alt="" /></div><div class="content">
-								<h2>An Arduino and 32 leds,<br />
-								spinning at 1000RPM</h2>
-								<p>All the game code is in an Arduino, bolted to the propeller of a big ass fan.</p>
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="image"><img src="/images/pic02.jpg" alt="" /></div><div class="content">
-								<h2>A pair of Wixels<br />
-								link the propeller and the base</h2>
-								<p>The base uses a Raspberry Pi to play the music and sound effects.</p>
-							</div>
-						</section>
-						<section class="spotlight">
-							<div class="image"><img src="/images/pic03.jpg" alt="" /></div><div class="content">
-								<h2>All the software and hardware<br />
-								are free and open</h2>
-								<p>You can build one by visiting our <a href="https://github.com/clubdejaqueo/super-ventilagon">GitHub page</a>.</p>
-							</div>
-						</section>
-					</section>
+		<!-- Three -->
+			<section id="three" class="wrapper style3 special">
+				<div class="inner">
+					<header class="major">
+						<h2>In the media</h2>
+					</header>
+					<ul class="features">
+						{% include media.html %}
+					</ul>
+				</div>
+			</section>
 
-				<!-- Three -->
-					<section id="three" class="wrapper style3 special">
-						<div class="inner">
-							<header class="major">
-								<h2>In the media</h2>
-							</header>
-							<ul class="features">
-								{% include media.html %}
-							</ul>
-						</div>
-					</section>
 
-				<!-- CTA -->
-					<section id="cta" class="wrapper style4">
-						<div class="inner">
-							<header>
-								<h2>A game by <br /> Club de Jaqueo</h2>
-								<p>
-									bits:&nbsp;alecu |
-									volts:&nbsp;jorge |
-									waves:&nbsp;cris
-								</p>
-								<p>
-									
-									In our club we make electromechanical versions<br />
-									of the most awesome timeless videogames. <br />
-									<a href="http://reflektor.protocultura.net/">Reflektor</a> is our previous game.
-								</p>
-							</header>
-							<ul class="actions vertical">
-								<li><a href="mailto:ventilagon@protocultura.net" class="button fit special">Contact us</a></li>
-							</ul>
-						</div>
-					</section>
+          <!-- CTA -->
+          <section id="cta" class="wrapper style4">
+            <div class="inner">
+              <header>
+                <h2>A game console made by alecu</h2>
+                <p>
+                  With the help of plenty of friends:
+                  <ul>
+                    <li>Tecnoestructuras</li>
+                    <li>Python Argentina</li>
+                    <li>GameOn!</li>
+                    <li>ArsGames</li>
+                    <li>EspacioTec</li>
+                    <li>Cybercirujas</li>
+                    <li>FlashParty</li>
+                  </ul>
+                </p>
+                <p>
+                  Some previous games:
+                  <ul>
+                    <li><a href="http://reflektor.protocultura.net/">Reflektor</a> (2013)</li>
+                    <li><a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015)</li>
+                    <li><a href="https://www.megajuegos.com.ar/">Vigilen los Cielos</a> (2016)</li>
+                  </ul>
+                </p>
+              </header>
+              <ul class="actions vertical">
+                <li><a href="mailto:ventilastation@protocultura.net" class="button fit special">Contact us</a></li>
+              </ul>
+            </div>
+          </section>
