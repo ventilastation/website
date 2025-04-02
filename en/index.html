@@ -6,7 +6,6 @@ layout: landing
 		</div>
 		<video autoplay loop muted poster="/images/banner.jpg" id="bgvid">
 			<source src="/images/banner.mp4" type="video/mp4">
-			<!--source src="/images/banner.webm" type="video/webm"-->
 		</video>
 
 		<!-- Banner -->
@@ -17,7 +16,7 @@ layout: landing
 				Open Source, Open Hardware.</p>
 			<ul class="actions">
 			<li><a href="#what" class="scrolly button">What is it?</a></li>
-			<li><a href="#how" class="scrolly button">How to play?</a></li>
+			<!-- li><a href="#how" class="scrolly button">How to play?</a></li -->
 			<li><a href="#games" class="scrolly button">Create games</a></li>
 			<li><a href="#hardware" class="scrolly button">Build one</a></li>
 			</ul>
@@ -31,13 +30,13 @@ layout: landing
               <header class="major">
                 <h2>What's Ventilastation?</h2>
                 <p>
-					It's an open source game console with an odd display, for creating and playing circular video games. <br/>
-					Fully designed, published and built in Argentina.
+                  It's an open source game console with an odd display, for creating and playing circular video games. <br/>
+                  Fully designed, published and built in Argentina.
                 </p>
                 <p>
-					The evolution of <a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015),
-					it builds on its predecesor's circular display by adding sprite based 8-bit like graphics,
-					and super easy programmability with Micropython.
+                  The evolution of <a href="https://ventilagon.protocultura.net/">Super Ventilagon</a> (2015),
+                  it builds on its predecesor's circular display by adding sprite based 8-bit like graphics,
+                  and super easy programmability with Micropython.
                 </p>
                 <!--
                 <div class='embed-container'>
@@ -66,20 +65,21 @@ layout: landing
               <div class="image"><img src="/images/pic02.jpg" alt="" /></div><div class="content">
                 <h2>Slip Ring<br />
                 </h2>
-                <p>Power supply and data signals coss thru a Slip Ring towards the base, that uses a Raspberry Pi to
-					play back the game music and sound effects.
-				</p>
+                <p>Power supply and data signals go thru a Slip Ring towards the base, that uses a Raspberry Pi to
+                  play back the game music and sound effects.
+                </p>
               </div>
             </section>
             <section class="spotlight">
               <div class="image"><img src="/images/pic03.jpg" alt="" /></div><div class="content">
                 <h2>Open Source <br/> and Open Hardware</h2>
-                <p>If you have a washing machine or a fan you are no longer using, you can build your own Ventilastation. Find more in our <a href="https://github.com/ventilastation/vsdk">Github repository</a>.</p>
+                <p>If you have a washing machine or a fan you are no longer using, you can build your own Ventilastation.
+                  Find out more in our <a href="https://github.com/ventilastation/vsdk">Github repository</a>.</p>
               </div>
             </section>
           </section>
 
-		<!-- Three -->
+		<!-- Three
 			<section id="three" class="wrapper style3 special">
 				<div class="inner">
 					<header class="major">
@@ -90,7 +90,46 @@ layout: landing
 					</ul>
 				</div>
 			</section>
+    -->
+          <!-- Hacer juegos -->
+          <section id="games" class="wrapper style1 special">
+            <div class="inner">
+              <header class="major">
+                <h2>Making games for Ventilastation</h2>
+                <p> 
+                  Ventilastation is ideal for games that are specifically designed for its circular display.
+                </p>
+                <p>
+                  Unlike a traditional screen with square pixels, the spinning LEDs that make up the Ventilastation display are shaped like little arcs.
+                  We call them "Arxels", and their size gets smaller when they are closer to the center of the fan.
+                </p>
+                <p>
+                  To make it easier to create games, the <a href="https://micropython.org/">Micropython</a> programming language is embedded in the spinning ESP32 microcontroller.
+                  And a computer-based emulator is available, so you can build and test your games before commiting to make a dedicated hardware console.
+                </p>
+                <p>
+                  A sprite-based coding library, with a design inspired in the Commodore 64 video chip allows up to 100 moving objects at once.
+                  To start coding, we recommend browing the sample game Vyruss, which is less than 700 lines of code, available in <a href="https://github.com/ventilastation/vsdk/blob/main/apps/micropython/apps/vyruss.py">the project's repository.</a>
+                </p>
+              </header>
+            </div>
+          </section>
 
+          <!-- Construir una consola -->
+          <section id="hardware" class="wrapper style3 special">
+            <div class="inner">
+              <header class="major">
+                <h2>Build your own Ventilastation</h2>
+                <p>
+                  All the source code, the electronic schematics, and the mechanical blueprints to build your own Ventilastation console are open source and open hardware.
+                </p>
+                <p>
+                  Get started in the <a href="https://github.com/ventilastation/vsdk">GitHub repository</a>.
+                  And if you ever get stuck, don't hesitate to <a href="mailto:ventilastation@protocultura.net" class="button fit special">contact us</a>, we are happy to help more folks build their own.
+                </p>
+              </header>
+            </div>
+          </section>
 
           <!-- CTA -->
           <section id="cta" class="wrapper style4">
