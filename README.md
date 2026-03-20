@@ -13,3 +13,5 @@ La forma más sencilla para hacer juegos para Ventilastation es usando el lengua
 Cómo construir tu propia Ventilastation
 =======================================
 El diseño de Hardware y Software de Ventilastation es de libre copia y distribución, está disponible en el sitio Github
+
+<!-- Pages redeploy marker: 2026-03-20 -->
