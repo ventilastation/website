@@ -54,5 +54,13 @@ social:
 
 # Build settings
 markdown: kramdown
+include:
+  - emulator/apps/micropython/__init__.py
+  - emulator/apps/micropython/apps/__init__.py
+  - emulator/apps/micropython/apps/dome_defander/__init__.py
+  - emulator/apps/micropython/apps/tincho_vrunner/__init__.py
+  - emulator/apps/micropython/apps/vortris/__init__.py
+  - emulator/apps/micropython/ventilastation/__init__.py
+  - emulator/apps/micropython/ventilastation/platforms/__init__.py
 #sass:
 #  style: compressed
