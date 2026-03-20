@@ -1,3 +1,8 @@
 [submodule "_site/dump2024"]
 	path = dump2024
 	url = https://github.com/ventilastation/dump2024
+
+[submodule "vsdk"]
+	path = vsdk
+	url = https://github.com/ventilastation/vsdk
+	branch = web-emulator-experiments
