@@ -20,6 +20,22 @@ const KEY_TO_BUTTON = new Map([
   ["Escape", BUTTONS.BUTTON_D],
 ]);
 
+const GAMEPAD_FACE_BUTTONS = new Map([
+  [0, BUTTONS.BUTTON_A],
+  [2, BUTTONS.BUTTON_B],
+  [3, BUTTONS.BUTTON_C],
+  [1, BUTTONS.BUTTON_D],
+  [8, BUTTONS.BUTTON_D],
+  [16, BUTTONS.BUTTON_D],
+]);
+
+const GAMEPAD_DPAD_BUTTONS = new Map([
+  [14, BUTTONS.JOY_LEFT],
+  [15, BUTTONS.JOY_RIGHT],
+  [12, BUTTONS.JOY_UP],
+  [13, BUTTONS.JOY_DOWN],
+]);
+
 const LedRenderCore = globalThis.VentilastationLedRenderCore;
 if (!LedRenderCore) {
   throw new Error("Missing VentilastationLedRenderCore");
@@ -30,15 +46,25 @@ const {
   PIXELS,
   computeLedFramePixels,
   createLedRingGeometry,
-  repeatLedColors,
 } = LedRenderCore;
 
 const FORCE_2D_STORAGE_KEY = "ventilastation.force2dFallback";
+const INVERT_GAMEPAD_Y_STORAGE_KEY = "ventilastation.invertGamepadY.v1";
 const INSPECTOR_OPEN_STORAGE_KEY = "ventilastation.inspectorOpen.v2";
+const RENDERER_PROFILING_STORAGE_KEY = "ventilastation.rendererProfiling.v1";
+const WEBGL_RESOLUTION_SCALE_STORAGE_KEY = "ventilastation.webglResolutionScale.v1";
 const SCENE_STEP_MS = 30;
 const MAX_CATCH_UP_STEPS = 6;
 const MAX_TICK_BACKLOG_MS = SCENE_STEP_MS * MAX_CATCH_UP_STEPS;
 const TOUCH_STICK_DEAD_ZONE = 0.26;
+const GAMEPAD_AXIS_DEAD_ZONE = 0.35;
+const FPS_DISPLAY_INTERVAL_MS = 500;
+const RENDER_PROFILE_SAMPLE_LIMIT = 60;
+const WEBGL_RESOLUTION_SCALE_AUTO = "auto";
+const DEFAULT_WEBGL_RESOLUTION_SCALE = 1;
+const WEBGL_RESOLUTION_SCALES = [1, 0.75, 0.5, 0.375, 0.25];
+const WEBGL_AUTO_SCALE_MIN_FPS = 20;
+const WEBGL_AUTO_SCALE_WAIT_MS = 3000;
 const EMULATOR_BASE_URL = new URL(".", window.location.href);
 const PROJECT_ROOT_CANDIDATES = [
   EMULATOR_BASE_URL,
@@ -47,6 +73,72 @@ const PROJECT_ROOT_CANDIDATES = [
 
 function decodePerspective(value) {
   return (value & 0x80) ? value - 0x100 : value;
+}
+
+function formatProfileMs(value) {
+  return value === null || value === undefined ? "--" : `${value.toFixed(2)} ms`;
+}
+
+function getNestedValue(source, path) {
+  return path.split(".").reduce((value, key) => (value == null ? value : value[key]), source);
+}
+
+function summarizeProfileValues(samples, key) {
+  const values = samples
+    .map((sample) => getNestedValue(sample, key))
+    .filter((value) => typeof value === "number" && Number.isFinite(value));
+  if (!values.length) {
+    return null;
+  }
+  const total = values.reduce((sum, value) => sum + value, 0);
+  return {
+    avg: total / values.length,
+    max: Math.max(...values),
+  };
+}
+
+function buildRenderProfileSnapshot(samples) {
+  if (!Array.isArray(samples) || !samples.length) {
+    return null;
+  }
+  const latest = samples[samples.length - 1];
+  return {
+    sampleCount: samples.length,
+    renderer: latest.renderer,
+    totalMs: summarizeProfileValues(samples, "totalMs"),
+    computePixelsMs: summarizeProfileValues(samples, "computePixelsMs"),
+    rendererMs: summarizeProfileValues(samples, "rendererMs"),
+    detail: latest.renderer === "webgl" ? {
+      resizeMs: summarizeProfileValues(samples, "rendererDetail.resizeMs"),
+      clearMs: summarizeProfileValues(samples, "rendererDetail.clearMs"),
+      colorExpandMs: summarizeProfileValues(samples, "rendererDetail.colorExpandMs"),
+      uploadMs: summarizeProfileValues(samples, "rendererDetail.uploadMs"),
+      drawSubmitMs: summarizeProfileValues(samples, "rendererDetail.drawSubmitMs"),
+      colorBytes: latest.rendererDetail?.colorBytes ?? null,
+      vertexCount: latest.rendererDetail?.vertexCount ?? null,
+      resolutionScale: latest.rendererDetail?.resolutionScale ?? null,
+    } : {
+      resizeMs: summarizeProfileValues(samples, "rendererDetail.resizeMs"),
+      drawMs: summarizeProfileValues(samples, "rendererDetail.drawMs"),
+      drawnLedCount: latest.rendererDetail?.drawnLedCount ?? null,
+    },
+  };
+}
+
+function fillRepeatedLedColors(ledPixels, repeatedWords, multiplier) {
+  const ledWords = new Uint32Array(
+    ledPixels.buffer,
+    ledPixels.byteOffset,
+    ledPixels.byteLength / 4
+  );
+  let dest = 0;
+  for (let index = 0; index < ledWords.length; index += 1) {
+    const word = ledWords[index];
+    for (let repeat = 0; repeat < multiplier; repeat += 1) {
+      repeatedWords[dest] = word;
+      dest += 1;
+    }
+  }
 }
 
 async function resolveFirstAvailableUrl(paths, { method = "HEAD" } = {}) {
@@ -221,9 +313,14 @@ class LedRingWebGLRenderer {
   constructor(canvas) {
     this.canvas = canvas;
     this.geometry = createLedRingGeometry();
+    this.lastProfile = null;
+    this.resolutionScale = DEFAULT_WEBGL_RESOLUTION_SCALE;
+    this.displayWidth = canvas.clientWidth || 0;
+    this.displayHeight = canvas.clientHeight || 0;
+    this.lastDevicePixelRatio = null;
     this.gl = canvas.getContext("webgl", {
       alpha: true,
-      antialias: true,
+      antialias: false,
       premultipliedAlpha: false,
     });
     this.available = Boolean(this.gl);
@@ -285,6 +382,8 @@ class LedRingWebGLRenderer {
     this.colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.geometry.vertexCount * 4, gl.DYNAMIC_DRAW);
+    this.colorBytes = new Uint8Array(this.geometry.vertexCount * 4);
+    this.colorWords = new Uint32Array(this.colorBytes.buffer);
 
     this.attribs = {
       position: gl.getAttribLocation(this.program, "a_position"),
@@ -304,6 +403,11 @@ class LedRingWebGLRenderer {
     } else {
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     }
+  }
+
+  setDisplaySize(width, height) {
+    this.displayWidth = Math.max(0, Number(width) || 0);
+    this.displayHeight = Math.max(0, Number(height) || 0);
   }
 
   createShader(type, source) {
@@ -331,16 +435,20 @@ class LedRingWebGLRenderer {
 
   resize() {
     const dpr = window.devicePixelRatio || 1;
-    const width = Math.max(1, Math.round(this.canvas.clientWidth * dpr));
-    const height = Math.max(1, Math.round(this.canvas.clientHeight * dpr));
-    if (this.canvas.width !== width || this.canvas.height !== height) {
+    const scale = Number.isFinite(this.resolutionScale) && this.resolutionScale > 0
+      ? this.resolutionScale
+      : DEFAULT_WEBGL_RESOLUTION_SCALE;
+    const width = Math.max(1, Math.round(this.displayWidth * dpr * scale));
+    const height = Math.max(1, Math.round(this.displayHeight * dpr * scale));
+    if (this.canvas.width !== width || this.canvas.height !== height || this.lastDevicePixelRatio !== dpr) {
       this.canvas.width = width;
       this.canvas.height = height;
+      this.lastDevicePixelRatio = dpr;
     }
     if (this.gl) {
       this.gl.viewport(0, 0, width, height);
     }
-    return { width, height };
+    return { width, height, scale };
   }
 
   clear() {
@@ -353,12 +461,16 @@ class LedRingWebGLRenderer {
 
   render(ledPixels) {
     if (!this.available) {
+      this.lastProfile = null;
       return false;
     }
 
-    const { width, height } = this.resize();
+    const startedAt = performance.now();
+    const { width, height, scale } = this.resize();
+    const afterResizeAt = performance.now();
     const gl = this.gl;
     this.clear();
+    const afterClearAt = performance.now();
     gl.useProgram(this.program);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
@@ -370,7 +482,10 @@ class LedRingWebGLRenderer {
     gl.vertexAttribPointer(this.attribs.texCoord, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, repeatLedColors(ledPixels, 6), gl.DYNAMIC_DRAW);
+    fillRepeatedLedColors(ledPixels, this.colorWords, 6);
+    const afterColorExpandAt = performance.now();
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.colorBytes);
+    const afterUploadAt = performance.now();
     gl.enableVertexAttribArray(this.attribs.color);
     gl.vertexAttribPointer(this.attribs.color, 4, gl.UNSIGNED_BYTE, true, 0, 0);
 
@@ -378,6 +493,18 @@ class LedRingWebGLRenderer {
     gl.uniform2f(this.uniforms.center, width * 0.5, height * 0.5);
     gl.uniform1f(this.uniforms.scale, Math.min(width, height) / 200);
     gl.drawArrays(gl.TRIANGLES, 0, this.geometry.vertexCount);
+    const finishedAt = performance.now();
+    this.lastProfile = {
+      resizeMs: afterResizeAt - startedAt,
+      clearMs: afterClearAt - afterResizeAt,
+      colorExpandMs: afterColorExpandAt - afterClearAt,
+      uploadMs: afterUploadAt - afterColorExpandAt,
+      drawSubmitMs: finishedAt - afterUploadAt,
+      totalMs: finishedAt - startedAt,
+      resolutionScale: scale,
+      vertexCount: this.geometry.vertexCount,
+      colorBytes: this.colorBytes.length,
+    };
     return true;
   }
 }
@@ -387,43 +514,26 @@ class LedRingCanvasRenderer {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.geometry = geometry;
+    this.ledLayout = this.buildLedLayout();
+    this.lastProfile = null;
+    this.displayWidth = canvas.clientWidth || 0;
+    this.displayHeight = canvas.clientHeight || 0;
+    this.lastDevicePixelRatio = null;
   }
 
-  resize() {
-    const dpr = window.devicePixelRatio || 1;
-    const width = Math.max(1, Math.round(this.canvas.clientWidth * dpr));
-    const height = Math.max(1, Math.round(this.canvas.clientHeight * dpr));
-    if (this.canvas.width !== width || this.canvas.height !== height) {
-      this.canvas.width = width;
-      this.canvas.height = height;
-    }
-    return { width, height };
+  setDisplaySize(width, height) {
+    this.displayWidth = Math.max(0, Number(width) || 0);
+    this.displayHeight = Math.max(0, Number(height) || 0);
   }
 
-  render(ledPixels) {
-    if (!this.ctx) {
-      return;
-    }
-    const { width, height } = this.resize();
-    const scale = Math.min(width, height) / 200;
-    const ctx = this.ctx;
+  buildLedLayout() {
     const positions = this.geometry.positions;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#05070b";
-    ctx.fillRect(0, 0, width, height);
+    const layout = new Array(COLUMNS * PIXELS);
 
     for (let column = 0; column < COLUMNS; column += 1) {
       for (let led = 0; led < PIXELS; led += 1) {
-        const colorOffset = (column * PIXELS + led) * 4;
-        const red = ledPixels[colorOffset];
-        const green = ledPixels[colorOffset + 1];
-        const blue = ledPixels[colorOffset + 2];
-        const alpha = ledPixels[colorOffset + 3];
-        if (!red && !green && !blue) {
-          continue;
-        }
-
-        const vertexOffset = (column * PIXELS + led) * 12;
+        const index = column * PIXELS + led;
+        const vertexOffset = index * 12;
         const p0x = positions[vertexOffset];
         const p0y = positions[vertexOffset + 1];
         const p1x = positions[vertexOffset + 2];
@@ -437,11 +547,12 @@ class LedRingCanvasRenderer {
         const centerY = (p0y + p1y + p2y + p3y) * 0.25;
         const angle = Math.atan2(-(p1y - p0y), p1x - p0x);
         const radius = Math.hypot(centerX, centerY);
-        const circumference = 2 * Math.PI * radius;
-        const ledWidth = Math.max(0.35, (circumference / COLUMNS) * scale);
-        let rowSpacing = 0;
+        const widthWorld = (2 * Math.PI * radius) / COLUMNS;
+
+        let rowSpacingWorld = 0;
         if (led + 1 < PIXELS) {
-          const nextVertexOffset = (column * PIXELS + led + 1) * 12;
+          const nextIndex = index + 1;
+          const nextVertexOffset = nextIndex * 12;
           const np0x = positions[nextVertexOffset];
           const np0y = positions[nextVertexOffset + 1];
           const np1x = positions[nextVertexOffset + 2];
@@ -452,9 +563,10 @@ class LedRingCanvasRenderer {
           const np3y = positions[nextVertexOffset + 11];
           const nextCenterX = (np0x + np1x + np2x + np3x) * 0.25;
           const nextCenterY = (np0y + np1y + np2y + np3y) * 0.25;
-          rowSpacing = Math.hypot(nextCenterX - centerX, nextCenterY - centerY) * scale;
+          rowSpacingWorld = Math.hypot(nextCenterX - centerX, nextCenterY - centerY);
         } else if (led > 0) {
-          const prevVertexOffset = (column * PIXELS + led - 1) * 12;
+          const prevIndex = index - 1;
+          const prevVertexOffset = prevIndex * 12;
           const pp0x = positions[prevVertexOffset];
           const pp0y = positions[prevVertexOffset + 1];
           const pp1x = positions[prevVertexOffset + 2];
@@ -465,20 +577,82 @@ class LedRingCanvasRenderer {
           const pp3y = positions[prevVertexOffset + 11];
           const prevCenterX = (pp0x + pp1x + pp2x + pp3x) * 0.25;
           const prevCenterY = (pp0y + pp1y + pp2y + pp3y) * 0.25;
-          rowSpacing = Math.hypot(centerX - prevCenterX, centerY - prevCenterY) * scale;
+          rowSpacingWorld = Math.hypot(centerX - prevCenterX, centerY - prevCenterY);
         }
-        const ledHeight = Math.max(0.16, rowSpacing * (2 / 3));
-        const drawX = width * 0.5 + centerX * scale;
-        const drawY = height * 0.5 - centerY * scale;
 
-        ctx.save();
-        ctx.translate(drawX, drawY);
-        ctx.rotate(angle);
-        ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${Math.max(alpha, 208) / 255})`;
-        ctx.fillRect(-ledWidth * 0.5, -ledHeight * 0.5, ledWidth, ledHeight);
-        ctx.restore();
+        layout[index] = {
+          centerX,
+          centerY,
+          angle,
+          widthWorld,
+          heightWorld: rowSpacingWorld * (2 / 3),
+        };
       }
     }
+
+    return layout;
+  }
+
+  resize() {
+    const dpr = window.devicePixelRatio || 1;
+    const width = Math.max(1, Math.round(this.displayWidth * dpr));
+    const height = Math.max(1, Math.round(this.displayHeight * dpr));
+    if (this.canvas.width !== width || this.canvas.height !== height || this.lastDevicePixelRatio !== dpr) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+      this.lastDevicePixelRatio = dpr;
+    }
+    return { width, height };
+  }
+
+  render(ledPixels) {
+    if (!this.ctx) {
+      this.lastProfile = null;
+      return;
+    }
+    const startedAt = performance.now();
+    const { width, height } = this.resize();
+    const afterResizeAt = performance.now();
+    const scale = Math.min(width, height) / 200;
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#05070b";
+    ctx.fillRect(0, 0, width, height);
+
+    let drawnLedCount = 0;
+
+    for (let index = 0; index < this.ledLayout.length; index += 1) {
+      const colorOffset = index * 4;
+      const red = ledPixels[colorOffset];
+      const green = ledPixels[colorOffset + 1];
+      const blue = ledPixels[colorOffset + 2];
+      const alpha = ledPixels[colorOffset + 3];
+      if (!red && !green && !blue) {
+        continue;
+      }
+      drawnLedCount += 1;
+
+      const layout = this.ledLayout[index];
+      const ledWidth = Math.max(0.35, layout.widthWorld * scale);
+      const ledHeight = Math.max(0.16, layout.heightWorld * scale);
+      const drawX = width * 0.5 + layout.centerX * scale;
+      const drawY = height * 0.5 - layout.centerY * scale;
+
+      ctx.save();
+      ctx.translate(drawX, drawY);
+      ctx.rotate(layout.angle);
+      ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${Math.max(alpha, 208) / 255})`;
+      ctx.fillRect(-ledWidth * 0.5, -ledHeight * 0.5, ledWidth, ledHeight);
+      ctx.restore();
+    }
+
+    const finishedAt = performance.now();
+    this.lastProfile = {
+      resizeMs: afterResizeAt - startedAt,
+      drawMs: finishedAt - afterResizeAt,
+      totalMs: finishedAt - startedAt,
+      drawnLedCount,
+    };
   }
 }
 
@@ -573,6 +747,8 @@ class BrowserHostApp {
     this.currentButtons = 0;
     this.keyboardButtons = 0;
     this.touchButtons = 0;
+    this.gamepadButtons = 0;
+    this.activeGamepadIndex = null;
     this.assetIndex = new Map();
     this.assetRenderCache = new Map();
     this.visibleStripSlots = [];
@@ -582,28 +758,56 @@ class BrowserHostApp {
     this.lastFrame = null;
     this.lastFrameShape = null;
     this.lastRenderedLedPixels = null;
+    this.lastRenderAt = null;
+    this.displayedFps = null;
+    this.pendingMinFps = null;
+    this.lastFpsDisplayUpdateAt = null;
+    this.renderProfileSamples = [];
+    this.fullscreenRenderProfileSamples = [];
+    this.lastFullscreenRenderProfile = null;
+    this.lastCanvasClientSize = null;
+    this.lastAppliedCanvasClientSize = null;
+    this.canvasDisplaySize = { width: 0, height: 0 };
+    this.fallbackCanvasDisplaySize = { width: 0, height: 0 };
+    this.isFullscreen = false;
+    this.lowFpsSinceAt = null;
     this.diagnostics = [];
     this.audio = new BrowserAudioHost();
     this.force2dFallback = this.readForce2dPreference();
+    this.invertGamepadY = this.readInvertGamepadYPreference();
+    this.rendererProfiling = this.readRendererProfilingPreference();
+    this.webglResolutionScalePreference = this.readWebglResolutionScalePreference();
+    this.webglResolutionScale = this.webglResolutionScalePreference === WEBGL_RESOLUTION_SCALE_AUTO
+      ? DEFAULT_WEBGL_RESOLUTION_SCALE
+      : this.webglResolutionScalePreference;
     this.inspectorOpen = this.readInspectorPreference();
     this.lastSceneTickAt = null;
     this.pollRequestId = null;
     this.pollingHalted = false;
     this.renderingPaused = false;
     this.touchStickPointerId = null;
+    this.unsubscribeWorkerFrame = null;
+    this.unsubscribeWorkerRuntimeError = null;
+    this.canvasResizeObserver = null;
+    this.stagePanel = document.querySelector(".stage-panel");
     this.canvas = document.querySelector("#frame-canvas-gl");
     this.fallbackCanvas = document.querySelector("#frame-canvas-2d");
     this.renderer = new LedRingWebGLRenderer(this.canvas);
+    this.renderer.resolutionScale = this.webglResolutionScale;
     this.fallbackRenderer = new LedRingCanvasRenderer(this.fallbackCanvas, this.renderer.geometry);
     this.elements = {
       adapterName: document.querySelector("#adapter-name"),
       adapterSource: document.querySelector("#adapter-source"),
       frameCounter: document.querySelector("#frame-counter"),
       buttonMask: document.querySelector("#button-mask"),
+      gamepadStatus: document.querySelector("#gamepad-status"),
+      webglScaleStatus: document.querySelector("#webgl-scale-status"),
       sceneErrorBanner: document.querySelector("#scene-error-banner"),
       sceneErrorTitle: document.querySelector("#scene-error-title"),
       sceneErrorMessage: document.querySelector("#scene-error-message"),
       sceneErrorDebugButton: document.querySelector("#scene-error-debug-button"),
+      stageFullscreenExit: document.querySelector("#stage-fullscreen-exit"),
+      toggleFullscreenButton: document.querySelector("#toggle-fullscreen-button"),
       toggleRenderingButton: document.querySelector("#toggle-rendering-button"),
       touchStick: document.querySelector("#touch-stick"),
       touchStickKnob: document.querySelector("#touch-stick-knob"),
@@ -617,6 +821,9 @@ class BrowserHostApp {
       copyDiagnosticsStatus: document.querySelector("#copy-diagnostics-status"),
       runtimeSummary: document.querySelector("#runtime-summary"),
       force2dFallback: document.querySelector("#force-2d-fallback"),
+      invertGamepadY: document.querySelector("#invert-gamepad-y"),
+      enableRendererProfiling: document.querySelector("#enable-renderer-profiling"),
+      webglResolutionScale: document.querySelector("#webgl-resolution-scale"),
     };
     this.copyStatusTimer = null;
     this.refreshCopyDiagnostics();
@@ -714,7 +921,44 @@ class BrowserHostApp {
     frame.events = remainingEvents;
   }
 
+  refreshCanvasDisplayMetrics() {
+    const webglWidth = this.canvas?.clientWidth || 0;
+    const webglHeight = this.canvas?.clientHeight || 0;
+    const fallbackWidth = this.fallbackCanvas?.clientWidth || 0;
+    const fallbackHeight = this.fallbackCanvas?.clientHeight || 0;
+
+    this.canvasDisplaySize = { width: webglWidth, height: webglHeight };
+    this.fallbackCanvasDisplaySize = { width: fallbackWidth, height: fallbackHeight };
+    this.lastCanvasClientSize = `${webglWidth}x${webglHeight}`;
+
+    this.renderer?.setDisplaySize(webglWidth, webglHeight);
+    this.fallbackRenderer?.setDisplaySize(fallbackWidth, fallbackHeight);
+  }
+
+  bindCanvasResizeObserver() {
+    this.refreshCanvasDisplayMetrics();
+
+    const handleResize = () => {
+      this.refreshCanvasDisplayMetrics();
+    };
+
+    if (typeof ResizeObserver === "function") {
+      this.canvasResizeObserver = new ResizeObserver(() => {
+        handleResize();
+      });
+      if (this.canvas) {
+        this.canvasResizeObserver.observe(this.canvas);
+      }
+      if (this.fallbackCanvas) {
+        this.canvasResizeObserver.observe(this.fallbackCanvas);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+  }
+
   start() {
+    this.syncFullscreenState();
     this.elements.adapterName.textContent = this.adapter.name;
     this.elements.adapterSource.textContent = this.runtime.source;
     this.addDiagnostic("adapter.start", {
@@ -729,14 +973,36 @@ class BrowserHostApp {
     this.bindVisibility();
     this.bindCopyDiagnostics();
     this.bindDebugControls();
+    this.bindFullscreenControls();
     this.bindRenderingToggle();
     this.bindInspectorToggle();
     this.bindSceneErrorControls();
+    this.bindCanvasResizeObserver();
+    this.renderFullscreenToggle();
     this.renderRenderingToggle();
     this.renderInspectorVisibility();
     this.renderCanvasVisibility();
     this.renderSceneError();
-    this.schedulePoll(true);
+    if (this.adapter.usesWorkerFrameStream && typeof this.adapter.onFrame === "function") {
+      this.unsubscribeWorkerFrame = this.adapter.onFrame((frame) => {
+        this.handleWorkerFrame(frame);
+      });
+      this.unsubscribeWorkerRuntimeError = this.adapter.onRuntimeError?.((error) => {
+        if (!error) {
+          return;
+        }
+        const normalizedError = new Error(error.message || String(error));
+        normalizedError.stack = error.stack || normalizedError.stack;
+        this.executionError = this.extractProminentError(normalizedError);
+        this.runtime.error = this.executionError ? null : normalizedError;
+        this.pollingHalted = Boolean(this.executionError?.isSceneLifecycleError);
+        this.renderSceneError();
+        this.renderRuntimeStatus();
+      }) || null;
+      void this.adapter.startLoop({ full: true });
+    } else {
+      this.schedulePoll(true);
+    }
   }
 
   schedulePoll(full = false) {
@@ -780,13 +1046,125 @@ class BrowserHostApp {
     window.addEventListener("blur", () => {
       this.keyboardButtons = 0;
       this.touchButtons = 0;
+      this.gamepadButtons = 0;
       this.touchStickPointerId = null;
       this.syncButtons();
       this.addDiagnostic("input.blur", { buttons: 0 });
       this.renderStatus();
     });
 
+    this.bindGamepadControls();
     this.bindTouchControls();
+  }
+
+  bindGamepadControls() {
+    window.addEventListener("gamepadconnected", (event) => {
+      const gamepad = event.gamepad;
+      this.selectActiveGamepad();
+      this.addDiagnostic("input.gamepad.connected", {
+        index: gamepad.index,
+        id: gamepad.id,
+        mapping: gamepad.mapping || "unknown",
+      });
+      this.renderStatus();
+    });
+
+    window.addEventListener("gamepaddisconnected", (event) => {
+      const gamepad = event.gamepad;
+      const wasActive = gamepad.index === this.activeGamepadIndex;
+      if (wasActive) {
+        this.activeGamepadIndex = null;
+        this.gamepadButtons = 0;
+      }
+      this.selectActiveGamepad();
+      this.addDiagnostic("input.gamepad.disconnected", {
+        index: gamepad.index,
+        id: gamepad.id,
+        wasActive,
+      });
+      this.syncButtons();
+      this.renderStatus();
+    });
+
+    this.selectActiveGamepad();
+  }
+
+  getConnectedGamepads() {
+    if (typeof navigator.getGamepads !== "function") {
+      return [];
+    }
+    return Array.from(navigator.getGamepads()).filter(Boolean);
+  }
+
+  selectActiveGamepad() {
+    const gamepads = this.getConnectedGamepads();
+    const activeGamepad = gamepads.find((gamepad) => gamepad.index === this.activeGamepadIndex);
+    if (activeGamepad) {
+      return activeGamepad;
+    }
+    const nextGamepad = gamepads[0] || null;
+    const previousIndex = this.activeGamepadIndex;
+    this.activeGamepadIndex = nextGamepad ? nextGamepad.index : null;
+    if (previousIndex !== this.activeGamepadIndex) {
+      this.addDiagnostic("input.gamepad.active", {
+        index: this.activeGamepadIndex,
+        id: nextGamepad?.id || null,
+      });
+    }
+    return nextGamepad;
+  }
+
+  readGamepadButtons() {
+    const gamepad = this.selectActiveGamepad();
+    if (!gamepad) {
+      return 0;
+    }
+
+    let buttons = 0;
+
+    for (const [index, bit] of GAMEPAD_FACE_BUTTONS) {
+      if (gamepad.buttons[index]?.pressed) {
+        buttons |= bit;
+      }
+    }
+
+    for (const [index, bit] of GAMEPAD_DPAD_BUTTONS) {
+      if (gamepad.buttons[index]?.pressed) {
+        buttons |= bit;
+      }
+    }
+
+    const axisX = gamepad.axes[0] || 0;
+    const rawAxisY = gamepad.axes[1] || 0;
+    const axisY = this.invertGamepadY ? -rawAxisY : rawAxisY;
+    if (axisX <= -GAMEPAD_AXIS_DEAD_ZONE) {
+      buttons |= BUTTONS.JOY_LEFT;
+    }
+    if (axisX >= GAMEPAD_AXIS_DEAD_ZONE) {
+      buttons |= BUTTONS.JOY_RIGHT;
+    }
+    if (axisY <= -GAMEPAD_AXIS_DEAD_ZONE) {
+      buttons |= BUTTONS.JOY_UP;
+    }
+    if (axisY >= GAMEPAD_AXIS_DEAD_ZONE) {
+      buttons |= BUTTONS.JOY_DOWN;
+    }
+
+    return buttons & 0xff;
+  }
+
+  updateGamepadButtons() {
+    const nextButtons = this.readGamepadButtons();
+    if (nextButtons === this.gamepadButtons) {
+      return false;
+    }
+    this.gamepadButtons = nextButtons;
+    this.syncButtons();
+    this.addDiagnostic("input.gamepad.state", {
+      activeIndex: this.activeGamepadIndex,
+      buttons: this.gamepadButtons,
+    });
+    return true;
   }
 
   bindTouchControls() {
@@ -959,7 +1337,7 @@ class BrowserHostApp {
   }
 
   syncButtons() {
-    this.currentButtons = (this.keyboardButtons | this.touchButtons) & 0xff;
+    this.currentButtons = (this.keyboardButtons | this.touchButtons | this.gamepadButtons) & 0xff;
     this.adapter.setButtons(this.currentButtons);
     this.renderTouchButtons();
     this.renderTouchStickFromButtons();
@@ -971,11 +1349,18 @@ class BrowserHostApp {
       if (document.hidden) {
         this.lastSceneTickAt = now;
         this.addDiagnostic("timing.pause", { reason: "hidden" });
+        if (this.adapter.usesWorkerFrameStream && typeof this.adapter.stopLoop === "function") {
+          void this.adapter.stopLoop();
+        }
         return;
       }
       this.lastSceneTickAt = now - SCENE_STEP_MS;
       this.addDiagnostic("timing.resume", { reason: "visible" });
-      this.schedulePoll(false);
+      if (this.adapter.usesWorkerFrameStream && typeof this.adapter.startLoop === "function") {
+        void this.adapter.startLoop({ full: false });
+      } else {
+        this.schedulePoll(false);
+      }
     });
   }
 
@@ -1004,21 +1389,177 @@ class BrowserHostApp {
   }
 
   bindDebugControls() {
-    if (!this.elements.force2dFallback) {
+    if (this.elements.force2dFallback) {
+      this.elements.force2dFallback.checked = this.force2dFallback;
+      this.elements.force2dFallback.addEventListener("change", () => {
+        this.force2dFallback = Boolean(this.elements.force2dFallback.checked);
+        this.writeForce2dPreference(this.force2dFallback);
+        this.renderProfileSamples = [];
+        this.fullscreenRenderProfileSamples = [];
+        this.lastFullscreenRenderProfile = null;
+        this.addDiagnostic("renderer.mode", {
+          forced2d: this.force2dFallback,
+          webglAvailable: this.renderer.available,
+        });
+        this.renderCanvasVisibility();
+        this.renderStatus();
+        this.renderFrame();
+      });
+    }
+
+    if (this.elements.invertGamepadY) {
+      this.elements.invertGamepadY.checked = this.invertGamepadY;
+      this.elements.invertGamepadY.addEventListener("change", () => {
+        this.invertGamepadY = Boolean(this.elements.invertGamepadY.checked);
+        this.writeInvertGamepadYPreference(this.invertGamepadY);
+        this.addDiagnostic("input.gamepad.invert_y", {
+          enabled: this.invertGamepadY,
+        });
+        if (this.updateGamepadButtons()) {
+          this.renderStatus();
+        }
+      });
+    }
+
+    if (this.elements.enableRendererProfiling) {
+      this.elements.enableRendererProfiling.checked = this.rendererProfiling;
+      this.elements.enableRendererProfiling.addEventListener("change", () => {
+        this.rendererProfiling = Boolean(this.elements.enableRendererProfiling.checked);
+        this.writeRendererProfilingPreference(this.rendererProfiling);
+        this.renderProfileSamples = [];
+        this.fullscreenRenderProfileSamples = [];
+        this.lastFullscreenRenderProfile = null;
+        this.addDiagnostic("renderer.profiling", {
+          enabled: this.rendererProfiling,
+        });
+        if (this.lastFrame) {
+          this.renderInspectors(this.lastFrame);
+        } else {
+          this.refreshCopyDiagnostics();
+        }
+      });
+    }
+
+    if (this.elements.webglResolutionScale) {
+      this.elements.webglResolutionScale.value = String(this.webglResolutionScalePreference);
+      this.elements.webglResolutionScale.addEventListener("change", () => {
+        const nextValue = this.elements.webglResolutionScale.value;
+        if (nextValue === WEBGL_RESOLUTION_SCALE_AUTO) {
+          this.setWebglResolutionScalePreference(WEBGL_RESOLUTION_SCALE_AUTO, { reason: "manual_auto", persist: true });
+          this.applyWebglResolutionScale(DEFAULT_WEBGL_RESOLUTION_SCALE, { reason: "manual_auto", persist: false });
+        } else {
+          const nextScale = Number.parseFloat(nextValue);
+          const resolvedScale = Number.isFinite(nextScale) && nextScale > 0
+            ? nextScale
+            : DEFAULT_WEBGL_RESOLUTION_SCALE;
+          this.setWebglResolutionScalePreference(resolvedScale, { reason: "manual_fixed", persist: true });
+          this.applyWebglResolutionScale(resolvedScale, { reason: "manual_fixed", persist: false });
+        }
+        if (this.lastFrame) {
+          this.renderFrame();
+        } else {
+          this.renderStatus();
+          this.refreshCopyDiagnostics();
+        }
+      });
+    }
+  }
+
+  applyWebglResolutionScale(scale, { reason = "manual", persist = true } = {}) {
+    const resolvedScale = WEBGL_RESOLUTION_SCALES.includes(scale)
+      ? scale
+      : DEFAULT_WEBGL_RESOLUTION_SCALE;
+    this.webglResolutionScale = resolvedScale;
+    this.renderer.resolutionScale = resolvedScale;
+    this.lowFpsSinceAt = null;
+    this.renderProfileSamples = [];
+    this.fullscreenRenderProfileSamples = [];
+    this.lastFullscreenRenderProfile = null;
+    if (persist) {
+      this.writeWebglResolutionScalePreference(this.webglResolutionScalePreference);
+    }
+    if (this.elements.webglResolutionScale) {
+      this.elements.webglResolutionScale.value = String(this.webglResolutionScalePreference);
+    }
+    this.addDiagnostic("renderer.resolution_scale", {
+      preference: this.webglResolutionScalePreference,
+      scale: resolvedScale,
+      reason,
+      persist,
+    });
+  }
+
+  setWebglResolutionScalePreference(value, { reason = "manual", persist = true } = {}) {
+    const resolvedPreference = value === WEBGL_RESOLUTION_SCALE_AUTO
+      ? WEBGL_RESOLUTION_SCALE_AUTO
+      : (WEBGL_RESOLUTION_SCALES.includes(value) ? value : DEFAULT_WEBGL_RESOLUTION_SCALE);
+    this.webglResolutionScalePreference = resolvedPreference;
+    if (persist) {
+      this.writeWebglResolutionScalePreference(resolvedPreference);
+    }
+    if (this.elements.webglResolutionScale) {
+      this.elements.webglResolutionScale.value = String(resolvedPreference);
+    }
+    this.addDiagnostic("renderer.resolution_scale_preference", {
+      preference: resolvedPreference,
+      reason,
+      persist,
+    });
+  }
+
+  getNextLowerWebglResolutionScale() {
+    const currentIndex = WEBGL_RESOLUTION_SCALES.indexOf(this.webglResolutionScale);
+    if (currentIndex === -1) {
+      return null;
+    }
+    return WEBGL_RESOLUTION_SCALES[currentIndex + 1] || null;
+  }
+
+  syncAdaptiveWebglResolution(now = performance.now()) {
+    if (!this.canvas || this.force2dFallback || !this.renderer.available) {
+      this.lowFpsSinceAt = null;
       return;
     }
-    this.elements.force2dFallback.checked = this.force2dFallback;
-    this.elements.force2dFallback.addEventListener("change", () => {
-      this.force2dFallback = Boolean(this.elements.force2dFallback.checked);
-      this.writeForce2dPreference(this.force2dFallback);
-      this.addDiagnostic("renderer.mode", {
-        forced2d: this.force2dFallback,
-        webglAvailable: this.renderer.available,
+    if (this.webglResolutionScalePreference !== WEBGL_RESOLUTION_SCALE_AUTO) {
+      this.lowFpsSinceAt = null;
+      return;
+    }
+
+    const currentSize = this.lastCanvasClientSize;
+    if (this.lastAppliedCanvasClientSize !== currentSize) {
+      this.lastAppliedCanvasClientSize = currentSize;
+      this.applyWebglResolutionScale(DEFAULT_WEBGL_RESOLUTION_SCALE, {
+        reason: "display_change",
+        persist: false,
       });
-      this.renderCanvasVisibility();
-      this.renderStatus();
-      this.renderFrame();
+      return;
+    }
+
+    if (this.displayedFps === null || this.displayedFps >= WEBGL_AUTO_SCALE_MIN_FPS) {
+      this.lowFpsSinceAt = null;
+      return;
+    }
+
+    if (this.lowFpsSinceAt === null) {
+      this.lowFpsSinceAt = now;
+      return;
+    }
+
+    if (now - this.lowFpsSinceAt < WEBGL_AUTO_SCALE_WAIT_MS) {
+      return;
+    }
+
+    const nextScale = this.getNextLowerWebglResolutionScale();
+    if (!nextScale) {
+      this.lowFpsSinceAt = null;
+      return;
+    }
+
+    this.applyWebglResolutionScale(nextScale, {
+      reason: "auto_low_fps",
+      persist: true,
     });
+    this.lowFpsSinceAt = now;
   }
 
   renderCanvasVisibility() {
@@ -1028,6 +1569,55 @@ class BrowserHostApp {
     const use2d = this.force2dFallback || !this.renderer.available;
     this.canvas.hidden = use2d;
     this.fallbackCanvas.hidden = !use2d;
+  }
+
+  bindFullscreenControls() {
+    const button = this.elements.toggleFullscreenButton;
+    const stageExitButton = this.elements.stageFullscreenExit;
+    if (!button || !this.stagePanel || !document.fullscreenEnabled) {
+      if (button) {
+        button.hidden = true;
+      }
+      if (stageExitButton) {
+        stageExitButton.hidden = true;
+      }
+      return;
+    }
+
+    const toggleFullscreen = async () => {
+      try {
+        if (this.isFullscreen) {
+          await document.exitFullscreen();
+        } else {
+          await this.stagePanel.requestFullscreen();
+        }
+      } catch (error) {
+        this.addDiagnostic("fullscreen.error", {
+          message: error?.message || String(error),
+        });
+      }
+    };
+
+    button.addEventListener("click", () => {
+      void toggleFullscreen();
+    });
+    if (stageExitButton) {
+      stageExitButton.addEventListener("click", () => {
+        void toggleFullscreen();
+      });
+    }
+
+    document.addEventListener("fullscreenchange", () => {
+      this.syncFullscreenState();
+      this.refreshCanvasDisplayMetrics();
+      this.renderFullscreenToggle();
+      this.renderStatus();
+      if (this.lastFrame) {
+        this.renderInspectors(this.lastFrame);
+      } else {
+        this.refreshCopyDiagnostics();
+      }
+    });
   }
 
   bindInspectorToggle() {
@@ -1073,13 +1663,63 @@ class BrowserHostApp {
         window.cancelAnimationFrame(this.pollRequestId);
         this.pollRequestId = null;
       }
+      if (this.adapter.usesWorkerFrameStream && typeof this.adapter.stopLoop === "function") {
+        void this.adapter.stopLoop();
+      }
       this.addDiagnostic("timing.pause", { reason: "manual" });
     } else {
       this.lastSceneTickAt = performance.now() - SCENE_STEP_MS;
       this.addDiagnostic("timing.resume", { reason: "manual" });
-      this.schedulePoll(false);
+      if (this.adapter.usesWorkerFrameStream && typeof this.adapter.startLoop === "function") {
+        void this.adapter.startLoop({ full: false });
+      } else {
+        this.schedulePoll(false);
+      }
     }
     this.renderRenderingToggle();
+  }
+
+  syncFullscreenState() {
+    const active = Boolean(this.stagePanel && document.fullscreenElement === this.stagePanel);
+    if (this.isFullscreen === active) {
+      if (this.stagePanel) {
+        this.stagePanel.classList.toggle("is-fullscreen", active);
+      }
+      return;
+    }
+
+    this.isFullscreen = active;
+    if (this.stagePanel) {
+      this.stagePanel.classList.toggle("is-fullscreen", active);
+    }
+    if (active) {
+      this.fullscreenRenderProfileSamples = [];
+      this.lastFullscreenRenderProfile = null;
+    } else if (this.fullscreenRenderProfileSamples.length) {
+      this.lastFullscreenRenderProfile = buildRenderProfileSnapshot(this.fullscreenRenderProfileSamples);
+      this.fullscreenRenderProfileSamples = [];
+    }
+    this.addDiagnostic("fullscreen.state", {
+      active,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio || 1,
+      },
+    });
+  }
+
+  renderFullscreenToggle() {
+    const button = this.elements.toggleFullscreenButton;
+    const stageExitButton = this.elements.stageFullscreenExit;
+    if (!button) {
+      return;
+    }
+    button.textContent = this.isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
+    button.setAttribute("aria-pressed", this.isFullscreen ? "true" : "false");
+    if (stageExitButton) {
+      stageExitButton.hidden = !this.isFullscreen;
+    }
   }
 
   renderRenderingToggle() {
@@ -1087,7 +1727,7 @@ class BrowserHostApp {
     if (!button) {
       return;
     }
-    button.textContent = this.renderingPaused ? "Resume rendering" : "Stop rendering";
+    button.textContent = this.renderingPaused ? "Resume emulator" : "Pause emulator";
     button.setAttribute("aria-pressed", this.renderingPaused ? "true" : "false");
   }
 
@@ -1096,7 +1736,7 @@ class BrowserHostApp {
       return;
     }
     this.elements.inspectorPanel.hidden = !this.inspectorOpen;
-    this.elements.toggleInspectorButton.textContent = this.inspectorOpen ? "Hide debug" : "Show debug";
+    this.elements.toggleInspectorButton.textContent = this.inspectorOpen ? "Hide options" : "Show options";
     this.elements.toggleInspectorButton.setAttribute("aria-expanded", this.inspectorOpen ? "true" : "false");
   }
 
@@ -1114,6 +1754,71 @@ class BrowserHostApp {
         localStorage.setItem(FORCE_2D_STORAGE_KEY, "1");
       } else {
         localStorage.removeItem(FORCE_2D_STORAGE_KEY);
+      }
+    } catch (_error) {
+      return;
+    }
+  }
+
+  readInvertGamepadYPreference() {
+    try {
+      return localStorage.getItem(INVERT_GAMEPAD_Y_STORAGE_KEY) === "1";
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  writeInvertGamepadYPreference(enabled) {
+    try {
+      if (enabled) {
+        localStorage.setItem(INVERT_GAMEPAD_Y_STORAGE_KEY, "1");
+      } else {
+        localStorage.removeItem(INVERT_GAMEPAD_Y_STORAGE_KEY);
+      }
+    } catch (_error) {
+      return;
+    }
+  }
+
+  readRendererProfilingPreference() {
+    try {
+      return localStorage.getItem(RENDERER_PROFILING_STORAGE_KEY) === "1";
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  writeRendererProfilingPreference(enabled) {
+    try {
+      if (enabled) {
+        localStorage.setItem(RENDERER_PROFILING_STORAGE_KEY, "1");
+      } else {
+        localStorage.removeItem(RENDERER_PROFILING_STORAGE_KEY);
+      }
+    } catch (_error) {
+      return;
+    }
+  }
+
+  readWebglResolutionScalePreference() {
+    try {
+      const rawValue = localStorage.getItem(WEBGL_RESOLUTION_SCALE_STORAGE_KEY);
+      if (rawValue === null || rawValue === WEBGL_RESOLUTION_SCALE_AUTO) {
+        return WEBGL_RESOLUTION_SCALE_AUTO;
+      }
+      const parsed = Number.parseFloat(rawValue ?? "");
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : WEBGL_RESOLUTION_SCALE_AUTO;
+    } catch (_error) {
+      return WEBGL_RESOLUTION_SCALE_AUTO;
+    }
+  }
+
+  writeWebglResolutionScalePreference(scalePreference) {
+    try {
+      if (scalePreference === WEBGL_RESOLUTION_SCALE_AUTO) {
+        localStorage.setItem(WEBGL_RESOLUTION_SCALE_STORAGE_KEY, WEBGL_RESOLUTION_SCALE_AUTO);
+      } else {
+        localStorage.setItem(WEBGL_RESOLUTION_SCALE_STORAGE_KEY, String(scalePreference));
       }
     } catch (_error) {
       return;
@@ -1174,8 +1879,82 @@ class BrowserHostApp {
     return text;
   }
 
+  applyFrame(frame) {
+    if (!frame || typeof frame !== "object") {
+      throw new Error(`Invalid frame payload: ${String(frame)}`);
+    }
+    if (this.usesEventStreamProtocol(frame)) {
+      this.processFrameEvents(frame);
+    } else if (!Array.isArray(frame.sprites)) {
+      frame.sprites = [];
+    }
+    if (
+      frame.palette instanceof Uint8Array &&
+      (
+        !(this.palette instanceof Uint8Array) ||
+        Boolean(frame.palette_dirty) ||
+        Number(frame.palette_version || 0) !== this.paletteVersion
+      )
+    ) {
+      this.palette = frame.palette;
+      this.paletteVersion = Number(frame.palette_version || 0);
+      this.paletteLoadedBytes = frame.palette.length;
+      this.assetRenderCache.clear();
+    }
+    if (Array.isArray(frame.assets) && frame.assets.length) {
+      for (const asset of frame.assets) {
+        this.assetIndex.set(asset.slot, {
+          ...asset,
+          dataLength: asset.data?.length ?? 0,
+          loadedBytes: asset.data?.length ?? 0,
+          data: asset.data ?? null,
+        });
+      }
+    }
+    this.runtime.error = null;
+    if (this.executionError && this.runtime.source === "wasm") {
+      this.executionError = null;
+      this.pollingHalted = false;
+      this.renderSceneError();
+      this.renderRuntimeStatus();
+    }
+    this.lastFrame = frame;
+    this.visibleStripSlots = Array.isArray(frame.sprites)
+      ? [...new Set(frame.sprites.map((sprite) => sprite.image_strip).filter((slot) => Number.isInteger(slot) && slot > 0))]
+      : [];
+    this.addDiagnostic("frame.ok", {
+      frame: frame.frame,
+      sprites: Array.isArray(frame.sprites) ? frame.sprites.length : -1,
+      assets: this.assetIndex.size,
+      hasPalette: this.palette instanceof Uint8Array,
+    });
+  }
+
+  handleWorkerFrame(frame) {
+    try {
+      const gamepadChanged = this.updateGamepadButtons();
+      this.applyFrame(frame);
+      this.renderFrame();
+      if (gamepadChanged) {
+        this.renderStatus();
+      }
+    } catch (error) {
+      this.executionError = this.extractProminentError(error);
+      this.runtime.error = this.executionError ? null : error;
+      this.pollingHalted = Boolean(this.executionError?.isSceneLifecycleError);
+      this.addDiagnostic("frame.error", {
+        message: error.message || String(error),
+        stack: error.stack || null,
+      });
+      this.renderSceneError();
+      this.renderRuntimeStatus();
+      console.error("Worker frame handling failed", error);
+    }
+  }
+
   async pollFrame(full = false) {
     try {
+      const gamepadChanged = this.updateGamepadButtons();
       const now = performance.now();
       let stepsDue = 0;
       if (this.lastSceneTickAt === null) {
@@ -1210,50 +1989,14 @@ class BrowserHostApp {
 
       if (!full && stepsDue === 0 && this.lastFrame) {
         this.renderFrame();
+        if (gamepadChanged) {
+          this.renderStatus();
+        }
         return;
       }
 
       const frame = await Promise.resolve(this.adapter.exportFrame({ full }));
-      if (!frame || typeof frame !== "object") {
-        throw new Error(`Invalid frame payload: ${String(frame)}`);
-      }
-      if (this.usesEventStreamProtocol(frame)) {
-        this.processFrameEvents(frame);
-      } else if (!Array.isArray(frame.sprites)) {
-        frame.sprites = [];
-      }
-      if (!(this.palette instanceof Uint8Array) && frame.palette instanceof Uint8Array) {
-        this.palette = frame.palette;
-        this.paletteVersion = Number(frame.palette_version || 0);
-        this.paletteLoadedBytes = frame.palette.length;
-      }
-      if (Array.isArray(frame.assets) && frame.assets.length) {
-        for (const asset of frame.assets) {
-          this.assetIndex.set(asset.slot, {
-            ...asset,
-            dataLength: asset.data?.length ?? 0,
-            loadedBytes: asset.data?.length ?? 0,
-            data: asset.data ?? null,
-          });
-        }
-      }
-      this.runtime.error = null;
-      if (this.executionError && this.runtime.source === "wasm") {
-        this.executionError = null;
-        this.pollingHalted = false;
-        this.renderSceneError();
-        this.renderRuntimeStatus();
-      }
-      this.lastFrame = frame;
-      this.visibleStripSlots = Array.isArray(frame.sprites)
-        ? [...new Set(frame.sprites.map((sprite) => sprite.image_strip).filter((slot) => Number.isInteger(slot) && slot > 0))]
-        : [];
-      this.addDiagnostic("frame.ok", {
-        frame: frame.frame,
-        sprites: Array.isArray(frame.sprites) ? frame.sprites.length : -1,
-        assets: this.assetIndex.size,
-        hasPalette: this.palette instanceof Uint8Array,
-      });
+      this.applyFrame(frame);
       this.renderFrame();
     } catch (error) {
       this.executionError = this.extractProminentError(error);
@@ -1279,23 +2022,116 @@ class BrowserHostApp {
       return;
     }
 
+    this.updateDisplayedFps();
+    this.syncAdaptiveWebglResolution();
+    const startedAt = this.rendererProfiling ? performance.now() : 0;
+
     const hasPendingVisibleAsset = this.visibleStripSlots.some((slot) => {
       const asset = this.assetIndex.get(slot);
       return !asset || !(asset.data instanceof Uint8Array) || asset.loadedBytes < asset.dataLength;
     });
+    const beforePixelsAt = this.rendererProfiling ? performance.now() : 0;
     const ledPixels = hasPendingVisibleAsset && this.lastRenderedLedPixels
       ? this.lastRenderedLedPixels
       : computeLedFramePixels(frame, this.assetIndex, this.palette);
+    const afterPixelsAt = this.rendererProfiling ? performance.now() : 0;
     if (!hasPendingVisibleAsset) {
       this.lastRenderedLedPixels = ledPixels;
     }
     this.renderCanvasVisibility();
+    const beforeRendererAt = this.rendererProfiling ? performance.now() : 0;
     const rendered = !this.force2dFallback && this.renderer.render(ledPixels);
     if ((!rendered || this.force2dFallback) && this.fallbackRenderer) {
       this.fallbackRenderer.render(ledPixels);
     }
+    const afterRendererAt = this.rendererProfiling ? performance.now() : 0;
+    if (this.rendererProfiling) {
+      this.recordRenderProfile({
+        renderer: rendered && !this.force2dFallback ? "webgl" : "canvas",
+        totalMs: afterRendererAt - startedAt,
+        computePixelsMs: afterPixelsAt - beforePixelsAt,
+        rendererMs: afterRendererAt - beforeRendererAt,
+        rendererDetail: rendered && !this.force2dFallback
+          ? this.renderer.lastProfile
+          : this.fallbackRenderer?.lastProfile || null,
+      });
+    }
     this.renderStatus();
     this.renderInspectors(frame);
+  }
+
+  updateDisplayedFps() {
+    const now = performance.now();
+    if (this.lastRenderAt !== null) {
+      const elapsedMs = now - this.lastRenderAt;
+      if (elapsedMs > 0) {
+        const instantaneousFps = 1000 / elapsedMs;
+        this.pendingMinFps = this.pendingMinFps === null
+          ? instantaneousFps
+          : Math.min(this.pendingMinFps, instantaneousFps);
+      }
+    }
+
+    if (this.lastFpsDisplayUpdateAt === null) {
+      this.lastFpsDisplayUpdateAt = now;
+    }
+
+    if (this.displayedFps === null && this.pendingMinFps !== null) {
+      this.displayedFps = this.pendingMinFps;
+      this.pendingMinFps = null;
+      this.lastFpsDisplayUpdateAt = now;
+    } else if (this.pendingMinFps !== null && now - this.lastFpsDisplayUpdateAt >= FPS_DISPLAY_INTERVAL_MS) {
+      this.displayedFps = this.pendingMinFps;
+      this.pendingMinFps = null;
+      this.lastFpsDisplayUpdateAt = now;
+    }
+
+    if (now < this.lastFpsDisplayUpdateAt) {
+      this.lastFpsDisplayUpdateAt = now;
+      this.pendingMinFps = null;
+    }
+
+    this.lastRenderAt = now;
+  }
+
+  recordRenderProfile(sample) {
+    const stampedSample = {
+      at: performance.now(),
+      isFullscreen: this.isFullscreen,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio || 1,
+      },
+      ...sample,
+    };
+    this.renderProfileSamples.push(stampedSample);
+    if (this.renderProfileSamples.length > RENDER_PROFILE_SAMPLE_LIMIT) {
+      this.renderProfileSamples.shift();
+    }
+    if (this.isFullscreen) {
+      this.fullscreenRenderProfileSamples.push(stampedSample);
+      if (this.fullscreenRenderProfileSamples.length > RENDER_PROFILE_SAMPLE_LIMIT) {
+        this.fullscreenRenderProfileSamples.shift();
+      }
+    }
+  }
+
+  getRenderProfileSnapshot() {
+    if (!this.rendererProfiling) {
+      return null;
+    }
+    return buildRenderProfileSnapshot(this.renderProfileSamples);
+  }
+
+  getFullscreenRenderProfileSnapshot() {
+    if (!this.rendererProfiling) {
+      return null;
+    }
+    if (this.isFullscreen) {
+      return buildRenderProfileSnapshot(this.fullscreenRenderProfileSamples);
+    }
+    return this.lastFullscreenRenderProfile;
   }
 
   getAssetFrameImage(asset, frameNumber) {
@@ -1356,8 +2192,20 @@ class BrowserHostApp {
 
   renderStatus() {
     this.elements.buttonMask.textContent = `Buttons 0x${this.currentButtons.toString(16).padStart(2, "0")}`;
-    if (this.lastFrame) {
-      this.elements.frameCounter.textContent = `Frame ${this.lastFrame.frame}`;
+    if (this.elements.gamepadStatus) {
+      this.elements.gamepadStatus.textContent = this.activeGamepadIndex === null
+        ? "Gamepad none"
+        : `Gamepad ${this.activeGamepadIndex + 1}`;
+    }
+    if (this.elements.webglScaleStatus) {
+      this.elements.webglScaleStatus.textContent = this.webglResolutionScalePreference === WEBGL_RESOLUTION_SCALE_AUTO
+        ? `Scale Auto ${Math.round(this.webglResolutionScale * 100)}%`
+        : `Scale ${Math.round(this.webglResolutionScale * 100)}%`;
+    }
+    if (this.elements.frameCounter) {
+      this.elements.frameCounter.textContent = this.displayedFps === null
+        ? "FPS --"
+        : `FPS ${this.displayedFps.toFixed(1)}`;
     }
   }
 
@@ -1409,6 +2257,8 @@ class BrowserHostApp {
     if (!this.inspectorOpen) {
       return;
     }
+    const profile = this.getRenderProfileSnapshot();
+    const fullscreenProfile = this.getFullscreenRenderProfileSnapshot();
     const summary = [
       ["Sprites", frame.sprites.length],
       ["Assets", this.assetIndex.size],
@@ -1416,9 +2266,51 @@ class BrowserHostApp {
       ["Column Offset", frame.column_offset],
       ["Gamma", frame.gamma_mode],
       ["Buttons", `0x${frame.buttons.toString(16).padStart(2, "0")}`],
+      ["Gamepad", this.activeGamepadIndex === null ? "None" : `Controller ${this.activeGamepadIndex + 1}`],
       ["Renderer", this.force2dFallback ? "2D fallback" : this.renderer.available ? "WebGL" : "2D fallback"],
+      ["Fullscreen", this.isFullscreen ? "Active" : "Windowed"],
+      ["WebGL Scale", this.webglResolutionScalePreference === WEBGL_RESOLUTION_SCALE_AUTO
+        ? `Auto (${Math.round(this.webglResolutionScale * 100)}%)`
+        : `${Math.round(this.webglResolutionScale * 100)}%`],
     ];
-
+    if (profile) {
+      summary.push(
+        ["Profile Samples", profile.sampleCount],
+        ["Frame Total", `${formatProfileMs(profile.totalMs?.avg)} avg / ${formatProfileMs(profile.totalMs?.max)} max`],
+        ["Pixels", `${formatProfileMs(profile.computePixelsMs?.avg)} avg / ${formatProfileMs(profile.computePixelsMs?.max)} max`],
+        ["Renderer Cost", `${formatProfileMs(profile.rendererMs?.avg)} avg / ${formatProfileMs(profile.rendererMs?.max)} max`],
+      );
+      if (profile.renderer === "webgl") {
+        summary.push(
+          ["Color Expand", `${formatProfileMs(profile.detail.colorExpandMs?.avg)} avg / ${formatProfileMs(profile.detail.colorExpandMs?.max)} max`],
+          ["Upload", `${formatProfileMs(profile.detail.uploadMs?.avg)} avg / ${formatProfileMs(profile.detail.uploadMs?.max)} max`],
+          ["Draw Submit", `${formatProfileMs(profile.detail.drawSubmitMs?.avg)} avg / ${formatProfileMs(profile.detail.drawSubmitMs?.max)} max`],
+        );
+      } else {
+        summary.push([
+          "Canvas Draw",
+          `${formatProfileMs(profile.detail.drawMs?.avg)} avg / ${formatProfileMs(profile.detail.drawMs?.max)} max`,
+        ]);
+      }
+    }
+    if (fullscreenProfile) {
+      summary.push(
+        ["FS Samples", fullscreenProfile.sampleCount],
+        ["FS Frame Total", `${formatProfileMs(fullscreenProfile.totalMs?.avg)} avg / ${formatProfileMs(fullscreenProfile.totalMs?.max)} max`],
+        ["FS Renderer", `${formatProfileMs(fullscreenProfile.rendererMs?.avg)} avg / ${formatProfileMs(fullscreenProfile.rendererMs?.max)} max`],
+      );
+      if (fullscreenProfile.renderer === "webgl") {
+        summary.push(
+          ["FS Upload", `${formatProfileMs(fullscreenProfile.detail.uploadMs?.avg)} avg / ${formatProfileMs(fullscreenProfile.detail.uploadMs?.max)} max`],
+          ["FS Draw Submit", `${formatProfileMs(fullscreenProfile.detail.drawSubmitMs?.avg)} avg / ${formatProfileMs(fullscreenProfile.detail.drawSubmitMs?.max)} max`],
+        );
+      } else {
+        summary.push([
+          "FS Canvas Draw",
+          `${formatProfileMs(fullscreenProfile.detail.drawMs?.avg)} avg / ${formatProfileMs(fullscreenProfile.detail.drawMs?.max)} max`,
+        ]);
+      }
+    }
     this.elements.runtimeSummary.innerHTML = summary.map(([label, value]) => `
       <div class="summary-card">
         <strong>${label}</strong>
@@ -1433,6 +2325,9 @@ class BrowserHostApp {
 
   describeFrame(frame) {
     const firstAsset = this.assetIndex.size ? this.assetIndex.values().next().value : null;
+    const renderProfile = this.getRenderProfileSnapshot();
+    const fullscreenRenderProfile = this.getFullscreenRenderProfileSnapshot();
+    const dpr = window.devicePixelRatio || 1;
     return {
       frameType: typeof frame,
       keys: Object.keys(frame || {}),
@@ -1448,6 +2343,28 @@ class BrowserHostApp {
         ...firstAsset,
         data: `[${firstAsset.data?.length ?? 0} bytes]`,
       } : null,
+      viewport: {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+        devicePixelRatio: dpr,
+        isFullscreen: this.isFullscreen,
+      },
+      webglResolutionScalePreference: this.webglResolutionScalePreference,
+      webglResolutionScale: this.webglResolutionScale,
+      webglCanvas: this.canvas ? {
+        clientWidth: this.canvasDisplaySize.width,
+        clientHeight: this.canvasDisplaySize.height,
+        width: this.canvas.width,
+        height: this.canvas.height,
+      } : null,
+      fallbackCanvas: this.fallbackCanvas ? {
+        clientWidth: this.fallbackCanvasDisplaySize.width,
+        clientHeight: this.fallbackCanvasDisplaySize.height,
+        width: this.fallbackCanvas.width,
+        height: this.fallbackCanvas.height,
+      } : null,
+      renderProfile,
+      fullscreenRenderProfile,
     };
   }
 
@@ -1463,6 +2380,17 @@ class BrowserHostApp {
   }
 
   buildDiagnosticBundle(frameShape, diagnostics) {
+    const exportedDiagnostics = this.rendererProfiling
+      ? diagnostics.filter((entry) => (
+        entry?.type === "renderer.profiling" ||
+        entry?.type === "renderer.mode" ||
+        entry?.type === "fullscreen.state" ||
+        entry?.type === "fullscreen.error" ||
+        entry?.type === "timing.resync" ||
+        entry?.type === "timing.catchup" ||
+        entry?.type === "frame.error"
+      ))
+      : diagnostics;
     const bundle = {
       generatedAt: new Date().toISOString(),
       runtimeStatus: this.elements.runtimeMessage.textContent,
@@ -1479,7 +2407,7 @@ class BrowserHostApp {
         isSceneLifecycleError: this.executionError.isSceneLifecycleError,
       } : null,
       frameShape,
-      diagnostics,
+      diagnostics: exportedDiagnostics,
     };
     return JSON.stringify(bundle, null, 2);
   }
