@@ -11,11 +11,8 @@ if [[ ! -d "$VSDK_DIR/web" || ! -d "$VSDK_DIR/apps" ]]; then
   exit 1
 fi
 
-rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR"
+rsync -a --delete --exclude 'apps' --exclude '__pycache__/' "$VSDK_DIR/web"/ "$OUT_DIR"/
+rsync -a --delete --exclude '__pycache__/' "$VSDK_DIR/apps"/ "$OUT_DIR/apps"/
 
-cp -R "$VSDK_DIR/web/." "$OUT_DIR/"
-rm -f "$OUT_DIR/apps"
-cp -R "$VSDK_DIR/apps" "$OUT_DIR/apps"
-
-printf 'Updated emulator site bundle at %s from %s\n' "$OUT_DIR" "$VSDK_DIR"
+printf 'Updated emulator publish tree at %s from %s/web + %s/apps\n' "$OUT_DIR" "$VSDK_DIR" "$VSDK_DIR"
