@@ -28,7 +28,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
-          bundler-cache: false
+          bundler-cache: true
 
       - name: Setup Pages
         id: pages
@@ -38,12 +38,6 @@ jobs:
         run: |
           python3 tools/refresh-emulator-runtime-bundle.py vsdk/web
           bash tools/update-emulator-from-vsdk.sh
-
-      - name: Prepare Bundler lockfile for Linux
-        run: bundle lock --add-platform x86_64-linux
-
-      - name: Install gems
-        run: bundle install
 
       - name: Build with Jekyll
         run: bundle exec jekyll build --destination ./_site

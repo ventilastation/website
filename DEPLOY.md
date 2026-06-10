@@ -83,6 +83,22 @@ You can override the port, for example:
 PORT=8001 tools/deploy-emulator-local.sh
 ```
 
+## Local Pages build test
+
+To reproduce the GitHub Pages Jekyll build locally with Homebrew Ruby 3.3 and Bundler 2.5.11:
+
+```bash
+tools/test-pages-build.sh
+```
+
+That script:
+
+1. uses `/usr/local/opt/ruby@3.3/bin`
+2. refreshes `vsdk/web/runtime-bundle.json`
+3. republishes `vsdk` into `emulator/`
+4. runs `bundle install`
+5. builds Jekyll into `_site_local_pages_test/`
+
 ## Notes about full bundle rebuilds
 
 There is a generator in:
