@@ -11,6 +11,29 @@ It currently provides:
 - inspector panels for runtime events, sprites, and assets
 - a WASM adapter layer that auto-activates if a low-level bridge is provided
 - a worker-bridge scaffold for integrating the official MicroPython `webassembly` port
+- a browser-usable ROM builder for `stripedefs.yaml` asset folders
+- a runtime workspace API for browser IDE integration
+
+## Browser Workspace API
+
+The emulator now exposes `window.VentilastationWebEmulator` for browser-side IDEs and parent shells.
+
+That API provides:
+
+- `listProjectFiles(path = ".")`
+- `readProjectFile(path, encoding = "utf8")`
+- `writeProjectFile(path, content, encoding = "utf8")`
+- `deleteProjectFile(path)`
+- `applyProjectSnapshot(files)`
+- `restartRuntime({ full = true })`
+
+This lets an embedded editor write files directly into the worker-hosted MicroPython filesystem and restart the runtime without rebuilding `runtime-bundle.json` on every save.
+
+The first built-in IDE panel uses Monaco and lazy-loads it from jsDelivr at runtime, so that editor surface currently depends on normal browser network access.
+
+For the intended GitHub and web-IDE flow, see:
+
+- `vsdk/docs/web-ide-integration.md`
 
 ## Run
 
@@ -28,6 +51,40 @@ Then open `http://localhost:8000/web/`.
 For a direct worker/bootstrap check, open:
 
 `http://localhost:8000/web/smoke-test.html`
+
+## ROM Builder
+
+Two browser-friendly scripts are now available:
+
+- `web/rom-builder-core.js`
+- `web/rom-builder-browser.js`
+
+Load them in that order, then generate a ROM from an asset folder:
+
+```html
+<script src="/web/rom-builder-core.js"></script>
+<script src="/web/rom-builder-browser.js"></script>
+<script>
+  const rom = await window.VentilastationBrowserRomBuilder.buildRomFromFolder(
+    "/apps/images/ventap/"
+  );
+  console.log("ROM bytes", rom.length);
+</script>
+```
+
+The same shared core is also used by a tiny Node CLI:
+
+```bash
+cd vsdk
+npm install
+node tools/generate_roms_js.cjs
+```
+
+Or generate a single folder:
+
+```bash
+node tools/generate_roms_js.cjs apps/images/ventap
+```
 
 ## Expected Runtime Adapter
 

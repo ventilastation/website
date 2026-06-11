@@ -31,6 +31,10 @@ The WASM worker boots MicroPython from:
 
 That means editing Python source under `vsdk/web/apps/micropython/...` is not enough by itself. If the runtime bundle is not refreshed, the browser may still run stale Python code even though the JS files are new.
 
+Exception:
+
+- if you are editing files through the browser workspace API exposed as `window.VentilastationWebEmulator`, those live workspace edits are written straight into the worker filesystem and do not require a bundle refresh for that browser session
+
 ## After editing JS only
 
 If only browser-side JS/CSS/HTML changed, a normal reload is usually enough:
@@ -160,3 +164,13 @@ After Python-side emulator changes:
 3. publish `vsdk/web` into `emulator/`
 4. reload the page
 5. if behavior still looks stale, do a hard reload
+
+## Browser IDE note
+
+For web IDE integration, prefer this split:
+
+- use `runtime-bundle.json` as the base read-only runtime payload
+- layer editable project files on top through the browser workspace API
+- restart the runtime after save
+
+That gives a fast edit/test loop without rebuilding the bundle on every change.
