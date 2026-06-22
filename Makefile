@@ -25,9 +25,7 @@ install-deps:
 	@"$(VSDK_DIR)/.venv/bin/python" -m pip install -r "$(VSDK_DIR)/requirements.txt"
 	@echo "Installed VSDK Python dependencies into $(VSDK_DIR)/.venv"
 
-roms: $(ROMS_STAMP)
-
-$(ROMS_STAMP): $(VSDK_DIR)/tools/generate_roms.py $(VSDK_DIR)/requirements.txt
+roms:
 	@mkdir -p "$(TMP_DIR)"
 	@$(PYTHON) -c 'import numpy, yaml; from PIL import Image' || { \
 		echo "Missing Python dependencies for ROM generation." >&2; \
@@ -35,7 +33,7 @@ $(ROMS_STAMP): $(VSDK_DIR)/tools/generate_roms.py $(VSDK_DIR)/requirements.txt
 		echo "Install them with: make install-deps" >&2; \
 		exit 1; \
 	}
-	@if [ ! -f "$(ROMS_STAMP)" ] || find "$(VSDK_DIR)/games" "$(VSDK_DIR)/system" -type f \( -name '*.png' -o -name '__images__.yaml' \) -newer "$(ROMS_STAMP)" | grep -q .; then \
+	@if [ ! -f "$(ROMS_STAMP)" ] || [ "$(VSDK_DIR)/tools/generate_roms.py" -nt "$(ROMS_STAMP)" ] || [ "$(VSDK_DIR)/requirements.txt" -nt "$(ROMS_STAMP)" ] || find "$(VSDK_DIR)/games" "$(VSDK_DIR)/system" -type f \( -name '*.png' -o -name '__images__.yaml' \) -newer "$(ROMS_STAMP)" | grep -q .; then \
 		cd "$(VSDK_DIR)/tools" && $(PYTHON) generate_roms.py; \
 		touch "$(ROMS_STAMP)"; \
 	else \
@@ -45,22 +43,18 @@ $(ROMS_STAMP): $(VSDK_DIR)/tools/generate_roms.py $(VSDK_DIR)/requirements.txt
 roms-js:
 	@cd "$(VSDK_DIR)" && $(NODE) tools/generate_roms_js.cjs
 
-bundle: $(BUNDLE_STAMP)
-
-$(BUNDLE_STAMP): $(ROOT_DIR)/tools/refresh-emulator-runtime-bundle.py $(ROMS_STAMP)
+bundle: roms
 	@mkdir -p "$(TMP_DIR)"
-	@if [ ! -f "$(BUNDLE_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" "$(VSDK_DIR)/games" "$(VSDK_DIR)/system" -type f -newer "$(BUNDLE_STAMP)" | grep -q .; then \
-		$(PYTHON) "$(ROOT_DIR)/tools/refresh-emulator-runtime-bundle.py" "$(VSDK_DIR)/web"; \
+	@if [ ! -f "$(BUNDLE_STAMP)" ] || [ "$(VSDK_DIR)/tools/generate_web_runtime_bundle.py" -nt "$(BUNDLE_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" "$(VSDK_DIR)/games" "$(VSDK_DIR)/system" -type f -newer "$(BUNDLE_STAMP)" | grep -q .; then \
+		cd "$(VSDK_DIR)" && $(PYTHON) tools/generate_web_runtime_bundle.py; \
 		touch "$(BUNDLE_STAMP)"; \
 	else \
 		echo "Runtime bundle is up to date"; \
 	fi
 
-publish: $(PUBLISH_STAMP)
-
-$(PUBLISH_STAMP): $(ROOT_DIR)/tools/update-emulator-from-vsdk.sh $(BUNDLE_STAMP)
+publish: bundle
 	@mkdir -p "$(OUT_DIR)"
-	@if [ ! -f "$(PUBLISH_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" -type f -newer "$(PUBLISH_STAMP)" | grep -q .; then \
+	@if [ ! -f "$(PUBLISH_STAMP)" ] || [ "$(ROOT_DIR)/tools/update-emulator-from-vsdk.sh" -nt "$(PUBLISH_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" -type f -newer "$(PUBLISH_STAMP)" | grep -q .; then \
 		"$(ROOT_DIR)/tools/update-emulator-from-vsdk.sh" "$(VSDK_DIR)" "$(OUT_DIR)"; \
 		touch "$(PUBLISH_STAMP)"; \
 	else \
