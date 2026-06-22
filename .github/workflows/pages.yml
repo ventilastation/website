@@ -30,14 +30,21 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install ROM generator dependencies
+        run: python3 -m pip install -r vsdk/requirements.txt
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
 
       - name: Generate emulator publish tree
         run: |
-          python3 tools/refresh-emulator-runtime-bundle.py vsdk/web
-          bash tools/update-emulator-from-vsdk.sh
+          make publish
 
       - name: Build with Jekyll
         run: bundle exec jekyll build --destination ./_site

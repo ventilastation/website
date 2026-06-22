@@ -22,12 +22,11 @@ cd "$ROOT_DIR"
 
 echo "[1/5] Ruby: $(ruby --version)"
 echo "[2/5] Bundler: $(bundle _${BUNDLER_VERSION}_ --version)"
-echo "[3/5] Refreshing runtime bundle"
-python3 tools/refresh-emulator-runtime-bundle.py vsdk/web
-echo "[4/5] Publishing emulator tree"
-bash tools/update-emulator-from-vsdk.sh
-echo "[5/5] Installing gems and building Jekyll site"
+echo "[3/5] Refreshing ROMs, bundle, and published emulator tree"
+make publish OUTPUT_DIR="$OUTPUT_DIR"
+echo "[4/5] Installing gems"
 bundle _${BUNDLER_VERSION}_ install
+echo "[5/5] Building Jekyll site"
 bundle _${BUNDLER_VERSION}_ exec jekyll build --destination "$OUTPUT_DIR"
 
 echo

@@ -35,11 +35,64 @@ Exception:
 
 - if you are editing files through the browser workspace API exposed as `window.VentilastationWebEmulator`, those live workspace edits are written straight into the worker filesystem and do not require a bundle refresh for that browser session
 
+## Canonical commands
+
+The top-level `Makefile` is now the canonical deploy surface:
+
+- `make install-deps`
+- `make roms`
+- `make bundle`
+- `make publish`
+- `make start`
+- `make local-pages-build`
+
+These targets replace the old ad-hoc sequence and are what local scripts plus GitHub Actions should call.
+
+## What each command does
+
+`make install-deps`
+
+- creates the VSDK virtualenv at `vsdk/.venv`
+- installs `vsdk/requirements.txt` into that virtualenv
+- matches the VSDK emulator docs for macOS and Linux
+
+`make roms`
+
+- runs the Python ROM generator in `vsdk/tools/generate_roms.py`
+- scans `vsdk/games/**/images` and `vsdk/system/**/images`
+- rebuilds only ROM files whose source PNGs or `__images__.yaml` changed
+- writes ROMs to `vsdk/apps/micropython/roms`
+- requires the Python deps from `vsdk/requirements.txt`
+- prefers `vsdk/.venv/bin/python` automatically, matching the VSDK emulator docs
+
+`make bundle`
+
+- runs `make roms` first
+- refreshes `vsdk/web/runtime-bundle.json` from the current files under `vsdk/web`
+
+`make publish`
+
+- runs `make bundle` first
+- republishes `vsdk/web` and `vsdk/apps` into the site-facing `emulator/` tree
+
+`make start`
+
+- runs `make publish` first
+- rebuilds ROMs, bundle, or the published tree only when their inputs are newer or missing
+- restarts the local static server for `emulator/`
+- serves `http://127.0.0.1:8000/` by default
+
+Override host or port when needed:
+
+```bash
+HOST=0.0.0.0 PORT=8001 make start
+```
+
 ## After editing JS only
 
-If only browser-side JS/CSS/HTML changed, a normal reload is usually enough:
+If only browser-side JS/CSS/HTML changed, a normal refresh flow is:
 
-1. Publish `vsdk/web` into `emulator/`
+1. `make publish`
 2. Reload `http://127.0.0.1:8000/`
 
 ## After editing MicroPython emulator code
@@ -55,53 +108,115 @@ you must refresh `vsdk/web/runtime-bundle.json` before publishing.
 
 ## Fast local bundle refresh
 
-This updates bundle entries from files that currently exist under `vsdk/web/`:
-
 ```bash
-python3 tools/refresh-emulator-runtime-bundle.py
+make bundle
 ```
 
-Use this when the manifest is already in place and you only need the bundle contents to match the current checked-out web-emulator files.
-
-## Publish into the site tree
-
-After updating `vsdk/web`, publish it into the site-facing `emulator/` directory with:
-
-```bash
-tools/update-emulator-from-vsdk.sh
-```
-
-## Full local deploy
-
-To clean the published copy, refresh the source bundle, publish into `emulator/`, and start a fresh local server in one step:
-
-```bash
-tools/deploy-emulator-local.sh
-```
-
-By default it serves on `http://127.0.0.1:8000/`.
-
-You can override the port, for example:
-
-```bash
-PORT=8001 tools/deploy-emulator-local.sh
-```
+Use this when you want the runtime bundle refreshed and ROMs checked first.
 
 ## Local Pages build test
 
 To reproduce the GitHub Pages Jekyll build locally with Homebrew Ruby 3.3 and Bundler 2.5.11:
 
 ```bash
+make local-pages-build
+```
+
+That target:
+
+1. uses `/usr/local/opt/ruby@3.3/bin`
+2. regenerates ROMs if needed
+3. refreshes `vsdk/web/runtime-bundle.json`
+4. republishes `vsdk` into `emulator/`
+5. runs `bundle install`
+6. builds Jekyll into `_site_local_pages_test/`
+
+The compatibility wrapper still exists:
+
+```bash
 tools/test-pages-build.sh
 ```
 
-That script:
+It now delegates to the same shared `make` targets.
 
-1. uses `/usr/local/opt/ruby@3.3/bin`
-2. refreshes `vsdk/web/runtime-bundle.json`
-3. republishes `vsdk` into `emulator/`
-4. runs `bundle install`
-5. builds Jekyll into `_site_local_pages_test/`
+## Compatibility wrappers
+
+These scripts still exist for convenience, but now delegate to the `Makefile`:
+
+- `tools/deploy-emulator-local.sh`
+- `tools/test-pages-build.sh`
+
+The low-level publish helper still exists and is used internally by `make publish`:
+
+- `tools/update-emulator-from-vsdk.sh`
+
+## ROM generation paths
+
+There are two ROM-generation implementations on purpose:
+
+- Python deploy path: `vsdk/tools/generate_roms.py`
+- Browser/editor path: `vsdk/web/rom-builder-core.js`, `vsdk/web/rom-builder-browser.js`, `vsdk/web/workspace-rom-builder.js`
+
+Use the Python path for deploys, CI, and checked-in ROM updates.
+
+The recommended bootstrap step is now:
+
+```bash
+make install-deps
+```
+
+If you prefer a virtualenv, point `make` at it explicitly:
+
+```bash
+PYTHON=.venv/bin/python make publish
+```
+
+Use the JS path inside the browser IDE, where edited PNGs are converted into temporary runtime ROMs without waiting for a server-side deploy.
+
+There is also a Node CLI wrapper around the JS path for parity/debugging:
+
+```bash
+make roms-js
+```
+
+## Local server
+
+To rebuild anything stale, publish it, and restart the local emulator server:
+
+```bash
+make start
+```
+
+Open:
+
+- `http://127.0.0.1:8000/`
+
+The compatibility wrapper remains available:
+
+```bash
+tools/deploy-emulator-local.sh
+```
+
+You can override the port, for example:
+
+```bash
+PORT=8001 make start
+```
+
+Or:
+
+```bash
+PORT=8001 tools/deploy-emulator-local.sh
+```
+
+## Direct low-level commands
+
+If you need to run the underlying pieces directly:
+
+1. `cd vsdk/tools && python3 generate_roms.py`
+2. `python3 tools/refresh-emulator-runtime-bundle.py vsdk/web`
+3. `tools/update-emulator-from-vsdk.sh`
+4. `cd emulator && python3 -m http.server 8000 --bind 127.0.0.1`
 
 ## Notes about full bundle rebuilds
 
@@ -119,21 +234,6 @@ If a full rebuild is needed:
 
 1. verify the manifest paths are valid for the current source tree
 2. or regenerate the emulator bundle from the correct root layout
-
-## Local server
-
-To serve the published emulator locally:
-
-```bash
-cd emulator
-python3 -m http.server 8000 --bind 127.0.0.1
-```
-
-Open:
-
-- `http://127.0.0.1:8000/`
-
-Do not use `/emulator/` in the URL when serving from inside the `emulator/` directory.
 
 ## Worker caching
 
@@ -160,10 +260,9 @@ for:
 After Python-side emulator changes:
 
 1. update the source files
-2. refresh `vsdk/web/runtime-bundle.json`
-3. publish `vsdk/web` into `emulator/`
-4. reload the page
-5. if behavior still looks stale, do a hard reload
+2. run `make start` or at least `make publish`
+3. reload the page
+4. if behavior still looks stale, do a hard reload
 
 ## Browser IDE note
 
