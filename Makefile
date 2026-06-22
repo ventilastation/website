@@ -54,7 +54,7 @@ bundle: roms
 
 publish: bundle
 	@mkdir -p "$(OUT_DIR)"
-	@if [ ! -f "$(PUBLISH_STAMP)" ] || [ "$(ROOT_DIR)/tools/update-emulator-from-vsdk.sh" -nt "$(PUBLISH_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" -type f -newer "$(PUBLISH_STAMP)" | grep -q .; then \
+	@if [ ! -f "$(PUBLISH_STAMP)" ] || [ "$(ROOT_DIR)/tools/update-emulator-from-vsdk.sh" -nt "$(PUBLISH_STAMP)" ] || find -L "$(VSDK_DIR)/web" "$(VSDK_DIR)/apps" "$(VSDK_DIR)/games" "$(VSDK_DIR)/system" -type f -newer "$(PUBLISH_STAMP)" | grep -q .; then \
 		"$(ROOT_DIR)/tools/update-emulator-from-vsdk.sh" "$(VSDK_DIR)" "$(OUT_DIR)"; \
 		touch "$(PUBLISH_STAMP)"; \
 	else \
