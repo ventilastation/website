@@ -26,4 +26,9 @@ rsync -a --delete --prune-empty-dirs \
   --exclude '*' \
   "$VSDK_DIR/system"/ "$OUT_DIR/system"/
 
+find "$OUT_DIR/games" "$OUT_DIR/system" -type f -name '__images__.yaml.txt' -delete 2>/dev/null || true
+while IFS= read -r -d '' manifest; do
+  cp "$manifest" "$manifest.txt"
+done < <(find "$OUT_DIR/games" "$OUT_DIR/system" -type f -name '__images__.yaml' -print0 2>/dev/null)
+
 printf 'Updated emulator publish tree at %s from %s/web + %s/apps + source assets\n' "$OUT_DIR" "$VSDK_DIR" "$VSDK_DIR"
