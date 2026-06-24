@@ -17,12 +17,14 @@ rsync -a --delete --exclude '__pycache__/' "$VSDK_DIR/apps"/ "$OUT_DIR/apps"/
 rsync -a --delete --prune-empty-dirs \
   --include '*/' \
   --include 'images/***' \
+  --include 'sounds/***' \
   --include 'menu.png' \
   --exclude '*' \
   "$VSDK_DIR/games"/ "$OUT_DIR/games"/
 rsync -a --delete --prune-empty-dirs \
   --include '*/' \
   --include 'images/***' \
+  --include 'sounds/***' \
   --exclude '*' \
   "$VSDK_DIR/system"/ "$OUT_DIR/system"/
 
