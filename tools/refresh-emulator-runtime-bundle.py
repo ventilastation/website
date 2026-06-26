@@ -10,6 +10,9 @@ def main() -> int:
     repo_root = pathlib.Path(__file__).resolve().parent.parent
     target_root = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else (repo_root / "vsdk" / "web")
     bundle_path = target_root / "runtime-bundle.json"
+    source_roots = [target_root]
+    if target_root.name == "web":
+        source_roots.append(target_root.parent)
 
     if not bundle_path.is_file():
         print(f"error: missing bundle file: {bundle_path}", file=sys.stderr)
@@ -23,8 +26,13 @@ def main() -> int:
         rel_path = entry.get("path")
         if not isinstance(rel_path, str):
             continue
-        source_path = target_root / rel_path
-        if not source_path.is_file():
+        source_path = None
+        for base_root in source_roots:
+            candidate = base_root / rel_path
+            if candidate.is_file():
+                source_path = candidate
+                break
+        if source_path is None:
             missing.append(rel_path)
             continue
         entry["base64"] = base64.b64encode(source_path.read_bytes()).decode("ascii")

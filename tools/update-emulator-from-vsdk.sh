@@ -16,6 +16,7 @@ rsync -a --delete --exclude 'apps' --exclude '__pycache__/' "$VSDK_DIR/web"/ "$O
 rsync -a --delete --exclude '__pycache__/' "$VSDK_DIR/apps"/ "$OUT_DIR/apps"/
 rsync -a --delete --prune-empty-dirs \
   --include '*/' \
+  --include 'code/***' \
   --include 'images/***' \
   --include 'sounds/***' \
   --include 'menu.png' \
@@ -23,6 +24,7 @@ rsync -a --delete --prune-empty-dirs \
   "$VSDK_DIR/games"/ "$OUT_DIR/games"/
 rsync -a --delete --prune-empty-dirs \
   --include '*/' \
+  --include 'code/***' \
   --include 'images/***' \
   --include 'sounds/***' \
   --exclude '*' \
