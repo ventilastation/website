@@ -12,7 +12,9 @@ if [[ ! -d "$VSDK_DIR/web" || ! -d "$VSDK_DIR/apps" ]]; then
 fi
 
 mkdir -p "$OUT_DIR"
-rsync -a --delete --exclude 'apps' --exclude '__pycache__/' "$VSDK_DIR/web"/ "$OUT_DIR"/
+# web/apps, web/games and web/system are dev-serving symlinks into the vsdk
+# checkout; skip them here, the rsyncs below publish the real trees instead
+rsync -a --delete --exclude 'apps' --exclude 'games' --exclude 'system' --exclude '__pycache__/' "$VSDK_DIR/web"/ "$OUT_DIR"/
 rsync -a --delete --exclude '__pycache__/' "$VSDK_DIR/apps"/ "$OUT_DIR/apps"/
 rsync -a --delete --prune-empty-dirs \
   --include '*/' \
