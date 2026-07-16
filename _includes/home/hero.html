@@ -1,0 +1,11 @@
+<section id="banner">
+  <div class="inner" markdown="1">
+{{ include.content }}
+</div>
+  <ul class="actions">
+    {% for item in include.navigation %}
+    <li><a href="{{ item.href }}" class="scrolly button">{{ item.label }}</a></li>
+    {% endfor %}
+  </ul>
+  <a href="{{ include.more_href }}" class="more scrolly">{{ include.more_label }}</a>
+</section>
