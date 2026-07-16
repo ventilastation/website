@@ -54,6 +54,14 @@ social:
 
 # Build settings
 markdown: kramdown
+exclude:
+  - .tmp
+  - .vscode
+  - _site
+  - _site_local_pages_test
+  - vsdk
+  - vsdk-native-emulator-library-menu
+  - emulator/apps/retro-go
 include:
   - emulator/apps/micropython/__init__.py
   - emulator/apps/micropython/apps/__init__.py
