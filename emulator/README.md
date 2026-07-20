@@ -1,24 +1,41 @@
-# Browser Host Scaffold
+# Web Emulator
 
-This directory is a minimal static shell for the future WASM runtime.
+The browser-based Ventilastation emulator: the MicroPython runtime compiled
+to WebAssembly runs the real launcher, system apps and games in a module
+worker, and this directory hosts the UI around it — WebGL/canvas POV
+renderers, keyboard/gamepad/touch input, audio playback, a Monaco-based
+code editor with live reload, a Piskel pixel-art editor, an in-browser ROM
+builder, and debug/heap inspectors.
 
-It currently provides:
+This directory is the **source of truth**; the Jekyll site publishes a copy
+of it (see [DEPLOY.md](../docs/internals/deploying-web-emulator.md)). `apps`, `games` and `system` are
+symlinks to the repo trees so this directory can be served directly as the
+docroot (e.g. `python3 -m http.server` from here): the worker fetches
+non-bundled assets — PNGs, sounds — over HTTP relative to the page. The
+publish script replaces the symlinks with real copies.
 
-- event-driven keyboard input mapped to the Ventilastation button bitmask
-- Gamepad API input mapped to the same button bitmask, using the first connected controller
-- a pull-based frame polling loop
-- a debug canvas that renders exported sprite state
-- inspector panels for runtime events, sprites, and assets
-- a WASM adapter layer that auto-activates if a low-level bridge is provided
-- a worker-bridge scaffold for integrating the official MicroPython `webassembly` port
-- a browser-usable ROM builder for `stripedefs.yaml` asset folders
-- a runtime workspace API for browser IDE integration
+## Layout
+
+| File | Role |
+|---|---|
+| `index.html`, `styles.css` | page shell, cache-busted script tags |
+| `app.js` | `BrowserHostApp`: UI, input, frame loop, inspectors |
+| `app-support.js` | shared constants + small helpers |
+| `led-ring-renderers.js` | WebGL renderer and 2D-canvas fallback |
+| `scene-webgl-compositor.js`, `scene-shader-core.js` | WebGL2 whole-frame compositor and its shared raw-scene/GLSL definition |
+| `audio-host.js` | plays the `sound`/`music`/`notes` commands |
+| `led-render-core.js` | polar frame math shared with the render parity test |
+| `micropython-bridge.js`, `wasm-worker.js`, `wasm-adapter.js` | browser⇄worker⇄WASM bridge (pointer-based frame transport; see ../docs/internals/web-emulator-architecture.md) |
+| `monaco-ide.js`, `piskel-embed.js` | embedded code/sprite editors |
+| `rom-builder-core.js`, `rom-builder-browser.js`, `workspace-rom-builder.js` | in-browser `.rom` building from `__images__.yaml` |
+| `runtime-manifest.json`, `runtime-bundle.json` | generated file list + bundle the worker mounts (`make web-runtime-bundle`) |
+| `vendor/` | pinned MicroPython WASM build, Monaco, Piskel |
+| `smoke-test.html`, `render-parity-test.js` | manual regression checks |
 
 ## Browser Workspace API
 
-The emulator now exposes `window.VentilastationWebEmulator` for browser-side IDEs and parent shells.
-
-That API provides:
+The emulator exposes `window.VentilastationWebEmulator` for browser-side
+IDEs and parent shells:
 
 - `listProjectFiles(path = ".")`
 - `readProjectFile(path, encoding = "utf8")`
@@ -27,207 +44,38 @@ That API provides:
 - `applyProjectSnapshot(files)`
 - `restartRuntime({ full = true })`
 
-This lets an embedded editor write files directly into the worker-hosted MicroPython filesystem and restart the runtime without rebuilding `runtime-bundle.json` on every save.
+This lets an embedded editor write files directly into the worker-hosted
+MicroPython filesystem and restart the runtime without rebuilding
+`runtime-bundle.json` on every save.
 
-The first built-in IDE panel uses Monaco and lazy-loads it from jsDelivr at runtime, so that editor surface currently depends on normal browser network access.
+## Comparing the CPU and shader compositors
 
-For the intended GitHub and web-IDE flow, see:
+Open **Options → Renderer** in the emulator and select either **CPU
+(existing)** or **GPU shader (WebGL2)**. The shader path consumes the raw
+`sprites` or `vs2_scene` frame payload, maps strip and palette data through
+GPU textures, and renders the complete 256×54 LED frame before the radial
+preview pass; it never calls the JavaScript per-column compositor.
 
-- `vsdk/docs/web-ide-integration.md`
+**Compare CPU / shader** warms both full paths and then times 24 synchronized
+frames with `gl.finish()` so the result includes GPU work rather than only
+command submission. It also reads back the shader LED texture once and reports
+pixel parity against the CPU compositor. This makes the same control useful for
+collecting comparable results on desktop and mobile browsers. The GPU option
+falls back to the CPU path on WebGL1-only devices, while strips are still
+loading, and for raw RGB-frame games.
 
-## Run
+The core packer/software-parity checks run without a browser:
 
-Serve the repository root or the `web/` directory with any static HTTP server.
-
-Example:
-
-```bash
-cd /Users/alecu/ventilastation/vsdk
-python3 -m http.server 8000
+```sh
+node tests/test_scene_shader_core.mjs
 ```
 
-Then open `http://localhost:8000/web/`.
+## Development notes
 
-For a direct worker/bootstrap check, open:
-
-`http://localhost:8000/web/smoke-test.html`
-
-## ROM Builder
-
-Two browser-friendly scripts are now available:
-
-- `web/rom-builder-core.js`
-- `web/rom-builder-browser.js`
-
-Load them in that order, then generate a ROM from an asset folder:
-
-```html
-<script src="/web/rom-builder-core.js"></script>
-<script src="/web/rom-builder-browser.js"></script>
-<script>
-  const rom = await window.VentilastationBrowserRomBuilder.buildRomFromFolder(
-    "/apps/images/ventap/"
-  );
-  console.log("ROM bytes", rom.length);
-</script>
-```
-
-The same shared core is also used by a tiny Node CLI:
-
-```bash
-cd vsdk
-npm install
-node tools/generate_roms_js.cjs
-```
-
-Or generate a single folder:
-
-```bash
-node tools/generate_roms_js.cjs apps/images/ventap
-```
-
-## Expected Runtime Adapter
-
-The page looks for `window.VentilastationRuntimeAdapter`.
-
-If that is not present, it tries to create one through `window.createVentilastationWasmAdapter()`.
-
-That adapter should expose:
-
-```js
-{
-  name: "MicroPython WASM",
-  setButtons(bitmask) {},
-  exportFrame({ full }) {
-    return {
-      frame: 1,
-      buttons: 0,
-      column_offset: 0,
-      gamma_mode: 1,
-      palette: Uint8Array | undefined,
-      assets: [
-        {
-          slot: 3,
-          width: 4,
-          height: 6,
-          frames: 1,
-          palette: 0,
-          data: Uint8Array
-        }
-      ],
-      events: [
-        {
-          command: "sound",
-          args: ["demo/sfx"]
-        }
-      ],
-      sprites: [
-        {
-          slot: 1,
-          image_strip: 3,
-          x: 12,
-          y: 34,
-          frame: 0,
-          perspective: 2
-        }
-      ]
-    };
-  }
-}
-```
-
-The adapter scaffold in `web/wasm-adapter.js` expects one of:
-
-- `window.VentilastationWasmBridge`
-- `window.createVentilastationWasmBridge()`
-
-That bridge must expose:
-
-```js
-{
-  async initialize() {},
-  async exec(code) {},
-  call(moduleName, functionName, ...args) {}
-}
-```
-
-This repository now also includes a default scaffold implementation:
-
-- [web/micropython-bridge.js](/Users/alecu/ventilastation/vsdk/web/micropython-bridge.js)
-- [web/wasm-worker.js](/Users/alecu/ventilastation/vsdk/web/wasm-worker.js)
-
-Today those files provide the transport layer. They do not include the actual MicroPython artifacts yet.
-
-The high-level adapter already translates that into:
-
-- `ventilastation.browser.set_buttons(...)`
-- `ventilastation.browser.export_frame(...)`
-- optionally `ventilastation.browser.export_storage(...)`
-
-## Smoke Test
-
-The smoke test page:
-
-- creates the worker bridge
-- initializes the MicroPython webassembly runtime
-- runs `configure_runtime("browser")`
-- imports `main`
-- calls `ventilastation.browser.export_frame(True)`
-
-Files:
-
-- [web/smoke-test.html](/Users/alecu/ventilastation/vsdk/web/smoke-test.html)
-- [web/smoke-test.js](/Users/alecu/ventilastation/vsdk/web/smoke-test.js)
-
-## Boot Sequence Used By The Adapter
-
-The adapter initializes the Python runtime with:
-
-```python
-import sys
-if "." not in sys.path:
-    sys.path.insert(0, ".")
-from ventilastation.director import configure_runtime
-configure_runtime("browser")
-import main
-```
-
-So the only missing piece now is a real MicroPython-in-WASM bridge that can:
-
-- evaluate Python code
-- call Python functions and return JS-usable values
-
-## Proposed Artifact Layout
-
-Place the official MicroPython webassembly build output under:
-
-```text
-web/vendor/micropython/
-  micropython.mjs
-  micropython.wasm
-```
-
-Then replace the placeholder logic in [web/wasm-worker.js](/Users/alecu/ventilastation/vsdk/web/wasm-worker.js) with:
-
-1. loading `micropython.mjs`
-2. instantiating `micropython.wasm`
-3. exposing `exec(code)` and `call(module, fn, args)`
-4. making the `apps/micropython` tree available to the runtime
-
-## Worker Protocol
-
-The main thread sends:
-
-- `initialize`
-- `exec`
-- `call`
-
-The worker replies with:
-
-- `{ id, ok: true, result }`
-- `{ id, ok: false, error }`
-
-That protocol is implemented in:
-
-- [web/micropython-bridge.js](/Users/alecu/ventilastation/vsdk/web/micropython-bridge.js)
-- [web/wasm-worker.js](/Users/alecu/ventilastation/vsdk/web/wasm-worker.js)
+- Python-side changes only reach the browser after `make web-runtime-bundle`
+  regenerates `runtime-bundle.json`.
+- When changing worker or module JS, bump the `?v=` cache-busting version in
+  `index.html` (and in module import specifiers) or browsers will keep the
+  old file.
+- After bridge/display changes, run the heap regression check described in
+  ../docs/internals/web-emulator-architecture.md ("Manual Regression Check").
