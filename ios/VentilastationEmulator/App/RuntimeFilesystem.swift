@@ -18,7 +18,7 @@ final class RuntimeFilesystem: ObservableObject {
 
     private let payloads = [
         (bundleDirectory: "micropython", destination: "runtime"),
-        (bundleDirectory: "launcher", destination: "runtime/system/launcher"),
+        (bundleDirectory: "system", destination: "runtime/system"),
         (bundleDirectory: "vyruss_vs2", destination: "runtime/games/alecu/vyruss_vs2"),
         (bundleDirectory: "vixeous", destination: "runtime/games/alecu/vixeous"),
     ]
@@ -42,7 +42,7 @@ final class RuntimeFilesystem: ObservableObject {
                 create: true
             )
             let root = supportDirectory.appendingPathComponent("VentilastationRuntime", isDirectory: true)
-            let completionMarker = root.appendingPathComponent(".ios-runtime-v3")
+            let completionMarker = root.appendingPathComponent(".ios-runtime-v4")
 
             if fileManager.fileExists(atPath: completionMarker.path) {
                 state = .ready(root)
@@ -66,7 +66,7 @@ final class RuntimeFilesystem: ObservableObject {
                 try fileManager.copyItem(at: source, to: destination)
             }
 
-            try Data("Ventilastation iOS runtime v3\n".utf8).write(to: completionMarker, options: .atomic)
+            try Data("Ventilastation iOS runtime v4\n".utf8).write(to: completionMarker, options: .atomic)
             state = .ready(root)
         } catch {
             state = .failed(error.localizedDescription)

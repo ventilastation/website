@@ -13,7 +13,7 @@
 		A10000000000000000000005 /* EmulatorControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* EmulatorControls.swift */; };
 		A10000000000000000000006 /* RuntimeFilesystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000017 /* RuntimeFilesystem.swift */; };
 		A10000000000000000000007 /* VSRuntime in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000018 /* VSRuntime */; };
-		A10000000000000000000008 /* VSLauncher in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000019 /* VSLauncher */; };
+		A10000000000000000000008 /* VSSystem in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000019 /* VSSystem */; };
 		A10000000000000000000009 /* VSVyrussVS2 in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001A /* VSVyrussVS2 */; };
 		A1000000000000000000000A /* VSVixeous in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001B /* VSVixeous */; };
 		A1000000000000000000000B /* NativeMicroPythonRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001D /* NativeMicroPythonRuntime.m */; };
@@ -35,7 +35,7 @@
 		A10000000000000000000016 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A10000000000000000000017 /* RuntimeFilesystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App/RuntimeFilesystem.swift; sourceTree = "<group>"; };
 		A10000000000000000000018 /* VSRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VSRuntime; path = ../emulator/apps/micropython; sourceTree = SOURCE_ROOT; };
-		A10000000000000000000019 /* VSLauncher */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VSLauncher; path = ../emulator/system/launcher; sourceTree = SOURCE_ROOT; };
+		A10000000000000000000019 /* VSSystem */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VSSystem; path = ../emulator/system; sourceTree = SOURCE_ROOT; };
 		A1000000000000000000001A /* VSVyrussVS2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VSVyrussVS2; path = ../emulator/games/alecu/vyruss_vs2; sourceTree = SOURCE_ROOT; };
 		A1000000000000000000001B /* VSVixeous */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VSVixeous; path = ../emulator/games/alecu/vixeous; sourceTree = SOURCE_ROOT; };
 		A1000000000000000000001C /* NativeMicroPythonRuntime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = App/NativeMicroPythonRuntime.h; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		A10000000000000000000030 = {isa = PBXGroup; children = (A10000000000000000000031 /* VentilastationEmulator */, A10000000000000000000033 /* Runtime Payloads */, A10000000000000000000032 /* Products */); sourceTree = "<group>"; };
 		A10000000000000000000031 /* VentilastationEmulator */ = {isa = PBXGroup; children = (A10000000000000000000011 /* VentilastationEmulatorApp.swift */, A10000000000000000000012 /* EmulatorScreen.swift */, A10000000000000000000013 /* VentilastationEngine.swift */, A10000000000000000000014 /* LedRingView.swift */, A10000000000000000000015 /* EmulatorControls.swift */, A10000000000000000000017 /* RuntimeFilesystem.swift */, A10000000000000000000021 /* NativeFrameStore.swift */, A10000000000000000000022 /* NativeMetalRenderer.swift */, A10000000000000000000023 /* MetalRingShader.metal */, A1000000000000000000001C /* NativeMicroPythonRuntime.h */, A1000000000000000000001D /* NativeMicroPythonRuntime.m */, A1000000000000000000001E /* VentilastationEmulator-Bridging-Header.h */, A10000000000000000000016 /* Info.plist */); path = VentilastationEmulator; sourceTree = "<group>"; };
 		A10000000000000000000032 /* Products */ = {isa = PBXGroup; children = (A10000000000000000000010 /* VentilastationEmulator.app */); name = Products; sourceTree = "<group>"; };
-		A10000000000000000000033 /* Runtime Payloads */ = {isa = PBXGroup; children = (A10000000000000000000018 /* VSRuntime */, A10000000000000000000019 /* VSLauncher */, A1000000000000000000001A /* VSVyrussVS2 */, A1000000000000000000001B /* VSVixeous */, A1000000000000000000001F /* libventilastation_micropython_sim.a */); name = "Runtime Payloads"; sourceTree = "<group>"; };
+		A10000000000000000000033 /* Runtime Payloads */ = {isa = PBXGroup; children = (A10000000000000000000018 /* VSRuntime */, A10000000000000000000019 /* VSSystem */, A1000000000000000000001A /* VSVyrussVS2 */, A1000000000000000000001B /* VSVixeous */, A1000000000000000000001F /* libventilastation_micropython_sim.a */); name = "Runtime Payloads"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -69,7 +69,7 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A10000000000000000000043 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000007 /* VSRuntime in Resources */, A10000000000000000000008 /* VSLauncher in Resources */, A10000000000000000000009 /* VSVyrussVS2 in Resources */, A1000000000000000000000A /* VSVixeous in Resources */); runOnlyForDeploymentPostprocessing = 0; };
+		A10000000000000000000043 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000007 /* VSRuntime in Resources */, A10000000000000000000008 /* VSSystem in Resources */, A10000000000000000000009 /* VSVyrussVS2 in Resources */, A1000000000000000000000A /* VSVixeous in Resources */); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
