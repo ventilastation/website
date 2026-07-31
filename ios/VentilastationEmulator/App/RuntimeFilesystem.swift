@@ -42,7 +42,7 @@ final class RuntimeFilesystem: ObservableObject {
                 create: true
             )
             let root = supportDirectory.appendingPathComponent("VentilastationRuntime", isDirectory: true)
-            let completionMarker = root.appendingPathComponent(".ios-runtime-v2")
+            let completionMarker = root.appendingPathComponent(".ios-runtime-v3")
 
             if fileManager.fileExists(atPath: completionMarker.path) {
                 state = .ready(root)
@@ -66,7 +66,7 @@ final class RuntimeFilesystem: ObservableObject {
                 try fileManager.copyItem(at: source, to: destination)
             }
 
-            try Data("Ventilastation iOS runtime v2\n".utf8).write(to: completionMarker, options: .atomic)
+            try Data("Ventilastation iOS runtime v3\n".utf8).write(to: completionMarker, options: .atomic)
             state = .ready(root)
         } catch {
             state = .failed(error.localizedDescription)

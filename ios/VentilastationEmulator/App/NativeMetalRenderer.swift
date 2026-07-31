@@ -5,7 +5,7 @@ private struct RingUniforms {
     var drawableCount: UInt32 = 0
     var columnOffset: UInt32 = 0
     var starCount: UInt32 = 0
-    var reserved: UInt32 = 0
+    var spriteCount: UInt32 = 0
     var viewport = SIMD2<Float>(repeating: 0)
     var padding = SIMD2<Float>(repeating: 0)
 }
@@ -21,7 +21,10 @@ final class NativeMetalRingRenderer: NSObject, MTKViewDelegate {
     private var stripMeta: MTLTexture?
     private var palette: MTLTexture?
     private var scene: MTLTexture?
+    private var cells: MTLTexture?
+    private var stars: MTLTexture?
     private var deepspace: MTLTexture
+    private var uploadedStarFrame = Int.min
     private var uniforms = RingUniforms()
 
     init?(view: MTKView, store: NativeFrameStore) {
@@ -58,10 +61,15 @@ final class NativeMetalRingRenderer: NSObject, MTKViewDelegate {
               let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: pass) else { return }
         let snapshot = store.snapshot()
         uploadIfNeeded(snapshot)
+        if snapshot.frameNumber != uploadedStarFrame {
+            stars = makeStarTexture(frameNumber: snapshot.frameNumber)
+            uploadedStarFrame = snapshot.frameNumber
+        }
 
         uniforms.drawableCount = UInt32(snapshot.drawableCount)
         uniforms.columnOffset = UInt32(snapshot.columnOffset & 255)
-        uniforms.starCount = 0
+        uniforms.starCount = UInt32(Self.starCount)
+        uniforms.spriteCount = UInt32(snapshot.spriteCount)
         uniforms.viewport = SIMD2<Float>(Float(view.drawableSize.width), Float(view.drawableSize.height))
 
         encoder.setRenderPipelineState(pipeline)
@@ -71,6 +79,8 @@ final class NativeMetalRingRenderer: NSObject, MTKViewDelegate {
         encoder.setFragmentTexture(palette, index: 2)
         encoder.setFragmentTexture(scene, index: 3)
         encoder.setFragmentTexture(deepspace, index: 4)
+        encoder.setFragmentTexture(cells, index: 5)
+        encoder.setFragmentTexture(stars, index: 6)
         encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
         encoder.endEncoding()
         commandBuffer.present(drawable)
@@ -87,6 +97,7 @@ final class NativeMetalRingRenderer: NSObject, MTKViewDelegate {
         if snapshot.sceneRevision != uploadedSceneRevision {
             let values = snapshot.scene.isEmpty ? [UInt32](repeating: 0, count: 16) : snapshot.scene
             scene = makeUIntTexture(values: values, width: 4, height: max(1, snapshot.drawableCount), pixelFormat: .rgba32Uint)
+            cells = makeByteTexture(bytes: snapshot.cells, width: 2048, height: snapshot.cellsHeight, pixelFormat: .r8Uint)
             uploadedSceneRevision = snapshot.sceneRevision
         }
     }
@@ -106,9 +117,41 @@ final class NativeMetalRingRenderer: NSObject, MTKViewDelegate {
         descriptor.usage = [.shaderRead]
         guard let texture = device.makeTexture(descriptor: descriptor) else { return nil }
         values.withUnsafeBytes { raw in
-            texture.replace(region: MTLRegionMake2D(0, 0, width, height), mipmapLevel: 0, withBytes: raw.baseAddress!, bytesPerRow: width * 4 * MemoryLayout<UInt32>.size)
+            let channels = pixelFormat == .rgba32Uint ? 4 : 1
+            texture.replace(region: MTLRegionMake2D(0, 0, width, height), mipmapLevel: 0, withBytes: raw.baseAddress!, bytesPerRow: width * channels * MemoryLayout<UInt32>.size)
         }
         return texture
+    }
+
+    private static let starCount = 128
+
+    private struct StarSeed {
+        let x0: Int
+        let y0: Int
+        let wraps: [Int]
+    }
+
+    private lazy var starSeeds: [StarSeed] = {
+        var state: UInt32 = 0x1badf00d
+        func nextInt() -> Int {
+            state = state &* 1664525 &+ 1013904223
+            return Int((Double(state) / 4294967296.0) * 256.0)
+        }
+        return (0..<Self.starCount).map { _ in
+            StarSeed(x0: nextInt(), y0: nextInt(), wraps: (0..<8).map { _ in nextInt() })
+        }
+    }()
+
+    private func makeStarTexture(frameNumber: Int) -> MTLTexture? {
+        let ticks = max(0, frameNumber)
+        let values = starSeeds.map { star -> UInt32 in
+            let total = star.y0 - ticks
+            let wrappedY = ((total % 256) + 256) % 256
+            let wrapCount = (ticks + (255 - star.y0)) / 256
+            let x = wrapCount <= 0 ? star.x0 : star.wraps[(wrapCount - 1) % star.wraps.count]
+            return UInt32((x & 255) | ((wrappedY & 255) << 8))
+        }
+        return makeUIntTexture(values: values, width: Self.starCount, height: 1, pixelFormat: .r32Uint)
     }
 
     private static func makeDeepspaceTexture(device: MTLDevice) -> MTLTexture? {

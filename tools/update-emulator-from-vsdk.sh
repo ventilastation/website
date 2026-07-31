@@ -21,6 +21,7 @@ rsync -a --delete --prune-empty-dirs \
   --include 'code/***' \
   --include 'images/***' \
   --include 'sounds/***' \
+  --include 'meta.json' \
   --include 'menu.png' \
   --exclude '*' \
   "$VSDK_DIR/games"/ "$OUT_DIR/games"/
@@ -29,6 +30,7 @@ rsync -a --delete --prune-empty-dirs \
   --include 'code/***' \
   --include 'images/***' \
   --include 'sounds/***' \
+  --include 'meta.json' \
   --exclude '*' \
   "$VSDK_DIR/system"/ "$OUT_DIR/system"/
 

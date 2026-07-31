@@ -169,14 +169,32 @@ static void receiveFrame(const uint8_t *sprites, size_t spritesLength, const uin
         _musicPlayer = nil;
         return;
     }
-    NSString *name = parts[1];
-    NSRange slash = [name rangeOfString:@"/"];
-    if (slash.location != NSNotFound) name = [name substringFromIndex:slash.location + 1];
-    NSString *soundDirectory = [_runtimeRoot stringByAppendingPathComponent:@"games/alecu/vyruss_vs2/sounds"];
+    NSString *qualifiedName = parts[1];
+    NSRange slash = [qualifiedName rangeOfString:@"/"];
+    NSString *slug = slash.location == NSNotFound ? nil : [qualifiedName substringToIndex:slash.location];
+    NSString *name = slash.location == NSNotFound ? qualifiedName : [qualifiedName substringFromIndex:slash.location + 1];
+    NSMutableArray<NSString *> *directories = [NSMutableArray array];
+    if (slug.length > 0) {
+        NSString *slugPath = [slug stringByReplacingOccurrencesOfString:@"." withString:@"/"];
+        [directories addObject:[_runtimeRoot stringByAppendingPathComponent:[NSString stringWithFormat:@"games/%@/sounds", slugPath]]];
+        [directories addObject:[_runtimeRoot stringByAppendingPathComponent:[NSString stringWithFormat:@"system/%@/sounds", slugPath]]];
+    }
+    // Unqualified legacy commands have historically resolved against the
+    // current Vyruss game. Keep that fallback while qualified V2 commands use
+    // the originating game's own sounds directory (e.g. alecu.vixeous).
+    [directories addObject:[_runtimeRoot stringByAppendingPathComponent:@"games/alecu/vyruss_vs2/sounds"]];
+    [directories addObject:[_runtimeRoot stringByAppendingPathComponent:@"games/alecu/vixeous/sounds"]];
     NSURL *url = nil;
-    for (NSString *extension in @[@"wav", @"mp3"]) {
-        NSURL *candidate = [NSURL fileURLWithPath:[[soundDirectory stringByAppendingPathComponent:name] stringByAppendingPathExtension:extension]];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:candidate.path]) { url = candidate; break; }
+    for (NSString *directory in directories) {
+        for (NSString *extension in @[@"wav", @"mp3", @"ogg"]) {
+            NSString *candidatePath = [directory stringByAppendingPathComponent:name];
+            if ([[candidatePath pathExtension] length] == 0) {
+                candidatePath = [candidatePath stringByAppendingPathExtension:extension];
+            }
+            NSURL *candidate = [NSURL fileURLWithPath:candidatePath];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:candidate.path]) { url = candidate; break; }
+        }
+        if (url != nil) break;
     }
     if (url == nil) return;
     NSError *error = nil;
