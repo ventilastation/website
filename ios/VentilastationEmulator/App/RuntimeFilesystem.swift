@@ -21,6 +21,9 @@ final class RuntimeFilesystem: ObservableObject {
         (bundleDirectory: "system", destination: "runtime/system"),
         (bundleDirectory: "vyruss_vs2", destination: "runtime/games/alecu/vyruss_vs2"),
         (bundleDirectory: "vixeous", destination: "runtime/games/alecu/vixeous"),
+        (bundleDirectory: "2bam_sencom", destination: "runtime/games/vsjam-oct25/2bam_sencom"),
+        (bundleDirectory: "tincho_vrunner", destination: "runtime/games/vsjam-oct25/tincho_vrunner"),
+        (bundleDirectory: "vasura_espacial", destination: "runtime/games/vsjam-may25/vasura_espacial"),
     ]
 
     init() {
@@ -42,7 +45,7 @@ final class RuntimeFilesystem: ObservableObject {
                 create: true
             )
             let root = supportDirectory.appendingPathComponent("VentilastationRuntime", isDirectory: true)
-            let completionMarker = root.appendingPathComponent(".ios-runtime-v4")
+            let completionMarker = root.appendingPathComponent(".ios-runtime-v5")
 
             if fileManager.fileExists(atPath: completionMarker.path) {
                 state = .ready(root)
@@ -66,7 +69,7 @@ final class RuntimeFilesystem: ObservableObject {
                 try fileManager.copyItem(at: source, to: destination)
             }
 
-            try Data("Ventilastation iOS runtime v4\n".utf8).write(to: completionMarker, options: .atomic)
+            try Data("Ventilastation iOS runtime v5\n".utf8).write(to: completionMarker, options: .atomic)
             state = .ready(root)
         } catch {
             state = .failed(error.localizedDescription)

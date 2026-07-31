@@ -26,6 +26,8 @@ rsync -a --delete --prune-empty-dirs \
   --exclude '*' \
   "$VSDK_DIR/games"/ "$OUT_DIR/games"/
 rsync -a --delete --prune-empty-dirs \
+  --delete-excluded \
+  --exclude 'voom/' \
   --include '*/' \
   --include 'code/***' \
   --include 'images/***' \
@@ -47,5 +49,13 @@ while IFS= read -r -d '' manifest; do
       ;;
   esac
 done < <(find "$OUT_DIR/games" "$OUT_DIR/system" -type f \( -name '__images__.yaml' -o -name '__images__.yml' \) -print0 2>/dev/null)
+
+# Keep the hardware acceptance app available only in the launcher's hidden
+# system menu. The launcher source is generated from the vsdk checkout, so
+# apply this small native-emulator overlay after each publish refresh.
+if [[ "$OUT_DIR" == "$ROOT_DIR/emulator" ]] && [[ -f "$OUT_DIR/system/launcher/code/__init__.py" ]] &&
+   ! grep -q '"vs2_hardware"' "$OUT_DIR/system/launcher/code/__init__.py"; then
+  patch -p0 < "$ROOT_DIR/tools/emulator-system-menu.patch" >/dev/null
+fi
 
 printf 'Updated emulator publish tree at %s from %s/web + %s/apps + source assets\n' "$OUT_DIR" "$VSDK_DIR" "$VSDK_DIR"
