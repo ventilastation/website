@@ -33,7 +33,7 @@ final class VentilastationEngine: ObservableObject {
     }
 
     enum Control: String, Hashable {
-        case up, down, left, right, a, b, c, d
+        case up, down, left, right, a, b, c, d, start, back
     }
 
     @Published private(set) var mode: Mode = .library

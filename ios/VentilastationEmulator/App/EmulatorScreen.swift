@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct EmulatorScreen: View {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var emulator = VentilastationEngine()
     @StateObject private var runtimeFilesystem = RuntimeFilesystem()
     @StateObject private var frameStore = NativeFrameStore()
@@ -61,6 +62,14 @@ struct EmulatorScreen: View {
         .onChange(of: runtimeFilesystem.state) { _ in
             startMicroPythonIfReady()
         }
+        .onChange(of: scenePhase) { phase in
+            // Match the desktop window blur handler: losing focus releases
+            // every held source so a suspended app cannot leave a game button
+            // stuck down when it resumes.
+            if phase != .active {
+                input.clearHeldInput()
+            }
+        }
         .onReceive(Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()) { _ in
             guard microPython.isRunning else { return }
             let sample = input.sampleForRuntime()
@@ -85,6 +94,7 @@ struct EmulatorScreen: View {
             Spacer()
             Button {
                 emulator.reset()
+                input.clearHeldInput()
                 input.exitRequested = true
             } label: {
                 Image(systemName: "arrow.counterclockwise")

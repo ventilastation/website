@@ -7,20 +7,23 @@ final class NativeInputController: ObservableObject {
     @Published private(set) var extra: UInt8 = 0
     @Published var exitRequested = false
     var onChange: ((UInt8, UInt8) -> Void)?
-    private var pendingJoy1: UInt8 = 0
-    private var pendingExtra: UInt8 = 0
+    private var pressCounts: [VentilastationEngine.Control: Int] = [:]
 
-    /// Returns the held state plus any press edges that happened since the
-    /// previous VM tick.  This preserves short taps for director.was_pressed,
-    /// whose edge detector only sees one sample per frame.
+    /// Return the current held state.  The desktop emulator is level-triggered:
+    /// Director derives press/release edges by comparing this state with the
+    /// previous game tick, so releases must never retain a pending press bit.
     func sampleForRuntime() -> (joy1: UInt8, extra: UInt8) {
-        let sample = (joy1 | pendingJoy1, extra | pendingExtra)
-        pendingJoy1 = 0
-        pendingExtra = 0
-        return sample
+        (joy1, extra)
     }
 
     func press(_ control: VentilastationEngine.Control) {
+        let count = pressCounts[control, default: 0]
+        pressCounts[control] = count + 1
+        // Multiple input sources can hold the same logical control (for
+        // example, keyboard Right plus the on-screen Right button).  Keep the
+        // bit down until the final source releases it, just like the desktop
+        // emulator's OR of its independent input masks.
+        guard count == 0 else { return }
         switch control {
         case .left: pressJoy1(0x01)
         case .right: pressJoy1(0x02)
@@ -29,15 +32,22 @@ final class NativeInputController: ObservableObject {
         case .a: pressJoy1(0x10)
         case .b: pressJoy1(0x20)
         case .c: pressJoy1(0x40)
-        case .d:
-            extra |= 0x01
-            pendingExtra |= 0x01
+        case .d: extra |= 0x01
+        case .start: extra |= 0x04
+        case .back: extra |= 0x08
         }
         notifyRuntime()
         NSLog("Ventilastation input press %@ joy1=%02x extra=%02x", control.rawValue, joy1, extra)
     }
 
     func release(_ control: VentilastationEngine.Control) {
+        guard let count = pressCounts[control], count > 0 else { return }
+        if count == 1 {
+            pressCounts.removeValue(forKey: control)
+        } else {
+            pressCounts[control] = count - 1
+            return
+        }
         switch control {
         case .left: joy1 &= ~0x01
         case .right: joy1 &= ~0x02
@@ -47,21 +57,28 @@ final class NativeInputController: ObservableObject {
         case .b: joy1 &= ~0x20
         case .c: joy1 &= ~0x40
         case .d: extra &= ~0x01
+        case .start: extra &= ~0x04
+        case .back: extra &= ~0x08
         }
         notifyRuntime()
         NSLog("Ventilastation input release %@ joy1=%02x extra=%02x", control.rawValue, joy1, extra)
     }
 
+    func clearHeldInput() {
+        guard !pressCounts.isEmpty || joy1 != 0 || extra != 0 else { return }
+        pressCounts.removeAll()
+        joy1 = 0
+        extra = 0
+        notifyRuntime()
+    }
+
     private func pressJoy1(_ bit: UInt8) {
         joy1 |= bit
-        pendingJoy1 |= bit
     }
 
     private func notifyRuntime() {
-        // Include the edge latch in the immediate update. The host keeps the
-        // rising edge until the next VM receive() call, so a short tap cannot
-        // disappear between the UI event and the 30 ms game tick.
-        onChange?(joy1 | pendingJoy1, extra | pendingExtra)
+        // Push the same level-triggered state that the desktop emulator sends.
+        onChange?(joy1, extra)
     }
 }
 
@@ -211,6 +228,7 @@ struct KeyboardCaptureView: UIViewRepresentable {
 
 final class KeyboardCaptureUIView: UIView {
     var input: NativeInputController
+    private var pressedKeys: Set<UIKeyboardHIDUsage> = []
 
     init(input: NativeInputController) {
         self.input = input
@@ -223,7 +241,10 @@ final class KeyboardCaptureUIView: UIView {
 
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        guard window != nil else { return }
+        guard window != nil else {
+            clearPressedKeys()
+            return
+        }
         // A one-point invisible responder is intentional: it keeps the native
         // app focused on the game while still accepting simulator hardware
         // keyboard events without presenting an on-screen keyboard.
@@ -233,36 +254,54 @@ final class KeyboardCaptureUIView: UIView {
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses { if let control = control(for: press) { input.press(control) } }
+        for press in presses {
+            guard let key = press.key?.keyCode, pressedKeys.insert(key).inserted else { continue }
+            if let control = control(for: press) { input.press(control) }
+        }
         super.pressesBegan(presses, with: event)
     }
 
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses { if let control = control(for: press) { input.release(control) } }
+        for press in presses {
+            guard let key = press.key?.keyCode, pressedKeys.remove(key) != nil else { continue }
+            if let control = control(for: press) { input.release(control) }
+        }
         super.pressesEnded(presses, with: event)
     }
 
     override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses { if let control = control(for: press) { input.release(control) } }
+        for press in presses {
+            guard let key = press.key?.keyCode, pressedKeys.remove(key) != nil else { continue }
+            if let control = control(for: press) { input.release(control) }
+        }
         super.pressesCancelled(presses, with: event)
+    }
+
+    private func clearPressedKeys() {
+        for key in pressedKeys {
+            if let control = control(for: key) { input.release(control) }
+        }
+        pressedKeys.removeAll()
+    }
+
+    private func control(for key: UIKeyboardHIDUsage) -> VentilastationEngine.Control? {
+        switch key {
+        case .keyboardUpArrow, .keyboardW: return .up
+        case .keyboardDownArrow, .keyboardS: return .down
+        case .keyboardLeftArrow, .keyboardA: return .left
+        case .keyboardRightArrow, .keyboardD: return .right
+        case .keyboardSpacebar: return .a
+        case .keyboardO: return .b
+        case .keyboardP: return .c
+        case .keyboardY: return .d
+        case .keyboardPageUp: return .start
+        case .keyboardPageDown: return .back
+        default: return nil
+        }
     }
 
     private func control(for press: UIPress) -> VentilastationEngine.Control? {
         guard let key = press.key else { return nil }
-        switch key.keyCode {
-        case .keyboardUpArrow: return .up
-        case .keyboardDownArrow: return .down
-        case .keyboardLeftArrow: return .left
-        case .keyboardRightArrow: return .right
-        case .keyboardZ: return .a
-        case .keyboardA: return .a
-        case .keyboardX: return .b
-        case .keyboardB: return .b
-        case .keyboardC: return .c
-        case .keyboardV: return .d
-        case .keyboardD: return .d
-        case .keyboardReturnOrEnter, .keyboardSpacebar: return .a
-        default: return nil
-        }
+        return control(for: key.keyCode)
     }
 }
