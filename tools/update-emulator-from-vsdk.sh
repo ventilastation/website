@@ -46,4 +46,8 @@ while IFS= read -r -d '' manifest; do
   esac
 done < <(find "$OUT_DIR/games" "$OUT_DIR/system" -type f \( -name '__images__.yaml' -o -name '__images__.yml' \) -print0 2>/dev/null)
 
+# Last, once every file is in place: set each ?v= cache-busting version to a
+# hash of the published tree, so changed modules reach returning visitors
+python3 "$VSDK_DIR/tools/stamp_web_versions.py" "$OUT_DIR"
+
 printf 'Updated emulator publish tree at %s from %s/web + %s/apps + source assets\n' "$OUT_DIR" "$VSDK_DIR" "$VSDK_DIR"
