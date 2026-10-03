@@ -74,6 +74,7 @@ These targets replace the old ad-hoc sequence and are what local scripts plus Gi
 
 - runs `make bundle` first
 - republishes `vsdk/web` and `vsdk/apps` into the site-facing `emulator/` tree
+- stamps every `?v=` cache-busting version in `emulator/` with one hash of the published files (`vsdk/tools/stamp_web_versions.py`)
 
 `make start`
 
@@ -237,23 +238,9 @@ If a full rebuild is needed:
 
 ## Worker caching
 
-The browser can keep using a stale module worker even after JS edits if the worker URL does not change.
+The browser caches the emulator's modules, including the worker, by URL, so every module URL carries a `?v=` version.
 
-If `app.js` looks updated but worker-side diagnostics do not, bump the cache-busting version in the source tree:
-
-- `vsdk/web/micropython-bridge.js`
-
-Specifically, update the query string used for:
-
-- `./wasm-worker.js?v=...`
-
-If needed, also bump the import query inside:
-
-- `vsdk/web/wasm-worker.js`
-
-for:
-
-- `./vendor/micropython/micropython.mjs?v=...`
+There is no need to bump these by hand: `make publish` rewrites every `?v=` value in `emulator/`, and the `*_VERSION` constants that build `?v=` URLs at run time, to one hash of the published files. Any change gets a new version, so it reaches returning visitors on their next load. The values written in `vsdk/web` are left as they are.
 
 ## Recommended refresh flow
 
