@@ -1,7 +1,7 @@
 ---
 kind: home_banner
 lang: es
-heading: Ventilastation
+paragraph_spacing: true
 language_label: English
 language_url: /en/
 poster: images/banner.jpg
@@ -16,7 +16,7 @@ actions:
 - label: Armate una
   url: '#hardware'
 more_label: Más Info
-more_url: '#one'
+more_url: '#que'
 ---
-La consola para videojuegos circulares  
+La consola para videojuegos circulares\\
 de código y hardware abierto

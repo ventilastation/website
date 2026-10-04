@@ -3,9 +3,6 @@
 
 # Site settings
 title: Ventilastation
-description: |
-  La consola para videojuegos circulares  
-  de código y hardware abierto  
 owner: alecu # or company name
 first_published: 2015 # if migrating another site, the year of your first publish
 email: ventilastation@protocultura.net
@@ -62,6 +59,12 @@ collections:
     output: false
 exclude:
   - CONTENT.md
+  - README.md
+  - README.txt
+  - DEPLOY.md
+  - Makefile
+  - tools
+  - vsdk
 include:
   - emulator/apps/micropython/__init__.py
   - emulator/apps/micropython/apps/__init__.py

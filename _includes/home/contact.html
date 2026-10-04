@@ -3,7 +3,7 @@
     <header>
       <h2>{% include home/heading.html heading=include.section.heading %}</h2>
       {% comment %}The original lists leave an empty paragraph after each list in the browser. Preserve that spacing.{% endcomment %}
-      {{ include.section.content | markdownify | replace: '</ul>', '</ul><p></p>' }}
+      {{ include.section.content | replace: '</ul>', '</ul><p></p>' }}
     </header>
     <ul class="actions vertical">
       <li><a href="{{ include.section.contact_url | escape }}" class="button fit special">{{ include.section.contact_label | escape }}</a></li>

@@ -2,7 +2,7 @@
   <div class="inner">
     <header class="major">
       <h2>{% include home/heading.html heading=include.section.heading %}</h2>
-      {{ include.section.content | markdownify }}
+      {{ include.section.content }}
       {% if include.section.video_embed %}
         <div class="embed-container">
           <iframe src="{{ include.section.video_embed | escape }}" frameborder="0" allowfullscreen></iframe>

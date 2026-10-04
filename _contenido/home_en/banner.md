@@ -1,7 +1,6 @@
 ---
 kind: home_banner
 lang: en
-heading: Ventilastation
 language_label: Spanish
 language_url: /
 poster: /images/banner.jpg
@@ -16,5 +15,5 @@ actions:
 more_label: More Info
 more_url: '#what'
 ---
-The first electromechanical game console from South America.  
+The first electromechanical game console from South America.\\
 Open Source, Open Hardware.

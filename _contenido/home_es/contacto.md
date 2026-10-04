@@ -3,7 +3,7 @@ kind: home_contact
 lang: es
 heading: Una consola hecha por alecu
 contact_label: Contactanos
-contact_url: mailto:ventilagon@protocultura.net
+contact_url: mailto:ventilastation@protocultura.net
 ---
 Con la colaboración de muchos amigues:
 

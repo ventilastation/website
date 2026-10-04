@@ -25,17 +25,22 @@ o un par de imágenes.
 ## Texto y links
 
 Separá los párrafos con una línea en blanco. Para un salto de línea dentro de un
-párrafo, dejá **dos espacios al final de la línea**. Los links y listas se escriben
+párrafo, escribí dos barras invertidas (`\\`) al final de la línea. Así el salto
+se conserva aunque el editor elimine espacios al guardar. Los links y listas se escriben
 con Markdown:
 
 ```markdown
+Primera línea\\
+Segunda línea
+
 Podés encontrar el código en [GitHub](https://github.com/ventilastation/vsdk).
 
 - Primer elemento
 - Segundo elemento
 ```
 
-`heading` es el título del bloque. Para conservar un título de varias líneas,
+`heading` es el título del bloque. Los banners usan el título general de
+`_config.yml`, sin una copia en cada idioma. Para conservar un título de varias líneas,
 usá una lista en YAML; una última línea vacía conserva el salto final:
 
 ```yaml
@@ -56,6 +61,7 @@ Los destacados (`kind: home_spotlight`), juegos (`kind: home_game`) y artículos
 (`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
 archivo. Para agregar uno, copiá un archivo del mismo tipo y elegí un `order`
 distinto. En las portadas, `lang: es` o `lang: en` determina dónde aparece.
+Los juegos se muestran aunque ese idioma no tenga un bloque `home_play`.
 
 Los bloques únicos se seleccionan por `kind`: `home_banner`, `home_intro`,
 `home_play`, `home_media`, `home_develop`, `home_build` y `home_contact`. Conservá
@@ -70,12 +76,19 @@ contiene la estructura HTML de cada bloque. `_includes/media.html` y
 en `_sass/` y `css/`, y el marco de las páginas en `_layouts/`.
 
 Los puntos de entrada `index.html`, `en/index.html` y `links.html` mantienen las
-URLs `/`, `/en/` y `/links.html`. El título y la descripción para metadatos,
-redes sociales y datos generales siguen en `_config.yml`. La colección tiene
+URLs `/`, `/en/` y `/links.html`. El título general, email y redes sociales
+siguen en `_config.yml`. La descripción de metadatos y del RSS se toma del cuerpo
+de `_contenido/home_es/banner.md`, para que no haya dos copias del mismo texto.
+`paragraph_spacing: true` conserva el espaciado del banner original; no depende
+del idioma. Jekyll convierte los documentos de la colección a HTML antes de
+renderizar las páginas, así que las plantillas usan `content` directamente.
+La colección tiene
 `output: false`: sus archivos no se publican como páginas independientes.
 
 `generic.html` y `elements.html` son ejemplos del tema original. El emulador y
-sus archivos generados tienen su propio proceso de publicación.
+sus archivos generados tienen su propio proceso de publicación. `vsdk/` se usa
+para generar `emulator/`, pero no se publica. Los documentos de mantenimiento,
+el Makefile y `tools/` tampoco se copian al sitio.
 
 ## Vista previa
 
@@ -96,3 +109,10 @@ bundle exec jekyll build --destination .tmp/content-preview
 La carpeta `.tmp` está ignorada por Git. No hace falta editar `_site/` ni ejecutar
 `make publish` para cambiar o previsualizar contenido. La publicación completa,
 incluido el emulador, sigue el procedimiento de `DEPLOY.md`.
+
+Los chequeos de edición verifican saltos de línea, juegos por idioma, metadatos
+y exclusión de archivos de mantenimiento:
+
+```sh
+python3 tools/test-content.py
+```
