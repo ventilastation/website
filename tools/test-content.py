@@ -25,12 +25,15 @@ class Page(HTMLParser):
         self.headings = []
         self.images = []
         self.sections = []
+        self.links = []
         self._title = False
         self._heading = False
         self.feed(path.read_text())
 
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
+        if tag == "a":
+            self.links.append(attrs.get("href"))
         if tag == "meta" and attrs.get("name") == "description":
             self.description = attrs["content"]
         elif tag == "title":
@@ -138,6 +141,15 @@ class ContentTests(unittest.TestCase):
         self.assertEqual(channel.findtext("title"), "Título de prueba")
         self.assertEqual(channel.findtext("description"), 'Una descripción "nueva" & enlace.')
 
+    def test_both_languages_offer_the_same_current_developer_path(self):
+        for filename in ("index.html", "en/index.html"):
+            page = Page(self.baseline / filename)
+            for target in ("/docs/", "/emulator/", "/docs/guides/desktop.html",
+                           "/docs/vs2/tutorial/first-game.html", "/docs/vs2/tutorial/index.html",
+                           "/docs/vs2/reference/index.html"):
+                with self.subTest(page=filename, target=target):
+                    self.assertIn(target, page.links)
+
     def test_private_sources_are_excluded_without_losing_runtime_assets(self):
         for name in PRIVATE_PATHS:
             with self.subTest(path=name):
@@ -151,7 +163,9 @@ def check_published_site(site):
             raise RuntimeError(f"Source files were published: {name}")
     for name in ("emulator/index.html", "emulator/runtime-bundle.json",
                  "emulator/runtime-manifest.json", "emulator/vendor/micropython/micropython.wasm",
-                 "emulator/games/alecu/vyruss_vs2/code/vyruss_vs2.py"):
+                 "emulator/games/alecu/vyruss_vs2/code/vyruss_vs2.py",
+                 "docs/index.html", "docs/guides/desktop.html",
+                 "docs/vs2/tutorial/first-game.html", "docs/vs2/reference/index.html"):
         if not (site / name).is_file():
             raise RuntimeError(f"Missing published emulator asset: {name}")
 

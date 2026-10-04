@@ -116,3 +116,22 @@ y exclusión de archivos de mantenimiento:
 ```sh
 python3 tools/test-content.py
 ```
+
+## Documentación técnica
+
+El contenido de `/docs/` pertenece a `ventilastation/vsdk`, en `docs/`.
+Sphinx genera el mismo tutorial y referencia para este sitio y Read the Docs.
+Editá allí las instrucciones técnicas; las portadas en español e inglés sólo
+presentan el recorrido y enlazan a las páginas canónicas. La documentación
+completa se genera después de Jekyll y se publica junto al emulador.
+
+Para previsualizarla después de una compilación Jekyll:
+
+```sh
+python3 -m pip install -r vsdk/docs/requirements.txt
+python3 -m sphinx -b html -W --keep-going vsdk/docs .tmp/content-preview/docs
+python3 vsdk/tools/check_docs.py .tmp/content-preview/docs
+```
+
+No edites HTML generado ni copies capítulos a `_contenido/`. El submódulo
+`vsdk` fija la revisión exacta usada para publicar tanto código como documentos.

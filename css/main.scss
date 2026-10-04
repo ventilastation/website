@@ -1430,6 +1430,9 @@ $baseurl: '{{ site.baseurl }}/images';
 /* Header */
 
 	#arriba {
+		display: flex;
+		gap: 1em;
+		font-size: 0.9em;
 		top: 0.3em;
 		right: 1em;
 		z-index: 100;
