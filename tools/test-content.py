@@ -151,7 +151,7 @@ def check_published_site(site):
             raise RuntimeError(f"Source files were published: {name}")
     for name in ("emulator/index.html", "emulator/runtime-bundle.json",
                  "emulator/runtime-manifest.json", "emulator/vendor/micropython/micropython.wasm",
-                 "emulator/games/alecu/vyruss/code/vyruss.py"):
+                 "emulator/games/alecu/vyruss_vs2/code/vyruss_vs2.py"):
         if not (site / name).is_file():
             raise RuntimeError(f"Missing published emulator asset: {name}")
 
