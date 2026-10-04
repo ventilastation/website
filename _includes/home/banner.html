@@ -1,0 +1,21 @@
+<div id="arriba">
+  <a href="{{ include.banner.language_url | escape }}">{{ include.banner.language_label | escape }}</a>
+</div>
+<video autoplay loop muted poster="{{ include.banner.poster | escape }}" id="bgvid">
+  <source src="{{ include.banner.video | escape }}" type="video/mp4">
+</video>
+<section id="banner">
+  <div class="inner">
+    <h2>{{ site.title | escape }}</h2>
+    {% comment %}Preserve the existing banner spacing when requested by the content document.{% endcomment %}
+    {% if include.banner.paragraph_spacing %}<p></p>{% endif %}
+    {{ include.banner.content }}
+    {% if include.banner.paragraph_spacing %}<p></p>{% endif %}
+    <ul class="actions">
+      {% for action in include.banner.actions %}
+        <li><a href="{{ action.url | escape }}" class="scrolly button">{{ action.label | escape }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <a href="{{ include.banner.more_url | escape }}" class="more scrolly">{{ include.banner.more_label | escape }}</a>
+</section>

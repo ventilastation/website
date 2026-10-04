@@ -1,0 +1,10 @@
+<section id="two" class="wrapper alt style2">
+  {% for spotlight in include.spotlights %}
+    <section class="spotlight">
+      <div class="image"><img src="{{ spotlight.image | escape }}" alt="{{ spotlight.image_alt | escape }}" /></div><div class="content">
+        <h2>{% include home/heading.html heading=spotlight.heading %}</h2>
+        {{ spotlight.content }}
+      </div>
+    </section>
+  {% endfor %}
+</section>

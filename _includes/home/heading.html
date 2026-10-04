@@ -1,0 +1,8 @@
+{%- comment -%}Keep a space after each break: the mobile CSS hides br elements.{%- endcomment -%}
+{%- if include.heading.first -%}
+  {%- for line in include.heading -%}
+    {{- line | escape -}}{% unless forloop.last %}<br />{{ ' ' }}{% endunless %}
+  {%- endfor -%}
+{%- else -%}
+  {{- include.heading | escape -}}
+{%- endif -%}
