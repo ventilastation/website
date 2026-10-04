@@ -125,7 +125,7 @@ class ContentTests(unittest.TestCase):
         source, output = self.variant("metadata")
         banner = source / "_contenido/home_es/banner.md"
         front_matter = banner.read_text().split("---", 2)[1]
-        banner.write_text('---' + front_matter + '---\nUna descripción "nueva" con [enlace](https://example.org/).\n')
+        banner.write_text('---' + front_matter + '---\nUna descripción "nueva" & [enlace](https://example.org/).\n')
         config = source / "_config.yml"
         config.write_text(re.sub(r"^title:.*$", "title: Título de prueba", config.read_text(), flags=re.M))
         build(source, output)
@@ -133,10 +133,10 @@ class ContentTests(unittest.TestCase):
             page = Page(output / filename)
             self.assertEqual(page.title, "Título de prueba")
             self.assertEqual(page.headings[0], "Título de prueba")
-            self.assertEqual(page.description, 'Una descripción "nueva" con enlace.')
+            self.assertEqual(page.description, 'Una descripción "nueva" & enlace.')
         channel = ET.parse(output / "feed.xml").getroot().find("channel")
         self.assertEqual(channel.findtext("title"), "Título de prueba")
-        self.assertEqual(channel.findtext("description"), 'Una descripción "nueva" con enlace.')
+        self.assertEqual(channel.findtext("description"), 'Una descripción "nueva" & enlace.')
 
     def test_private_sources_are_excluded_without_losing_runtime_assets(self):
         for name in PRIVATE_PATHS:

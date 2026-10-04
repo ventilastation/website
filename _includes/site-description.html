@@ -1,2 +1,2 @@
 {%- assign description_banner = site.contenido | where: 'kind', 'home_banner' | where: 'lang', 'es' | first -%}
-{{- description_banner.content | replace: '<br />', ' ' | strip_html | normalize_whitespace | escape -}}
+{{- description_banner.content | replace: '<br />', ' ' | strip_html | normalize_whitespace | escape_once -}}
