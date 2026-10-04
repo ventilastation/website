@@ -54,6 +54,14 @@ social:
 
 # Build settings
 markdown: kramdown
+kramdown:
+  # Preserve the punctuation of the original HTML copy.
+  smart_quotes: [apos, apos, quot, quot]
+collections:
+  contenido:
+    output: false
+exclude:
+  - CONTENT.md
 include:
   - emulator/apps/micropython/__init__.py
   - emulator/apps/micropython/apps/__init__.py

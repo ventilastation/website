@@ -1,0 +1,21 @@
+<div id="arriba">
+  <a href="{{ include.banner.language_url | escape }}">{{ include.banner.language_label | escape }}</a>
+</div>
+<video autoplay loop muted poster="{{ include.banner.poster | escape }}" id="bgvid">
+  <source src="{{ include.banner.video | escape }}" type="video/mp4">
+</video>
+<section id="banner">
+  <div class="inner">
+    <h2>{% include home/heading.html heading=include.banner.heading %}</h2>
+    {% comment %}The original Spanish banner's nested paragraphs produced an empty paragraph on each side. Preserve that spacing with valid HTML.{% endcomment %}
+    {% if page.lang == 'es' %}<p></p>{% endif %}
+    {{ include.banner.content | markdownify }}
+    {% if page.lang == 'es' %}<p></p>{% endif %}
+    <ul class="actions">
+      {% for action in include.banner.actions %}
+        <li><a href="{{ action.url | escape }}" class="scrolly button">{{ action.label | escape }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <a href="{{ include.banner.more_url | escape }}" class="more scrolly">{{ include.banner.more_label | escape }}</a>
+</section>

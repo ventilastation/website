@@ -1,3 +1,5 @@
+[Guía para editar el contenido del sitio](CONTENT.md)
+
 Qué es Ventilastation
 =====================
 Una consola para jugar videojuegos, construida con LEDs y RPMs.

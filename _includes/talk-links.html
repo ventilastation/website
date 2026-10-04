@@ -1,0 +1,5 @@
+{% assign links = site.contenido | where: 'kind', 'talk_links' | first %}
+<section>
+  <h4>{{ links.heading | escape }}</h4>
+  {{ links.content | markdownify | replace: '<ul>', '<ul class="alt">' }}
+</section>
