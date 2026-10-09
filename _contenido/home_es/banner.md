@@ -9,8 +9,6 @@ video: images/banner.mp4
 actions:
 - label: ¿Qué es?
   url: '#que'
-- label: ¿Cómo jugar?
-  url: '#como'
 - label: Hacé un juego
   url: '#juegos'
 - label: Armate una

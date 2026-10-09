@@ -40,7 +40,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install ROM generator dependencies
-        run: python3 -m pip install -r vsdk/requirements.txt
+        run: python3 -m pip install -r vsdk/requirements.txt -r vsdk/docs/requirements.txt
 
       - name: Setup Pages
         id: pages
@@ -52,6 +52,14 @@ jobs:
 
       - name: Build with Jekyll
         run: bundle exec jekyll build --destination ./_site
+
+      # Build after Jekyll: Sphinx output must not be interpreted as Jekyll input.
+      - name: Build shared SDK documentation
+        env:
+          VSDK_DOCS_BASEURL: ${{ steps.pages.outputs.base_url }}/docs/
+        run: |
+          python3 -m sphinx -b html -W --keep-going vsdk/docs _site/docs
+          python3 vsdk/tools/check_docs.py _site/docs
 
       - name: Check content editing and published files
         run: python3 tools/test-content.py --site _site

@@ -1020,17 +1020,6 @@ $baseurl: '{{ site.baseurl }}/images';
 			}
 		}
 
-		.fanshot {
-			@include vendor('order', '1');
-			border-radius: 0;
-			width: 40%;
-
-			img {
-				border-radius: 0;
-				width: 100%;
-			}
-		}
-
 		.content {
 			@include padding(2em, 4em);
 			@include vendor('order', '2');
@@ -1325,6 +1314,78 @@ $baseurl: '{{ site.baseurl }}/images';
 		}
 	}
 
+/* Homepage interviews, talks and press */
+
+	.media-highlights,
+	.media-archive-links {
+		display: grid;
+		gap: 1.5em;
+		list-style: none;
+		padding: 0;
+		text-align: left;
+
+		li {
+			min-width: 0;
+			padding: 1.5em;
+		}
+
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.media-highlights {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+
+		li {
+			background: rgba(0, 0, 0, 0.15);
+			border: solid 1px _palette(border);
+			border-radius: 3px;
+		}
+
+		@include breakpoint(medium) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.media-archive {
+		margin-top: 2em;
+		border-top: solid 1px _palette(border);
+		padding-top: 1.5em;
+		text-align: left;
+
+		summary {
+			cursor: pointer;
+			font-weight: _font(weight-bold);
+		}
+	}
+
+	.media-archive-links {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		margin-top: 1.5em;
+
+		li {
+			padding: 0;
+		}
+
+		@include breakpoint(small) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+/* First-game steps */
+
+	.home-develop ol {
+		max-width: 36em;
+		margin: 2em auto;
+		padding-left: 1.5em;
+		text-align: left;
+
+		li + li {
+			margin-top: 0.75em;
+		}
+	}
+
 /* Page Wrapper + Menu */
 
 	#page-wrapper {
@@ -1430,6 +1491,9 @@ $baseurl: '{{ site.baseurl }}/images';
 /* Header */
 
 	#arriba {
+		display: flex;
+		gap: 1em;
+		font-size: 0.9em;
 		top: 0.3em;
 		right: 1em;
 		z-index: 100;

@@ -1,10 +1,23 @@
-<section id="three" class="wrapper style3 special">
+<section id="three" class="wrapper style3 special home-media">
   <div class="inner">
     <header class="major">
       <h2>{% include home/heading.html heading=include.section.heading %}</h2>
+      {{ include.section.content }}
     </header>
-    <ul class="features">
-      {% include media.html %}
+    {% assign highlights = site.contenido | where: 'kind', 'media_feature' | where: 'lang', page.lang | sort: 'order' %}
+    <ul class="media-highlights">
+      {% for highlight in highlights %}
+        <li>
+          <h3>{{ highlight.heading | escape }}</h3>
+          {{ highlight.content }}
+        </li>
+      {% endfor %}
     </ul>
+    <details class="media-archive">
+      <summary>{{ include.section.archive_label | escape }}</summary>
+      <ul class="media-archive-links">
+        {% include media.html %}
+      </ul>
+    </details>
   </div>
 </section>

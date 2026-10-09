@@ -5,4 +5,4 @@
 [submodule "vsdk"]
 	path = vsdk
 	url = https://github.com/ventilastation/vsdk
-	branch = web-emulator-experiments
+	branch = main

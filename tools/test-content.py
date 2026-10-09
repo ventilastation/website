@@ -2,6 +2,7 @@
 """Build isolated editing fixtures and check the site's content contracts."""
 
 import argparse
+import json
 from html.parser import HTMLParser
 from pathlib import Path
 import re
@@ -13,7 +14,8 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ("index.html", "en/index.html", "links.html")
+HOME_PAGES = ("es/index.html", "en/index.html")
+PAGES = ("index.html", *HOME_PAGES, "links.html")
 PRIVATE_PATHS = ("CONTENT.md", "README.md", "README.txt", "DEPLOY.md", "Makefile", "tools", "vsdk")
 
 
@@ -25,12 +27,15 @@ class Page(HTMLParser):
         self.headings = []
         self.images = []
         self.sections = []
+        self.links = []
         self._title = False
         self._heading = False
         self.feed(path.read_text())
 
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
+        if tag == "a":
+            self.links.append(attrs.get("href"))
         if tag == "meta" and attrs.get("name") == "description":
             self.description = attrs["content"]
         elif tag == "title":
@@ -73,7 +78,7 @@ class ContentTests(unittest.TestCase):
         cls.workspace = Path(cls.temp.name)
         cls.source = cls.workspace / "source"
         cls.source.mkdir()
-        for directory in ("_contenido", "_includes", "_layouts", "en"):
+        for directory in ("_contenido", "_includes", "_layouts", "en", "es"):
             shutil.copytree(ROOT / directory, cls.source / directory)
         for filename in ("_config.yml", "index.html", "links.html", "feed.xml"):
             shutil.copy(ROOT / filename, cls.source / filename)
@@ -109,17 +114,16 @@ class ContentTests(unittest.TestCase):
                 self.assertEqual(normalize((self.baseline / filename).read_text()),
                                  normalize((output / filename).read_text()))
 
-    def test_games_render_without_a_play_section(self):
-        source, output = self.variant("english-game")
-        game = (source / "_contenido/home_es/juegos/01-vermu.md").read_text()
-        game = game.replace("lang: es", "lang: en").replace("images/", "/images/")
-        (source / "_contenido/home_en/test-game.md").write_text(game)
-        build(source, output)
-        page = Page(output / "en/index.html")
-        self.assertIn("/images/vermu.png", page.images)
-        self.assertIn("/images/vermu-control.png", page.images)
-        self.assertEqual(page.sections.count("two"), 2)
-        self.assertEqual(Page(self.baseline / "en/index.html").sections.count("two"), 1)
+    def test_outdated_how_to_play_section_and_screenshots_are_removed(self):
+        for filename in HOME_PAGES:
+            page = Page(self.baseline / filename)
+            with self.subTest(page=filename):
+                self.assertNotIn('como', page.sections)
+                self.assertNotIn('#como', page.links)
+                self.assertEqual(page.sections.count('two'), 1)
+                for name in ('vermu', 'vyruss', 'ventilagon'):
+                    self.assertNotIn(f'/images/{name}.png', page.images)
+                    self.assertNotIn(f'/images/{name}-control.png', page.images)
 
     def test_banner_edits_update_metadata_and_rss(self):
         source, output = self.variant("metadata")
@@ -129,7 +133,7 @@ class ContentTests(unittest.TestCase):
         config = source / "_config.yml"
         config.write_text(re.sub(r"^title:.*$", "title: Título de prueba", config.read_text(), flags=re.M))
         build(source, output)
-        for filename in ("index.html", "en/index.html"):
+        for filename in HOME_PAGES:
             page = Page(output / filename)
             self.assertEqual(page.title, "Título de prueba")
             self.assertEqual(page.headings[0], "Título de prueba")
@@ -137,6 +141,76 @@ class ContentTests(unittest.TestCase):
         channel = ET.parse(output / "feed.xml").getroot().find("channel")
         self.assertEqual(channel.findtext("title"), "Título de prueba")
         self.assertEqual(channel.findtext("description"), 'Una descripción "nueva" & enlace.')
+
+    def test_both_languages_offer_the_same_current_developer_path(self):
+        for filename in HOME_PAGES:
+            page = Page(self.baseline / filename)
+            for target in ("/docs/", "/docs/guides/desktop.html",
+                           "/docs/vs2/tutorial/first-game.html", "/docs/vs2/tutorial/index.html",
+                           "/docs/vs2/reference/index.html"):
+                with self.subTest(page=filename, target=target):
+                    self.assertIn(target, page.links)
+            for target in ("/emulator/", "/docs/guides/browser.html"):
+                with self.subTest(page=filename, hidden=target):
+                    self.assertNotIn(target, page.links)
+
+    def test_homepages_link_directly_to_each_other_and_use_root_assets(self):
+        for filename, other_language in zip(HOME_PAGES, ('/en/', '/es/')):
+            page = Page(self.baseline / filename)
+            with self.subTest(page=filename):
+                self.assertIn(other_language, page.links)
+                self.assertTrue(page.images)
+                self.assertTrue(all(image.startswith('/images/') for image in page.images))
+                self.assertIn('poster="/images/banner.jpg"',
+                              (self.baseline / filename).read_text())
+
+    def test_language_selector_uses_browser_preferences_and_preserves_the_url(self):
+        cases = [
+            ({'languages': ['en-US', 'en']}, 'en'),
+            ({'languages': ['es']}, 'es'),
+            ({'languages': ['es-AR', 'en']}, 'es'),
+            ({'languages': ['en-US', 'es-419']}, 'es'),
+            ({'languages': ['ES-es']}, 'es'),
+            ({'languages': ['fr', 'de']}, 'en'),
+            ({'languages': ['esoteric']}, 'en'),
+            ({'languages': [], 'language': 'es-MX'}, 'es'),
+            ({'language': 'en-GB'}, 'en'),
+            ({}, 'en'),
+        ]
+        source, preview = self.variant('language-preview')
+        config = source / '_config.yml'
+        config.write_text(re.sub(r'^baseurl:.*$', 'baseurl: /review-preview',
+                                 config.read_text(), flags=re.M))
+        build(source, preview)
+        harness = '''
+const vm = require('node:vm');
+const input = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const results = input.cases.map(preferences => {
+    let destination;
+    vm.runInNewContext(input.script, {
+        navigator: preferences,
+        window: {location: {
+            search: '?from=menu', hash: '#games',
+            replace(url) { destination = url; }
+        }}
+    });
+    return destination;
+});
+process.stdout.write(JSON.stringify(results));
+'''
+        for directory, prefix in ((self.baseline, ''), (preview, '/review-preview')):
+            html = (directory / 'index.html').read_text()
+            script = re.search(r'<script>(.*?)</script>', html, flags=re.S).group(1)
+            result = subprocess.run(
+                ['node', '-e', harness], check=True, capture_output=True, text=True,
+                input=json.dumps({'script': script, 'cases': [case[0] for case in cases]}),
+            )
+            for (preferences, language), destination in zip(cases, json.loads(result.stdout)):
+                with self.subTest(prefix=prefix, preferences=preferences):
+                    self.assertEqual(destination, f'{prefix}/{language}/?from=menu#games')
+            self.assertIn(f'0; url={prefix}/en/', html)
+            self.assertEqual(Page(directory / 'index.html').links,
+                             [f'{prefix}/en/', f'{prefix}/es/'])
 
     def test_private_sources_are_excluded_without_losing_runtime_assets(self):
         for name in PRIVATE_PATHS:
@@ -149,9 +223,11 @@ def check_published_site(site):
     for name in PRIVATE_PATHS:
         if (site / name).exists():
             raise RuntimeError(f"Source files were published: {name}")
-    for name in ("emulator/index.html", "emulator/runtime-bundle.json",
+    for name in ("index.html", "es/index.html", "en/index.html", "emulator/index.html", "emulator/runtime-bundle.json",
                  "emulator/runtime-manifest.json", "emulator/vendor/micropython/micropython.wasm",
-                 "emulator/games/alecu/vyruss_vs2/code/vyruss_vs2.py"):
+                 "emulator/games/alecu/vyruss_vs2/code/vyruss_vs2.py",
+                 "docs/index.html", "docs/guides/desktop.html",
+                 "docs/vs2/tutorial/first-game.html", "docs/vs2/reference/index.html"):
         if not (site / name).is_file():
             raise RuntimeError(f"Missing published emulator asset: {name}")
 

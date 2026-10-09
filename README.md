@@ -10,10 +10,16 @@ Usar el joystick, o usar los botones de la consola
 
 Cómo hacer juegos para Ventilastation
 =====================================
-La forma más sencilla para hacer juegos para Ventilastation es usando el lenguaje de programación Micropython. Acá hay un ejemplo: [Vyruss VS2](https://github.com/ventilastation/vsdk/blob/main/games/alecu/vyruss_vs2/code/vyruss_vs2.py).
+Empezá por la [documentación de VS2](https://ventilastation.protocultura.net/docs/):
+configurá el emulador, creá tu primer juego y seguí el tutorial.
+Los documentos técnicos se editan en `ventilastation/vsdk/docs/`; este repositorio
+los publica en `/docs/` junto al sitio y al emulador. Read the Docs usa la misma fuente.
 
 Cómo construir tu propia Ventilastation
 =======================================
 El diseño de Hardware y Software de Ventilastation es de libre copia y distribución, está disponible en el sitio Github
 
 <!-- Pages redeploy marker: 2026-03-28 -->
+
+Las portadas están en `/es/` y `/en/`. `/` detecta si el navegador tiene español
+configurado y, en ese caso, abre `/es/`; en los demás casos abre `/en/`.

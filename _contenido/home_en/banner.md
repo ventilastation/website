@@ -2,7 +2,7 @@
 kind: home_banner
 lang: en
 language_label: Spanish
-language_url: /
+language_url: /es/
 poster: /images/banner.jpg
 video: /images/banner.mp4
 actions:

@@ -4,8 +4,17 @@ lang: en
 section_id: games
 heading: Making games for Ventilastation
 ---
-Ventilastation is ideal for games that are specifically designed for its circular display.
+Make your first circular game in MicroPython with **VS2**, the current game API.
+You can develop and test it on your computer without building a console.
 
-To make it easier to create games, the [Micropython](https://micropython.org/) programming language is embedded in the spinning ESP32 microcontroller. And a computer-based emulator is available, so you can build and test your games before committing to make a dedicated hardware console.
+1. [Set up the desktop emulator](/docs/guides/desktop.html).
+2. [Create your first game and steer a ship](/docs/vs2/tutorial/first-game.html).
+3. [Follow the complete tutorial](/docs/vs2/tutorial/index.html) to add enemies, a score and sound.
 
-To start coding, we recommend browsing the sample game Vyruss VS2, which is less than 500 lines of code, available in [the project's repository.](https://github.com/ventilastation/vsdk/blob/main/games/alecu/vyruss_vs2/code/vyruss_vs2.py)
+Use the desktop emulator to develop and test your game with local files.
+Look up a class or method in the
+[API reference](/docs/vs2/reference/index.html).
+
+After the tutorial, [Vyruss VS2](https://github.com/ventilastation/vsdk/blob/main/games/alecu/vyruss_vs2/code/vyruss_vs2.py)
+is a complete example game. The older `ventilastation.sprites` API is obsolete
+for new development; its maintenance guide lives in a separate section.

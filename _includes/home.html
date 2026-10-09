@@ -8,13 +8,6 @@
 {% assign spotlights = home | where: 'kind', 'home_spotlight' | sort: 'order' %}
 {% include home/spotlights.html spotlights=spotlights %}
 
-{% assign play = home | where: 'kind', 'home_play' | first %}
-{% if play %}
-  {% include home/text-section.html section=play style='style1' %}
-{% endif %}
-{% assign games = home | where: 'kind', 'home_game' | sort: 'order' %}
-{% if games.size > 0 %}{% include home/games.html games=games %}{% endif %}
-
 {% assign media = home | where: 'kind', 'home_media' | first %}
 {% if media %}{% include home/media-section.html section=media %}{% endif %}
 

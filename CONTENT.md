@@ -10,7 +10,8 @@ colección, `_contenido`, y las plantillas conservan el diseño actual.
 | --- | --- |
 | Portada en castellano | `_contenido/home_es/` |
 | Portada en inglés | `_contenido/home_en/` |
-| Artículos de prensa | `_contenido/media/` |
+| Entrevistas, charlas y notas destacadas | `_contenido/media/es/` y `_contenido/media/en/` |
+| Cobertura anterior | `_contenido/media/` |
 | Links de la charla | `_contenido/paginas/links.md` |
 
 Cada archivo tiene dos partes:
@@ -18,9 +19,11 @@ Cada archivo tiene dos partes:
 - El encabezado YAML entre `---` contiene títulos, imágenes, botones y otros datos.
 - El cuerpo contiene los párrafos, links y listas en Markdown.
 
-Las traducciones se editan por separado. Los archivos con `kind: home_media` y
-`kind: home_game` sólo necesitan el encabezado: representan un título de sección
-o un par de imágenes.
+Las traducciones se editan por separado. Los archivos con `kind: home_media`
+contienen el título, la introducción y `archive_label` del bloque de entrevistas,
+charlas y prensa. Los tres destacados usan `kind: media_feature`, `lang` y `order`;
+su cuerpo Markdown contiene la descripción y el enlace. Los artículos anteriores
+(`kind: media`) se conservan en una lista desplegable compartida por ambos idiomas.
 
 ## Texto y links
 
@@ -51,20 +54,18 @@ heading:
 
 Los botones del banner se editan en `actions`, con un `label` y un `url` por botón.
 El contacto usa `contact_label` y `contact_url`. Las imágenes se eligen con `image`
-y `image_alt`; los juegos también tienen `controls_image`, `controls_alt` y
-`controls_width`. Conservá los prefijos actuales de las imágenes: `images/` para
-la portada en castellano y `/images/` para la portada en inglés.
+y `image_alt`. Las plantillas resuelven `images/` y `/images/` desde la raíz
+del sitio, incluyendo el prefijo de una vista previa publicada en un subdirectorio.
 
 ## Orden y nuevos elementos
 
-Los destacados (`kind: home_spotlight`), juegos (`kind: home_game`) y artículos
-(`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
+Los destacados (`kind: home_spotlight`), entrevistas y charlas (`kind: media_feature`)
+y artículos (`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
 archivo. Para agregar uno, copiá un archivo del mismo tipo y elegí un `order`
 distinto. En las portadas, `lang: es` o `lang: en` determina dónde aparece.
-Los juegos se muestran aunque ese idioma no tenga un bloque `home_play`.
 
 Los bloques únicos se seleccionan por `kind`: `home_banner`, `home_intro`,
-`home_play`, `home_media`, `home_develop`, `home_build` y `home_contact`. Conservá
+`home_media`, `home_develop`, `home_build` y `home_contact`. Conservá
 un solo archivo de cada tipo por idioma. `section_id` mantiene los destinos de
 los botones y enlaces de la página.
 
@@ -75,9 +76,11 @@ contiene la estructura HTML de cada bloque. `_includes/media.html` y
 `_includes/talk-links.html` presentan los artículos y links. Los estilos siguen
 en `_sass/` y `css/`, y el marco de las páginas en `_layouts/`.
 
-Los puntos de entrada `index.html`, `en/index.html` y `links.html` mantienen las
-URLs `/`, `/en/` y `/links.html`. El título general, email y redes sociales
-siguen en `_config.yml`. La descripción de metadatos y del RSS se toma del cuerpo
+Las portadas están en `es/index.html` y `en/index.html`, en `/es/` y `/en/`.
+`index.html` elige `/es/` si el navegador tiene castellano configurado y `/en/`
+en los demás casos; sin JavaScript usa inglés. Los links de idioma van directo
+a cada portada. `links.html` mantiene `/links.html`. El título general, email y
+redes sociales siguen en `_config.yml`. La descripción de metadatos y del RSS se toma del cuerpo
 de `_contenido/home_es/banner.md`, para que no haya dos copias del mismo texto.
 `paragraph_spacing: true` conserva el espaciado del banner original; no depende
 del idioma. Jekyll convierte los documentos de la colección a HTML antes de
@@ -99,7 +102,7 @@ bundle install
 bundle exec jekyll serve --destination .tmp/content-preview
 ```
 
-Abrí `http://localhost:4000/`, `/en/` y `/links.html` para revisar los cambios.
+Abrí `http://localhost:4000/`, `/es/`, `/en/` y `/links.html` para revisar los cambios.
 Para generar únicamente el sitio:
 
 ```sh
@@ -110,9 +113,28 @@ La carpeta `.tmp` está ignorada por Git. No hace falta editar `_site/` ni ejecu
 `make publish` para cambiar o previsualizar contenido. La publicación completa,
 incluido el emulador, sigue el procedimiento de `DEPLOY.md`.
 
-Los chequeos de edición verifican saltos de línea, juegos por idioma, metadatos
+Los chequeos de edición verifican saltos de línea, portadas por idioma, metadatos
 y exclusión de archivos de mantenimiento:
 
 ```sh
 python3 tools/test-content.py
 ```
+
+## Documentación técnica
+
+El contenido de `/docs/` pertenece a `ventilastation/vsdk`, en `docs/`.
+Sphinx genera el mismo tutorial y referencia para este sitio y Read the Docs.
+Editá allí las instrucciones técnicas; las portadas en español e inglés sólo
+presentan el recorrido y enlazan a las páginas canónicas. La documentación
+completa se genera después de Jekyll y se publica junto al emulador.
+
+Para previsualizarla después de una compilación Jekyll:
+
+```sh
+python3 -m pip install -r vsdk/docs/requirements.txt
+python3 -m sphinx -b html -W --keep-going vsdk/docs .tmp/content-preview/docs
+python3 vsdk/tools/check_docs.py .tmp/content-preview/docs
+```
+
+No edites HTML generado ni copies capítulos a `_contenido/`. El submódulo
+`vsdk` fija la revisión exacta usada para publicar tanto código como documentos.
