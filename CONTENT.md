@@ -10,7 +10,8 @@ colección, `_contenido`, y las plantillas conservan el diseño actual.
 | --- | --- |
 | Portada en castellano | `_contenido/home_es/` |
 | Portada en inglés | `_contenido/home_en/` |
-| Artículos de prensa | `_contenido/media/` |
+| Entrevistas, charlas y notas destacadas | `_contenido/media/es/` y `_contenido/media/en/` |
+| Cobertura anterior | `_contenido/media/` |
 | Links de la charla | `_contenido/paginas/links.md` |
 
 Cada archivo tiene dos partes:
@@ -19,7 +20,10 @@ Cada archivo tiene dos partes:
 - El cuerpo contiene los párrafos, links y listas en Markdown.
 
 Las traducciones se editan por separado. Los archivos con `kind: home_media`
-sólo necesitan el encabezado: representan un título de sección.
+contienen el título, la introducción y `archive_label` del bloque de entrevistas,
+charlas y prensa. Los tres destacados usan `kind: media_feature`, `lang` y `order`;
+su cuerpo Markdown contiene la descripción y el enlace. Los artículos anteriores
+(`kind: media`) se conservan en una lista desplegable compartida por ambos idiomas.
 
 ## Texto y links
 
@@ -55,8 +59,8 @@ del sitio, incluyendo el prefijo de una vista previa publicada en un subdirector
 
 ## Orden y nuevos elementos
 
-Los destacados (`kind: home_spotlight`) y artículos
-(`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
+Los destacados (`kind: home_spotlight`), entrevistas y charlas (`kind: media_feature`)
+y artículos (`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
 archivo. Para agregar uno, copiá un archivo del mismo tipo y elegí un `order`
 distinto. En las portadas, `lang: es` o `lang: en` determina dónde aparece.
 
@@ -109,7 +113,7 @@ La carpeta `.tmp` está ignorada por Git. No hace falta editar `_site/` ni ejecu
 `make publish` para cambiar o previsualizar contenido. La publicación completa,
 incluido el emulador, sigue el procedimiento de `DEPLOY.md`.
 
-Los chequeos de edición verifican saltos de línea, juegos por idioma, metadatos
+Los chequeos de edición verifican saltos de línea, portadas por idioma, metadatos
 y exclusión de archivos de mantenimiento:
 
 ```sh
