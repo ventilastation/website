@@ -62,7 +62,9 @@ jobs:
           python3 vsdk/tools/check_docs.py _site/docs
 
       - name: Check content editing and published files
-        run: python3 tools/test-content.py --site _site
+        run: |
+          python3 tools/test-content.py --site _site
+          python3 tools/test-presentation.py --site _site --sdk vsdk
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
