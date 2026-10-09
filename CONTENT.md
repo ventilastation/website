@@ -18,9 +18,8 @@ Cada archivo tiene dos partes:
 - El encabezado YAML entre `---` contiene títulos, imágenes, botones y otros datos.
 - El cuerpo contiene los párrafos, links y listas en Markdown.
 
-Las traducciones se editan por separado. Los archivos con `kind: home_media` y
-`kind: home_game` sólo necesitan el encabezado: representan un título de sección
-o un par de imágenes.
+Las traducciones se editan por separado. Los archivos con `kind: home_media`
+sólo necesitan el encabezado: representan un título de sección.
 
 ## Texto y links
 
@@ -51,20 +50,18 @@ heading:
 
 Los botones del banner se editan en `actions`, con un `label` y un `url` por botón.
 El contacto usa `contact_label` y `contact_url`. Las imágenes se eligen con `image`
-y `image_alt`; los juegos también tienen `controls_image`, `controls_alt` y
-`controls_width`. Las plantillas resuelven `images/` y `/images/` desde la raíz
+y `image_alt`. Las plantillas resuelven `images/` y `/images/` desde la raíz
 del sitio, incluyendo el prefijo de una vista previa publicada en un subdirectorio.
 
 ## Orden y nuevos elementos
 
-Los destacados (`kind: home_spotlight`), juegos (`kind: home_game`) y artículos
+Los destacados (`kind: home_spotlight`) y artículos
 (`kind: media`) se ordenan por el campo numérico `order`, no por el nombre del
 archivo. Para agregar uno, copiá un archivo del mismo tipo y elegí un `order`
 distinto. En las portadas, `lang: es` o `lang: en` determina dónde aparece.
-Los juegos se muestran aunque ese idioma no tenga un bloque `home_play`.
 
 Los bloques únicos se seleccionan por `kind`: `home_banner`, `home_intro`,
-`home_play`, `home_media`, `home_develop`, `home_build` y `home_contact`. Conservá
+`home_media`, `home_develop`, `home_build` y `home_contact`. Conservá
 un solo archivo de cada tipo por idioma. `section_id` mantiene los destinos de
 los botones y enlaces de la página.
 

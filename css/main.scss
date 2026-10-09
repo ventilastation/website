@@ -1020,17 +1020,6 @@ $baseurl: '{{ site.baseurl }}/images';
 			}
 		}
 
-		.fanshot {
-			@include vendor('order', '1');
-			border-radius: 0;
-			width: 40%;
-
-			img {
-				border-radius: 0;
-				width: 100%;
-			}
-		}
-
 		.content {
 			@include padding(2em, 4em);
 			@include vendor('order', '2');
@@ -1322,6 +1311,19 @@ $baseurl: '{{ site.baseurl }}/images';
 
 		@include breakpoint(small) {
 			@include padding(3em, 2em);
+		}
+	}
+
+/* First-game steps */
+
+	.home-develop ol {
+		max-width: 36em;
+		margin: 2em auto;
+		padding-left: 1.5em;
+		text-align: left;
+
+		li + li {
+			margin-top: 0.75em;
 		}
 	}
 

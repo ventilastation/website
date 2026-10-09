@@ -114,17 +114,16 @@ class ContentTests(unittest.TestCase):
                 self.assertEqual(normalize((self.baseline / filename).read_text()),
                                  normalize((output / filename).read_text()))
 
-    def test_games_render_without_a_play_section(self):
-        source, output = self.variant("english-game")
-        game = (source / "_contenido/home_es/juegos/01-vermu.md").read_text()
-        game = game.replace("lang: es", "lang: en").replace("images/", "/images/")
-        (source / "_contenido/home_en/test-game.md").write_text(game)
-        build(source, output)
-        page = Page(output / "en/index.html")
-        self.assertIn("/images/vermu.png", page.images)
-        self.assertIn("/images/vermu-control.png", page.images)
-        self.assertEqual(page.sections.count("two"), 2)
-        self.assertEqual(Page(self.baseline / "en/index.html").sections.count("two"), 1)
+    def test_outdated_how_to_play_section_and_screenshots_are_removed(self):
+        for filename in HOME_PAGES:
+            page = Page(self.baseline / filename)
+            with self.subTest(page=filename):
+                self.assertNotIn('como', page.sections)
+                self.assertNotIn('#como', page.links)
+                self.assertEqual(page.sections.count('two'), 1)
+                for name in ('vermu', 'vyruss', 'ventilagon'):
+                    self.assertNotIn(f'/images/{name}.png', page.images)
+                    self.assertNotIn(f'/images/{name}-control.png', page.images)
 
     def test_banner_edits_update_metadata_and_rss(self):
         source, output = self.variant("metadata")
