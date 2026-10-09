@@ -11,8 +11,8 @@ You can develop and test it on your computer without building a console.
 2. [Create your first game and steer a ship](/docs/vs2/tutorial/first-game.html).
 3. [Follow the complete tutorial](/docs/vs2/tutorial/index.html) to add enemies, a score and sound.
 
-You can also [play and try edits in the browser](/docs/guides/browser.html)
-without installing anything. Look up a class or method in the
+Use the desktop emulator to develop and test your game with local files.
+Look up a class or method in the
 [API reference](/docs/vs2/reference/index.html).
 
 After the tutorial, [Vyruss VS2](https://github.com/ventilastation/vsdk/blob/main/games/alecu/vyruss_vs2/code/vyruss_vs2.py)

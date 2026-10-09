@@ -1,15 +1,12 @@
 {% if page.lang == 'en' %}
   {% assign docs_label = 'Documentation' %}
-  {% assign play_label = 'Play' %}
   {% assign nav_label = 'Main navigation' %}
 {% else %}
   {% assign docs_label = 'Documentación' %}
-  {% assign play_label = 'Jugar' %}
   {% assign nav_label = 'Navegación principal' %}
 {% endif %}
 <nav id="arriba" aria-label="{{ nav_label }}">
   <a href="{{ '/docs/' | relative_url }}">{{ docs_label }}</a>
-  <a href="{{ '/emulator/' | relative_url }}">{{ play_label }}</a>
   {% if page.lang == 'en' %}<a href="{{ '/' | relative_url }}" lang="es">Español</a>
   {% elsif page.lang == 'es' %}<a href="{{ '/en/' | relative_url }}" lang="en">English</a>
   {% else %}<a href="{{ '/' | relative_url }}">Inicio</a>{% endif %}

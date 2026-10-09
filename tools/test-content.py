@@ -144,11 +144,14 @@ class ContentTests(unittest.TestCase):
     def test_both_languages_offer_the_same_current_developer_path(self):
         for filename in ("index.html", "en/index.html"):
             page = Page(self.baseline / filename)
-            for target in ("/docs/", "/emulator/", "/docs/guides/desktop.html",
+            for target in ("/docs/", "/docs/guides/desktop.html",
                            "/docs/vs2/tutorial/first-game.html", "/docs/vs2/tutorial/index.html",
                            "/docs/vs2/reference/index.html"):
                 with self.subTest(page=filename, target=target):
                     self.assertIn(target, page.links)
+            for target in ("/emulator/", "/docs/guides/browser.html"):
+                with self.subTest(page=filename, hidden=target):
+                    self.assertNotIn(target, page.links)
 
     def test_private_sources_are_excluded_without_losing_runtime_assets(self):
         for name in PRIVATE_PATHS:
