@@ -20,3 +20,6 @@ Cómo construir tu propia Ventilastation
 El diseño de Hardware y Software de Ventilastation es de libre copia y distribución, está disponible en el sitio Github
 
 <!-- Pages redeploy marker: 2026-03-28 -->
+
+Las portadas están en `/es/` y `/en/`. `/` detecta si el navegador tiene español
+configurado y, en ese caso, abre `/es/`; en los demás casos abre `/en/`.

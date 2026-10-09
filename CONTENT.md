@@ -52,8 +52,8 @@ heading:
 Los botones del banner se editan en `actions`, con un `label` y un `url` por botón.
 El contacto usa `contact_label` y `contact_url`. Las imágenes se eligen con `image`
 y `image_alt`; los juegos también tienen `controls_image`, `controls_alt` y
-`controls_width`. Conservá los prefijos actuales de las imágenes: `images/` para
-la portada en castellano y `/images/` para la portada en inglés.
+`controls_width`. Las plantillas resuelven `images/` y `/images/` desde la raíz
+del sitio, incluyendo el prefijo de una vista previa publicada en un subdirectorio.
 
 ## Orden y nuevos elementos
 
@@ -75,9 +75,11 @@ contiene la estructura HTML de cada bloque. `_includes/media.html` y
 `_includes/talk-links.html` presentan los artículos y links. Los estilos siguen
 en `_sass/` y `css/`, y el marco de las páginas en `_layouts/`.
 
-Los puntos de entrada `index.html`, `en/index.html` y `links.html` mantienen las
-URLs `/`, `/en/` y `/links.html`. El título general, email y redes sociales
-siguen en `_config.yml`. La descripción de metadatos y del RSS se toma del cuerpo
+Las portadas están en `es/index.html` y `en/index.html`, en `/es/` y `/en/`.
+`index.html` elige `/es/` si el navegador tiene castellano configurado y `/en/`
+en los demás casos; sin JavaScript usa inglés. Los links de idioma van directo
+a cada portada. `links.html` mantiene `/links.html`. El título general, email y
+redes sociales siguen en `_config.yml`. La descripción de metadatos y del RSS se toma del cuerpo
 de `_contenido/home_es/banner.md`, para que no haya dos copias del mismo texto.
 `paragraph_spacing: true` conserva el espaciado del banner original; no depende
 del idioma. Jekyll convierte los documentos de la colección a HTML antes de
@@ -99,7 +101,7 @@ bundle install
 bundle exec jekyll serve --destination .tmp/content-preview
 ```
 
-Abrí `http://localhost:4000/`, `/en/` y `/links.html` para revisar los cambios.
+Abrí `http://localhost:4000/`, `/es/`, `/en/` y `/links.html` para revisar los cambios.
 Para generar únicamente el sitio:
 
 ```sh

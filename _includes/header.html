@@ -7,7 +7,7 @@
 {% endif %}
 <nav id="arriba" aria-label="{{ nav_label }}">
   <a href="{{ '/docs/' | relative_url }}">{{ docs_label }}</a>
-  {% if page.lang == 'en' %}<a href="{{ '/' | relative_url }}" lang="es">Español</a>
+  {% if page.lang == 'en' %}<a href="{{ '/es/' | relative_url }}" lang="es">Español</a>
   {% elsif page.lang == 'es' %}<a href="{{ '/en/' | relative_url }}" lang="en">English</a>
   {% else %}<a href="{{ '/' | relative_url }}">Inicio</a>{% endif %}
 </nav>
