@@ -6,6 +6,10 @@ layout: null
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html { background: #2e3842; color: #fff; }
+    body { visibility: hidden; }
+  </style>
   <title>{{ site.title | escape }}</title>
   <link rel="canonical" href="{{ '/en/' | absolute_url }}">
   <script>
@@ -15,7 +19,10 @@ layout: null
     const homepage = spanish ? {{ '/es/' | relative_url | jsonify }} : {{ '/en/' | relative_url | jsonify }};
     window.location.replace(homepage + window.location.search + window.location.hash);
   </script>
-  <noscript><meta http-equiv="refresh" content="0; url={{ '/en/' | relative_url }}"></noscript>
+  <noscript>
+    <style>body { visibility: visible; }</style>
+    <meta http-equiv="refresh" content="0; url={{ '/en/' | relative_url }}">
+  </noscript>
 </head>
 <body>
   <p><a href="{{ '/en/' | relative_url }}" lang="en">English</a> · <a href="{{ '/es/' | relative_url }}" lang="es">Español</a></p>
