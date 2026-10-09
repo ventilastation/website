@@ -4,6 +4,8 @@
   {% if page.layout == 'landing' %}
   <style>
     html { background: #2e3842; }
+    /* The fixed video sits behind the body, above the dark root canvas. */
+    body.landing { background: transparent; }
     body.is-loading #page-wrapper { visibility: hidden; }
   </style>
   {% endif %}
