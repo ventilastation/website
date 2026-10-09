@@ -26,11 +26,16 @@
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
 
-			$window.on('load', function() {
+			var revealPage = function() {
 				window.setTimeout(function() {
 					$body.removeClass('is-loading');
 				}, 100);
-			});
+			};
+
+			if (document.readyState === 'complete')
+				revealPage();
+			else
+				$window.one('load', revealPage);
 
 		// Mobile?
 			if (skel.vars.mobile)
