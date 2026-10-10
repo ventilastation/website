@@ -1,0 +1,23 @@
+:root { color-scheme: dark; }
+html, body { background: #0b1016; color: #eff6fa; }
+body { margin: 0; font: 18px/1.6 Arial, Helvetica, sans-serif; }
+main { max-width: 58rem; margin: auto; padding: clamp(1rem, 4vw, 2rem); }
+nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-bottom: 2rem; font-size: 1rem; }
+nav a { color: #b0c1cd; }
+a { color: #58e5b0; text-underline-offset: .15em; }
+a:hover { color: white; }
+a:focus-visible { outline: 2px solid #58e5b0; outline-offset: 4px; }
+h1, h2, h3 { line-height: 1.15; margin-top: 2rem; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); }
+h2 { font-size: 1.75rem; }
+h3 { color: #b0c1cd; }
+code { font-family: ui-monospace, Consolas, "Liberation Mono", monospace; }
+pre { padding: 1rem; background: #14212b; overflow-x: auto; }
+li { margin-bottom: .4rem; }
+img, video { display: block; max-width: 100%; max-height: 32rem; object-fit: contain; margin: 1rem auto; }
+.split { display: block; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #405260; }
+th { color: #58e5b0; }
+hr { border: 0; border-top: 2px solid #58e5b0; margin: 3rem 0; }
+@media print { nav { display: none; } }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b1016">
+  <title>{{ page.title }} | Ventilastation</title>
+  <link rel="stylesheet" href="{{ '/presentations/page.css' | relative_url }}">
+</head>
+<body>
+  <main>
+    <nav aria-label="Presentation resources">
+      <a href="{{ '/en/' | relative_url }}">Ventilastation</a>
+      <a href="{{ '/presentations/making-games/' | relative_url }}">Slides</a>
+      <a href="{{ '/presentations/making-games/handout.html' | relative_url }}">Reading view &amp; notes</a>
+      <a href="{{ '/presentations/making-games/presenter-guide.html' | relative_url }}">Presenter guide</a>
+    </nav>
+    <h1>{{ page.title }}</h1>
+    {{ content }}
+  </main>
+</body>
+</html>

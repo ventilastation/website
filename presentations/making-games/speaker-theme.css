@@ -1,0 +1,16 @@
+:root { color-scheme: dark; }
+html, body, #connection-status { background: #0b1016; color: #eff6fa; }
+#current-slide iframe, #upcoming-slide iframe { border-color: #405260; }
+.overlay-element, #speaker-layout { background: #14212b; color: #eff6fa; }
+.overlay-element.interactive:hover { background: #243642; }
+.speaker-controls-time .label,
+.speaker-controls-pace .label,
+.speaker-controls-notes .label,
+.speaker-controls-time .reset-button { color: #b0c1cd; }
+.speaker-controls-time, .speaker-controls-pace { border-color: #405260; }
+.speaker-controls-time .pacing.ahead { color: #8ecbff; }
+.speaker-controls-time .pacing.on-track { color: #58e5b0; }
+.speaker-controls-time .pacing.behind { color: #ff9999; }
+a { color: #58e5b0; }
+pre, code { background: #14212b; }
+pre { padding: .75rem; overflow-x: auto; }
