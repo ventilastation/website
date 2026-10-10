@@ -9,7 +9,7 @@ The festival's [Dream No Return theme](https://www.sickhouse.nl/festival/dream-n
 inspired a garden whose players can choose a slower pace. This is an original
 sample game, not a festival commission or an official festival game.
 
-[Download the complete game](dream-garden.zip). Extract the archive at the root of a current SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included. You can also use the SDK branch `feat/overkill-dream-garden` while the game awaits merging.
+[Download the complete game](dream-garden.zip). Extract the archive at the root of a current SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. You can also use the SDK branch `feat/overkill-dream-garden` while the game awaits merging.
 
 [Small first-game starter](first_game.py) · [Back to the slides](../)
 

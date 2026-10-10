@@ -99,6 +99,7 @@ def check_starter(sdk):
         expected = {str(path.relative_to(sdk)): path for path in game_source.rglob('*')
                     if path.is_file() and '__pycache__' not in path.parts}
         expected['games/demos/dream_garden/LICENSE'] = sdk / 'LICENSE'
+        expected['tests/test_dream_garden.py'] = sdk / 'tests/test_dream_garden.py'
         assert set(archive.namelist()) == set(expected)
         for name, path in expected.items():
             assert archive.read(name) == path.read_bytes(), name
