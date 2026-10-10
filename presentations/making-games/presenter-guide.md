@@ -6,51 +6,109 @@ lang: en
 
 [Open the slides](./) or use the [reading view with notes](handout.html).
 
-The talk is for experienced game developers. The main walkthrough takes 40 minutes, including two desktop demonstrations. Questions get the remaining five minutes. Each slide has a duration and a cumulative time cue in its speaker notes.
+This English talk is for game developers attending Overkill Festival 2026. It
+builds **Dream Garden**, a small shared garden inspired by Sickhouse's
+[Dream No Return theme](https://www.sickhouse.nl/festival/dream-no-return-2026).
+The walkthrough lasts 40 minutes, including two desktop demonstrations.
+Questions get five minutes. Every slide has a duration and cumulative time cue.
 
 ## Presenting
 
 - Arrow keys or Space advance. Shift + Space goes back.
-- `S` opens the speaker view with notes, the next slide and a pacing timer. Allow the presentation to open its speaker window if your browser blocks the popup.
-- `F` toggles fullscreen. `Esc` opens the slide overview. `?` shows keyboard help.
-- Slide URLs include an anchor, so you can bookmark a demo checkpoint or return to it after switching windows.
+- `S` opens the speaker view with notes, the next slide and a pacing timer. Allow the speaker popup if your browser blocks it.
+- `F` toggles fullscreen. `Esc` opens the overview. `?` shows keyboard help.
+- Slide anchors let you bookmark demonstration checkpoints.
 
-Everything needed to display the slides, including the presentation library, code highlighting and images, comes from this website. External links are references, not presentation dependencies.
+The slides, library, highlighting and images come from this website. External
+links provide references rather than dependencies for the presentation.
 
 ## Before the talk
 
-Set up the [desktop emulator]({{ '/docs/guides/desktop.html' | relative_url }}) in a local `vsdk` checkout. Run the finished example once:
+Follow the [desktop setup]({{ '/docs/guides/desktop.html' | relative_url }}) in a
+current SDK checkout. During branch review, use `feat/overkill-dream-garden` or
+extract the [complete game download](examples/dream-garden.zip) at the SDK root.
+The download creates `games/demos/dream_garden/` and includes the source, packed
+PNGs, YAML, menu icon, MP3s, artwork provenance and rebuild recipes.
+
+Run the finished game:
 
 ```sh
-./vs-emu.sh --game demos.tutorial_game
+./vs-emu.sh --game demos.dream_garden
 ```
 
-On Windows use `vs-emu.bat`. Leave the terminal visible beside the emulator so tracebacks are easy to find. Check your gamepad or arrow keys, Space and Page Down, and try the sound at the room's volume.
+Windows uses `vs-emu.bat --game demos.dream_garden`. Keep its terminal visible for
+tracebacks. Test two gamepads if available. One keyboard also works:
 
-Prepare a second game named `myname.mygame` using [this complete starter](examples/first_game.py). The folder, metadata and image instructions are on the “A game is a folder” and “PNGs become indexed image strips” slides. The starter only needs `ship.png`, its `frames: 3` YAML entry, a `64 x 30` menu icon and `meta.json`.
+| Action | Player 1 | Player 2 |
+| --- | --- | --- |
+| Steer | Left / Right | H / L |
+| Begin / join / slow time | Space | Z |
+| Rest | O | X |
+| Toggle audio | P | C |
+| Exit | Page Down | End |
 
-For the first demonstration, run:
+Sound starts off. Check the room's volume before opting in. Garden and Rest
+have no idle timeout, so exit deliberately after a demonstration.
 
-```sh
-./vs-emu.sh --game myname.mygame
+## First demonstration
+
+Create `games/myname/mygame/`, put [the starter](examples/first_game.py) in
+`code/mygame.py`, and copy `dreamer.png` and `menu.png` from Dream Garden. Use a
+YAML file that lists only the dreamer:
+
+```yaml
+palettegroups:
+  garden:
+    - strip: dreamer.png
+      frames: 8
 ```
 
-For the second, run `demos.tutorial_game` again. Show the title, steer, avoid an enemy, collide, restart and point out the best score. The [finished source](examples/trench_run.py) accompanies this deck and matches the SDK tutorial at commit `647670e`.
+Save it as `images/__images__.yaml`. Add `meta.json`:
 
-If the emulator is unavailable during the talk, the two checkpoint slides have screenshots. Explain what the input and update code do using those images. A real console is welcome for the second demo, but the talk does not require one.
+```json
+{"api": "vs2", "api_revision": 2, "title": "My Garden"}
+```
 
-## Editing and hosting
+Run `./vs-emu.sh --game myname.mygame`. Steer across the angular seam and show
+that opposite inputs cancel. The slide at `#/first-demo` has a matching renderer
+capture if you need to present without the emulator.
 
-Edit `slides.md` in this directory. `---` separates slides and `Notes:` starts the speaker notes. Keep `data-timing` in seconds and the notes' time ranges consistent when changing the pacing. The notes include links to the source material.
+## Finished demonstration
 
-Jekyll builds the presentation at `/presentations/making-games/`. It uses the website's usual build and Pages workflow, including project-site prefixes. No additional server or JavaScript build step is needed. Run the website's Jekyll build and serve the generated directory over HTTP to preview it locally.
+Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
+let another pass harmlessly. Invite a second person to join. Either player can
+hold A to slow the shared flow. Point out the mood label, seed speed and garden
+movement. Toggle the quiet audio. B chooses a still rest scene that keeps the
+flowers. A begins a new garden. Y/Back returns to the launcher.
 
-## Printing
+Keep [the finished source](examples/dream_garden.py) open at `build`, `update`
+and `move_seeds`. `#/finished-demo` shows the resting scene if a live demo is
+unavailable. The display geometry slides use the same game's actual sprites
+and font through the SDK desktop renderer. The general API tutorial remains a
+separate Trench Run walkthrough.
 
-Open [the print layout](./?print-pdf) in Chrome or Chromium and print to PDF, with landscape orientation, no margins and background graphics enabled. The [reading view](handout.html) is also printable and includes the notes.
+## Editing, hosting and printing
+
+Edit `slides.md`. `---` separates slides, `Notes:` starts speaker notes, and
+`data-timing` gives seconds. Keep note ranges and the 45-minute total consistent.
+The website's usual Jekyll and Pages build serves the deck at
+`/presentations/making-games/`, including project-site prefixes. The deck keeps
+its dark theme in slide, reading and speaker views.
+
+[Open the print layout](./?print-pdf) in Chrome or Chromium and print landscape,
+with no margins and background graphics enabled. The reading view is also
+printable and includes notes.
 
 ## Sources and assets
 
-The previous [Ventilastation Jam 2025 deck](https://docs.google.com/presentation/d/1gfKrzKq1-QdnFjiBYQB6Z456wWDf1JxnY42-vLq9Bws/edit) inspired the subject order. This deck uses the current VS2 tutorial rather than that deck's older API examples.
+The previous [Ventilastation Jam 2025 deck](https://docs.google.com/presentation/d/1gfKrzKq1-QdnFjiBYQB6Z456wWDf1JxnY42-vLq9Bws/edit)
+inspired the subject order. The current SDK documentation supports the API and
+display explanations. The [festival site](https://2026.theoverkill.nl/) and
+Sickhouse's theme announcement informed the new game direction.
 
-Tutorial diagrams, screenshots and example code come from [the SDK at `647670e`](https://github.com/ventilastation/vsdk/tree/647670e015da1fe5b7f1cbae869607566a2b3911/docs/vs2). The cover and console photograph come from this website. Reveal.js 6.0.2 is vendored with its MIT license and version record in `vendor/reveal/`.
+Cover and console photographs come from this website. Circular-coordinate and
+scene-lifecycle diagrams come from the existing SDK documentation. New game
+captures come from the SDK desktop renderer. The [artwork and sound record](examples/artwork.html)
+contains the built-in image generation prompt and the original tone recipes.
+The source and download accompany the slides. Reveal.js 6.0.2 is vendored with
+its MIT license and version record in `vendor/reveal/`.
