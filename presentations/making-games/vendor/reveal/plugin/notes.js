@@ -62,11 +62,14 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
+		<meta name="color-scheme" content="dark">
 
 		<title>reveal.js - Speaker View</title>
 
 		<style>
 			body {
+				background: #0b1016;
+				color: #eff6fa;
 				font-family: Helvetica;
 				font-size: 18px;
 			}
@@ -360,6 +363,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
 			}
 
 		</style>
+		<link rel="stylesheet" href="${new URL('speaker-theme.css', window.location.href).href}">
 	</head>
 
 	<body>

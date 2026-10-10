@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: presentation-page
 title: Presentations
 lang: en
 ---

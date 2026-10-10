@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: presentation-page
 title: Presenting “Making games for Ventilastation”
 lang: en
 ---

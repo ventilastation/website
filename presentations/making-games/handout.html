@@ -1,31 +1,8 @@
 ---
-layout: null
+layout: presentation-page
 title: Making games for Ventilastation — reading view
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ page.title }}</title>
-  <style>
-    :root { color-scheme: dark; }
-    body { max-width: 58rem; margin: auto; padding: 2rem; background: #0b1016; color: #eff6fa; font: 18px/1.6 Arial, sans-serif; }
-    a { color: #58e5b0; }
-    h1, h2 { line-height: 1.15; margin-top: 2rem; }
-    pre { padding: 1rem; background: #14212b; overflow-x: auto; }
-    img { display: block; max-width: 100%; max-height: 32rem; object-fit: contain; margin: 1rem auto; }
-    .split { display: block; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #405260; }
-    hr { border: 0; border-top: 2px solid #58e5b0; margin: 3rem 0; }
-    @media print { :root { color-scheme: light; } body { color: #111; background: white; } pre { background: #eee; } a { color: #174c37; } }
-  </style>
-</head>
-<body>
-  <nav><a href="./">Slide view</a> · <a href="slides.md" download>Markdown source</a> · <a href="presenter-guide.html">Presenter guide</a></nav>
-  <p>A 45-minute presentation for game developers. Each slide includes its pacing and speaker notes below.</p>
-  {% capture content %}{% include_relative slides.md %}{% endcapture %}
-  {{ content | replace: 'Notes:', '### Speaker notes' | markdownify }}
-</body>
-</html>
+<p><a href="slides.md" download>Download the Markdown source</a></p>
+<p>A 45-minute presentation for game developers. Each slide includes its pacing and speaker notes below.</p>
+{% capture content %}{% include_relative slides.md %}{% endcapture %}
+{{ content | replace: 'Notes:', '### Speaker notes' | markdownify }}

@@ -3,3 +3,4 @@ https://github.com/hakimel/reveal.js/releases/tag/6.0.2
 MIT license: see LICENSE
 Npm tarball integrity: sha512-JYIg5D9aoxoaLeb84O+OvAwsKWdIavVgEDScxtYEXFCT6t6TQrhNtSgogcjdCpdLsWglhJn3zyE3fUOwiH5KEg==
 Only the core, Markdown, highlighting and speaker-notes distributions are included.
+Local customization: the notes popup loads the presentation's speaker-theme.css.
