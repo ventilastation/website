@@ -7,6 +7,9 @@ heading: ¿Cómo hacer juegos para Ventilastation?
 Podés hacer tu primer juego circular con MicroPython y **VS2**, la API actual,
 sin tener una consola física. La documentación está en inglés.
 
+También podés [jugar en el emulador web](/emulator/) sin instalar nada.
+Para ver cómo se hace un juego paso a paso, mirá la [presentación en inglés](/presentations/making-games/).
+
 1. [Prepará el emulador de escritorio](/docs/guides/desktop.html).
 2. [Creá tu primer juego y mové una nave](/docs/vs2/tutorial/first-game.html).
 3. [Seguí el tutorial completo](/docs/vs2/tutorial/index.html) para agregar enemigos, puntaje y sonido.

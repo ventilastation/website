@@ -47,8 +47,7 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 | Toggle audio | P | C |
 | Exit | Page Down | End |
 
-Sound starts off. Check the room's volume before opting in. Garden and Rest
-have no idle timeout, so exit deliberately after a demonstration.
+Sound starts off. Check the room's volume before opting in. Use Y or Page Down to leave a demonstration.
 
 ## First demonstration
 
@@ -112,3 +111,15 @@ captures come from the SDK desktop renderer. The [artwork and sound record](exam
 contains the built-in image generation prompt and the original tone recipes.
 The source and download accompany the slides. Reveal.js 6.0.2 is vendored with
 its MIT license and version record in `vendor/reveal/`.
+
+## Browser checkpoints
+
+Code examples have a **Run this checkpoint** button. It opens the browser
+emulator in another tab with a cumulative version of the game at that slide,
+using the same packed assets as the desktop game. The stages are steering,
+poses, pools, timers, flowers, tiles, scrolling, HUD, scenes, shared play and
+audio. The early stages start directly; from the scenes checkpoint onward,
+press Space (A) at the title. Arrows steer, Space slows time when that mechanic
+appears, O rests after scenes are introduced, and P toggles the final audio.
+Reload the checkpoint URL to start fresh. Keep the desktop setup ready as a
+backup for poor network conditions.

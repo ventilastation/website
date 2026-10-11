@@ -106,6 +106,23 @@ def check_starter(sdk):
     print('Starter steers and wraps; complete game source and asset archive match the SDK')
 
 
+def check_checkpoints(site, sdk):
+    stages = set()
+    for slide in (TALK / 'slides.md').read_text().split('\n---\n'):
+        content = slide.split('\nNotes:\n')[0]
+        if '```python' in content or 'language-python' in content:
+            assert 'class="checkpoint-launch"' in content, content[:160]
+        for checkpoint in re.findall(r'data-checkpoint="([^"]+)"', content):
+            path = Path('games/demos/dream_garden/code/checkpoints') / (checkpoint + '.py')
+            assert (sdk / path).is_file(), checkpoint
+            assert (site / 'emulator' / path).read_bytes() == (sdk / path).read_bytes(), checkpoint
+            stages.add(checkpoint)
+    assert len(stages) == 11, stages
+    assert (sdk / 'games/demos/dream_garden/code/checkpoints/11-audio.py').read_bytes() == (sdk / 'games/demos/dream_garden/code/dream_garden.py').read_bytes()
+    assert 'idle_timeout' not in (TALK / 'slides.md').read_text()
+    print('All Python slides launch a published cumulative checkpoint; 11 stages match the SDK')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', type=Path, required=True)
@@ -115,3 +132,4 @@ if __name__ == '__main__':
     check_pacing()
     check_site(options.site.resolve(), options.baseurl.rstrip('/'), options.sdk.resolve())
     check_starter(options.sdk.resolve())
+    check_checkpoints(options.site.resolve(), options.sdk.resolve())
