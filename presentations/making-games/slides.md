@@ -102,7 +102,7 @@ Sources: [Sickhouse's theme](https://www.sickhouse.nl/festival/dream-no-return-2
 
 ## The desktop development loop
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 ```sh
 git clone https://github.com/ventilastation/vsdk.git
@@ -129,7 +129,7 @@ Sources: [Desktop setup](../../docs/guides/desktop.html), [complete Dream Garden
 
 ## A game is a folder
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" target="_blank" rel="noopener" data-checkpoint="01-steering">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering">Run this checkpoint</a>
 
 ```text
 games/myname/mygame/
@@ -157,7 +157,7 @@ Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter so
 
 ## PNGs become indexed image strips
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" target="_blank" rel="noopener" data-checkpoint="01-steering">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering">Run this checkpoint</a>
 
 <div class="split">
 <div>
@@ -201,7 +201,7 @@ Sources and diagram: [Scene lifecycle](../../docs/vs2/reference/scene.html), [ru
 
 ## A complete first game
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" target="_blank" rel="noopener" data-checkpoint="01-steering">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering">Run this checkpoint</a>
 
 ```python
 import vs2
@@ -232,7 +232,7 @@ Sources: [First game](../../docs/vs2/tutorial/first-game.html), [circular displa
 
 ## First checkpoint: a creature you can steer
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" target="_blank" rel="noopener" data-checkpoint="01-steering">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering">Run this checkpoint</a>
 
 <div class="split">
 <div>
@@ -290,7 +290,7 @@ Source: [Projections and draw order](../../docs/vs2/tutorial/display.html). Imag
 
 ## Movement and animation are property writes
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=02-poses" target="_blank" rel="noopener" data-checkpoint="02-poses">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=02-poses" data-checkpoint="02-poses">Run this checkpoint</a>
 
 ```python
 direction = joy1.held(LEFT) - joy1.held(RIGHT)
@@ -319,7 +319,7 @@ Sources: [Sprites](../../docs/vs2/tutorial/sprites.html), [Dream Garden's steer 
 
 ## Seeds and flowers have bounded pools
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=03-pools" target="_blank" rel="noopener" data-checkpoint="03-pools">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=03-pools" data-checkpoint="03-pools">Run this checkpoint</a>
 
 ```python
 # In build():
@@ -347,7 +347,7 @@ Source: [Sprite pools](../../docs/vs2/tutorial/pools.html), [sample source](exam
 
 ## A timer controls the seed rhythm
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=04-timer" target="_blank" rel="noopener" data-checkpoint="04-timer">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=04-timer" data-checkpoint="04-timer">Run this checkpoint</a>
 
 ```python
 from urandom import randrange
@@ -375,7 +375,7 @@ Sources: [Scene timers](../../docs/vs2/reference/scene.html), [sample spawn_seed
 
 ## A collision grows a flower
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" target="_blank" rel="noopener" data-checkpoint="05-flowers">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" data-checkpoint="05-flowers">Run this checkpoint</a>
 
 ```python
 if seed.overlaps(self.dreamer):
@@ -399,7 +399,7 @@ Sources: [Collision API](../../docs/vs2/tutorial/sprites.html), [Dream Garden's 
 
 ## The drifting garden is one tilemap
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=06-tiles" target="_blank" rel="noopener" data-checkpoint="06-tiles">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=06-tiles" data-checkpoint="06-tiles">Run this checkpoint</a>
 
 <div class="split">
 <div>
@@ -426,7 +426,7 @@ Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the s
 
 ## Scrolling moves the view
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=07-scroll" target="_blank" rel="noopener" data-checkpoint="07-scroll">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=07-scroll" data-checkpoint="07-scroll">Run this checkpoint</a>
 
 ```python
 pattern_height = 6 * self.ground.tile_height
@@ -452,7 +452,7 @@ Sources: [Tilemap scrolling](../../docs/vs2/tutorial/tilemaps-and-text.html), [D
 
 ## The HUD sets the mood
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=08-hud" target="_blank" rel="noopener" data-checkpoint="08-hud">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=08-hud" data-checkpoint="08-hud">Run this checkpoint</a>
 
 ```python
 self.mood = self.hud.label(
@@ -479,7 +479,7 @@ Source: [Labels and flips](../../docs/vs2/tutorial/tilemaps-and-text.html), [sam
 
 ## Title, garden and rest scenes
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=09-scenes" target="_blank" rel="noopener" data-checkpoint="09-scenes">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=09-scenes" data-checkpoint="09-scenes">Run this checkpoint</a>
 
 ```python
 self.switch(Garden())          # A on the title
@@ -505,7 +505,7 @@ Sources: [Scene reference](../../docs/vs2/reference/scene.html), [Title, Garden 
 
 ## Two people can share one garden
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=10-shared" target="_blank" rel="noopener" data-checkpoint="10-shared">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=10-shared" data-checkpoint="10-shared">Run this checkpoint</a>
 
 ```python
 joy1.held(LEFT)       # continuous steering
@@ -528,7 +528,7 @@ Sources: [Controls reference](../../docs/vs2/reference/services.html#vs2-control
 
 ## A quiet lullaby is optional
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 ```python
 vs2.audio.music("lullaby", loop=True)
@@ -551,7 +551,7 @@ Sources: [Audio API](../../docs/vs2/reference/services.html#vs2-audio), [origina
 
 ## Players can change the pace
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 <div class="split">
 <div>
@@ -595,7 +595,7 @@ Sources: [Resource limits](../../docs/vs2/reference/services.html#vs2-limits), [
 
 ## Heap stability is part of game correctness
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 ```python
 seed.y -= self.speed
@@ -638,7 +638,7 @@ Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: 
 
 ## Second checkpoint: a shared dream
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 <div class="split">
 <div>
@@ -662,7 +662,7 @@ Sources: [Finished source](examples/dream_garden.py), [game instructions](exampl
 
 ## A game travels with its source and assets
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" target="_blank" rel="noopener" data-checkpoint="11-audio">Run this checkpoint ↗</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 - Matching `code/<name>.py` entry point
 - PNG strips and `__images__.yaml`

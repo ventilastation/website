@@ -115,11 +115,13 @@ its MIT license and version record in `vendor/reveal/`.
 ## Browser checkpoints
 
 Code examples have a **Run this checkpoint** button. It opens the browser
-emulator in another tab with a cumulative version of the game at that slide,
+emulator with a cumulative version of the game at that slide,
 using the same packed assets as the desktop game. The stages are steering,
 poses, pools, timers, flowers, tiles, scrolling, HUD, scenes, shared play and
 audio. The early stages start directly; from the scenes checkpoint onward,
 press Space (A) at the title. Arrows steer, Space slows time when that mechanic
 appears, O rests after scenes are introduced, and P toggles the final audio.
+Use the browser’s Back action to return to the same slide, or open the link
+in another tab using your browser’s usual modifier key.
 Reload the checkpoint URL to start fresh. Keep the desktop setup ready as a
 backup for poor network conditions.
