@@ -7,6 +7,9 @@ heading: Making games for Ventilastation
 Make your first circular game in MicroPython with **VS2**, the current game API.
 You can develop and test it on your computer without building a console.
 
+You can also [play in the web emulator](/emulator/) without installing anything.
+For a guided game-making demonstration, see the [English presentation](/presentations/making-games/).
+
 1. [Set up the desktop emulator](/docs/guides/desktop.html).
 2. [Create your first game and steer a ship](/docs/vs2/tutorial/first-game.html).
 3. [Follow the complete tutorial](/docs/vs2/tutorial/index.html) to add enemies, a score and sound.

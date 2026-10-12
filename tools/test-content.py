@@ -147,12 +147,9 @@ class ContentTests(unittest.TestCase):
             page = Page(self.baseline / filename)
             for target in ("/docs/", "/docs/guides/desktop.html",
                            "/docs/vs2/tutorial/first-game.html", "/docs/vs2/tutorial/index.html",
-                           "/docs/vs2/reference/index.html"):
+                           "/docs/vs2/reference/index.html", "/emulator/", "/presentations/making-games/"):
                 with self.subTest(page=filename, target=target):
                     self.assertIn(target, page.links)
-            for target in ("/emulator/", "/docs/guides/browser.html"):
-                with self.subTest(page=filename, hidden=target):
-                    self.assertNotIn(target, page.links)
 
     def test_homepages_link_directly_to_each_other_and_use_root_assets(self):
         for filename, other_language in zip(HOME_PAGES, ('/en/', '/es/')):
