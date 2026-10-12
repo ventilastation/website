@@ -153,7 +153,22 @@ Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter so
 
 ---
 
-<!-- .slide: id="assets"  data-timing="105" -->
+<!-- .slide: id="sprite-atlas" data-timing="45" -->
+
+## Dream Garden sprite atlas
+
+<img class="figure atlas-figure" src="assets/source-atlas.png" alt="The complete Dream Garden atlas: pink and mint creatures in four poses each, golden seed animation frames, four flowers with two frames each, and eight garden details">
+
+<p class="caption">Dreamers, seeds, flowers and garden details.</p>
+
+Notes:
+**8:45–9:30.** Show the original artwork sheet before explaining its runtime format. The top row has four pink poses and the same four poses in mint for player two. Below are four seed frames, four flower species with two frames each, and eight sparse garden details. The source atlas was generated for this game and is included in the download. The preparation script crops its cells, corrects the leaning pose order, resizes them with nearest-neighbour sampling, makes alpha binary and packs horizontal strips. The dreamers become 19 × 19 pixel frames. Keep the artwork legible at that final size, especially on the moving physical display.
+
+Source: [Artwork provenance and preparation](examples/artwork.html). Image: Dream Garden's original `sources/source-atlas.png`, included unchanged.
+
+---
+
+<!-- .slide: id="assets"  data-timing="60" -->
 
 ## PNGs become indexed image strips
 
@@ -172,7 +187,7 @@ Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter so
 </div>
 
 Notes:
-**8:45–10:30.** The console uses compiled strips rather than decoding PNGs during play. The full dreamer strip has eight 19-pixel frames, so it is 152 pixels wide. The picture shows its first four poses. The next four repeat those poses in mint for player two. YAML declares all eight frames. Related art shares a palette group. The full game adds seed, flower and garden strips plus the existing CP437 font in a separate text palette. The artwork came from a generated atlas, then technical cropping, nearest-neighbour resizing and strip packing. You can replace the packed PNGs with your own pixel art. Rerun the emulator after editing assets. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**9:30–10:30.** The console uses compiled strips rather than decoding PNGs during play. The full dreamer strip has eight 19-pixel frames, so it is 152 pixels wide. The picture shows its first four poses. The next four repeat those poses in mint for player two. YAML declares all eight frames. Related art shares a palette group. The full game adds seed, flower and garden strips plus the existing CP437 font in a separate text palette. You can replace the packed PNGs with your own pixel art. Rerun the emulator after editing assets. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Image setup](../../docs/vs2/tutorial/first-game.html), [artwork provenance and preparation](examples/artwork.html). Image: the actual packed dreamer strip, cropped to player one's poses.
 
