@@ -27,12 +27,12 @@ Windows uses `vs-emu.bat --game demos.dream_garden`.
 
 | Action | Controller | Player 1 keyboard | Player 2 keyboard |
 | --- | --- | --- | --- |
-| Begin / join | A | Space | Z |
-| Drift around the rim | Left / Right | Left / Right arrows | H / L |
-| Slow everyone's garden | Hold A | Hold Space | Hold Z |
-| Rest and keep the flowers on screen | B | O | X |
-| Toggle the quiet lullaby and bloom sound | X | P | C |
-| Return to the launcher | Y / Back | Y / Page Down | V / End |
+| Begin / join | A | Space | Numpad 0 |
+| Drift around the rim | Left / Right | A / D | Left / Right arrows |
+| Slow everyone's garden | Hold A | Hold Space | Hold Numpad 0 |
+| Rest and keep the flowers on screen | B | B | Numpad 1 |
+| Toggle the quiet lullaby and bloom sound | X | N | Numpad 2 |
+| Return to the launcher | Y / Back | M / 1 | Numpad 3 / + |
 
 Catch a golden seed to plant a flower. Missing a seed has no penalty. A second
 player joins by steering or pressing A, using an already reserved mint dreamer.

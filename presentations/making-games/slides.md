@@ -119,7 +119,7 @@ Edit local files, rerun, watch the terminal.
 Windows uses `vs-emu.bat`. <!-- .element: class="caption" -->
 
 Notes:
-**6:00–7:30.** Prepare dependencies before the live demonstration. The setup guide covers Linux, macOS and Windows, including MicroPython and FFmpeg. The desktop host uses CPython, while game code runs in MicroPython. Do not initialize the Retro-Go firmware submodule just to make a game. The terminal shows game prints and tracebacks. The emulator rebuilds changed image ROMs at launch. During this branch preview, check out feat/overkill-dream-garden after cloning, or install the complete game download into an existing current SDK checkout. After the branch merges, the plain clone contains it. Space is A, O is B, P is X and Page Down exits. Two gamepads or the second keyboard controls support shared play. The Run this checkpoint button opens the finished game in the browser.
+**6:00–7:30.** Prepare dependencies before the live demonstration. The setup guide covers Linux, macOS and Windows, including MicroPython and FFmpeg. The desktop host uses CPython, while game code runs in MicroPython. Do not initialize the Retro-Go firmware submodule just to make a game. The terminal shows game prints and tracebacks. The emulator rebuilds changed image ROMs at launch. Dream Garden is included in the SDK checkout, or can be installed from the complete game download. WASD are the directions, Space is A, B is B, N is X and 1 or M exits. F1 shows the keyboard layout. Two gamepads or the second keyboard controls support shared play. The Run this checkpoint button opens the finished game in the browser.
 
 Sources: [Desktop setup](../../docs/guides/desktop.html), [complete Dream Garden download](examples/dream-garden.zip), [game instructions](examples/dream-garden-guide.html).
 
@@ -533,7 +533,7 @@ The second dreamer joins an already reserved sprite.
 Y or Back returns to the launcher on either controller.
 
 Notes:
-**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to affect the whole garden. Y and Back remain the shared arcade's exit route. Keyboard player two uses H/L to steer, Z for A, X for B and C for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to affect the whole garden. Y and Back remain the shared arcade's exit route. Keyboard player two uses Left/Right arrows to steer, numpad 0 for A, numpad 1 for B and numpad 2 for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Controls reference](../../docs/vs2/reference/services.html#vs2-controls), [game controls](examples/dream-garden-guide.html).
 
@@ -666,7 +666,7 @@ Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: 
 </div>
 
 Notes:
-**36:00–38:00.** Run the finished game. A begins. Show the dreamer moving and deliberately catch a seed to grow a flower. Let another seed pass to show that it causes no harm. Invite a second person or use H/L and Z to reveal the mint friend. Have either player hold A and point out the SLOW label and slower background. Use X or keyboard P to opt into the lullaby at a suitable room volume. B or O chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. Y or Page Down returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
+**36:00–38:00.** Run the finished game. A begins. Show the dreamer moving and deliberately catch a seed to grow a flower. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the SLOW label and slower background. Use X or keyboard N to opt into the lullaby at a suitable room volume. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
 
 Sources: [Finished source](examples/dream_garden.py), [game instructions](examples/dream-garden-guide.html), [complete download](examples/dream-garden.zip). Screenshot: the actual Rest scene through the SDK renderer.
 

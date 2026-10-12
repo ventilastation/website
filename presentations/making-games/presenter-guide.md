@@ -41,13 +41,13 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 
 | Action | Player 1 | Player 2 |
 | --- | --- | --- |
-| Steer | Left / Right | H / L |
-| Begin / join / slow time | Space | Z |
-| Rest | O | X |
-| Toggle audio | P | C |
-| Exit | Page Down | End |
+| Steer | A / D | Left / Right arrows |
+| Begin / join / slow time | Space | Numpad 0 |
+| Rest | B | Numpad 1 |
+| Toggle audio | N | Numpad 2 |
+| Exit | 1 or M | Numpad + or 3 |
 
-Sound starts off. Check the room's volume before opting in. Use Y or Page Down to leave a demonstration.
+Sound starts off. Check the room's volume before opting in. Use 1 or M to leave a demonstration. F1 shows the keyboard layout.
 
 ## First demonstration
 
