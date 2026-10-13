@@ -97,7 +97,8 @@ def check_starter(sdk):
     assert (TALK / 'examples/dream_garden.py').read_bytes() == (game_source / 'code/dream_garden.py').read_bytes()
     with zipfile.ZipFile(TALK / 'examples/dream-garden.zip') as archive:
         expected = {str(path.relative_to(sdk)): path for path in game_source.rglob('*')
-                    if path.is_file() and '__pycache__' not in path.parts}
+                    if path.is_file() and '__pycache__' not in path.parts
+                    and not path.name.endswith('.mp3.wav')}
         expected['games/demos/dream_garden/LICENSE'] = sdk / 'LICENSE'
         expected['tests/test_dream_garden.py'] = sdk / 'tests/test_dream_garden.py'
         assert set(archive.namelist()) == set(expected)
