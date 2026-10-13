@@ -25,7 +25,7 @@ links provide references rather than dependencies for the presentation.
 ## Before the talk
 
 Follow the [desktop setup]({{ '/docs/guides/desktop.html' | relative_url }}) in a
-current SDK checkout. During branch review, use `feat/dream-garden-layers` or
+current SDK checkout. During branch review, use `feat/dream-garden-clouds` or
 extract the [complete game download](examples/dream-garden.zip) at the SDK root.
 The download creates `games/demos/dream_garden/` and includes the source, packed
 PNGs, YAML, menu icon, MP3s, artwork provenance and rebuild recipes.
@@ -42,7 +42,7 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 | Action | Player 1 | Player 2 |
 | --- | --- | --- |
 | Steer | A / D | Left / Right arrows |
-| Begin / join / slow time | Space | Numpad 0 |
+| Begin / join / slow seeds | Space | Numpad 0 |
 | Rest | B | Numpad 1 |
 | Toggle audio | N | Numpad 2 |
 | Exit | 1 or M | Numpad + or 3 |
@@ -76,15 +76,15 @@ capture if you need to present without the emulator.
 
 Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
-hold A to slow the shared flow. Point out RELAX, slower flying seeds and the much slower inward flower drift.
-Plants appear on the side each dreamer last moved toward, even after stopping. Seeds pulse independently at random.
+hold A to slow the seeds while clouds and planted flowers keep their normal pace. Point out RELAX, fluffy clouds in varied sizes, seeds normally moving 15% slower than clouds and slowing further under A, and the much slower inward flower drift.
+Plants follow current movement; after stopping, the first follows that direction, then later catches alternate sides until movement resumes. Seeds pulse independently at random.
 Toggle the quiet audio and show NOISY/QUIET holding for two seconds before sliding out. RELAX slides out when A is released. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.
 
 Keep [the finished source](examples/dream_garden.py) open at `build`, `update`
 and `move_seeds`. `#/finished-demo` shows the resting scene if a live demo is
 unavailable. The display geometry slides use the same game's actual sprites
-and font through the SDK desktop renderer. The general API tutorial remains a
+and font through the emulator’s WebGL display backend. The general API tutorial remains a
 separate Trench Run walkthrough.
 
 ## Editing, hosting and printing
@@ -108,7 +108,7 @@ Sickhouse's theme announcement informed the new game direction.
 
 Cover and console photographs come from this website. Circular-coordinate and
 scene-lifecycle diagrams come from the existing SDK documentation. New game
-captures come from the SDK desktop renderer. The [artwork and sound record](examples/artwork.html)
+captures come from the emulator’s WebGL display backend. The [artwork and sound record](examples/artwork.html)
 contains the built-in image generation prompt and the original tone recipes.
 The source and download accompany the slides. Reveal.js 6.0.2 is vendored with
 its MIT license and version record in `vendor/reveal/`.
@@ -126,3 +126,21 @@ Use the browser’s Back action to return to the same slide, or open the link
 in another tab using your browser’s usual modifier key.
 Reload the checkpoint URL to start fresh. Keep the desktop setup ready as a
 backup for poor network conditions.
+
+## Rebuilding the WebGL captures
+
+All nine game and display captures use the SDK's WebGL scene compositor and
+LED display backend, including its glow. The geometry examples use the same
+packed assets. Photographs, source atlases and explanatory diagrams retain
+their original files. The capture script requires Playwright and Chromium,
+and fails if WebGL2 is unavailable rather than switching to Canvas 2D.
+
+```sh
+python3 tools/presentation-scenes.py --sdk vsdk --out /tmp/garden-scenes.json
+node tools/capture-presentation.mjs vsdk /tmp/garden-scenes.json
+```
+
+Run from the website repository after `make publish`. Set `CHROMIUM` to an
+installed Chrome executable if necessary. `assets/captures.json` records the
+backend and image hashes. The populated garden grows flowers through the real
+game's bloom handler; the starter and tilemap images run their actual checkpoints.

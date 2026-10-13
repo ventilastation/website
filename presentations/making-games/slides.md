@@ -14,7 +14,7 @@ Sources: [Sickhouse's 2026 theme](https://www.sickhouse.nl/festival/dream-no-ret
 ---
 
 
-<!-- .slide: id="console" data-timing="75" -->
+<!-- .slide: id="console" data-timing="60" -->
 
 ## A console built around a fan
 
@@ -29,14 +29,14 @@ Sources: [Sickhouse's 2026 theme](https://www.sickhouse.nl/festival/dream-no-ret
 
 
 Notes:
-**0:30–1:45.** Keep the hardware introduction short. Persistence of vision turns a rotating LED arm into a disc. The current game target is an ESP32-S3, with roughly 8 MB of RAM shared by the interpreter, heap and image strips. One core handles the game and another handles display work. Audio plays on the base station, not on the rotor. The photo shows a Ventilastation build, not a board identification guide. Game developers can work on a computer without owning or building the console.
+**0:30–1:30.** Keep the hardware introduction short. Persistence of vision turns a rotating LED arm into a disc. The current game target is an ESP32-S3, with roughly 8 MB of RAM shared by the interpreter, heap and image strips. One core handles the game and another handles display work. Audio plays on the base station, not on the rotor. The photo shows a Ventilastation build, not a board identification guide. Game developers can work on a computer without owning or building the console.
 
 Sources: [Tutorial introduction](../../docs/vs2/tutorial/index.html), [website](../../en/). Photograph: this website's `images/pic01.jpg`.
 
 ---
 
 
-<!-- .slide: id="display-in-time" data-timing="90" -->
+<!-- .slide: id="display-in-time" data-timing="75" -->
 
 ## The screen is drawn over time
 
@@ -51,13 +51,13 @@ Sources: [Tutorial introduction](../../docs/vs2/tutorial/index.html), [website](
 
 
 Notes:
-**1:45–3:15.** A conventional panel has physical pixels distributed over a surface. Ventilastation moves a line of LEDs through that surface and changes their colours at each angle. Your eye integrates the emitted light over a rotation. The output serves 256 angular columns, each with 54 radial LED samples. The renderer prepares polar framebuffers, and the output serves ready columns independently of the 30 ms game tick. Motor speed does not set your update rate. This is why physical brightness, motion and display deadlines matter even when a desktop image looks correct. The clip shows the real display. If video cannot play, the poster still gives the physical context.
+**1:30–2:45.** A conventional panel has physical pixels distributed over a surface. Ventilastation moves a line of LEDs through that surface and changes their colours at each angle. Your eye integrates the emitted light over a rotation. The output serves 256 angular columns, each with 54 radial LED samples. The renderer prepares polar framebuffers, and the output serves ready columns independently of the 30 ms game tick. Motor speed does not set your update rate. This is why physical brightness, motion and display deadlines matter even when a desktop image looks correct. The clip shows the real display. If video cannot play, the poster still gives the physical context.
 
 Sources: [Physical display and renderer](../../docs/vs2/tutorial/index.html), [geometry](../../docs/vs2/tutorial/display.html). Video: this website's `images/banner.mp4`.
 
 ---
 
-<!-- .slide: id="wedge-pixels"  data-timing="90" -->
+<!-- .slide: id="wedge-pixels"  data-timing="75" -->
 
 ## The pixels form wedges
 
@@ -71,9 +71,9 @@ Sources: [Physical display and renderer](../../docs/vs2/tutorial/index.html), [g
 </div>
 
 Notes:
-**3:15–4:45.** Here are four copies of our dream creature at the same depth. Their orientation follows the disc. Their antennae point inward rather than staying upright on a rectangular screen. Angular cells get physically narrower near the centre, while the LED bar determines radial spacing. A constant angular velocity covers different physical distances at different radii. Put critical text near the rim and decide whether movement means angle or depth. A garden arranged around the disc lets people tend the whole circumference.
+**2:45–4:00.** Here are four copies of our dream creature at the same depth. Their orientation follows the disc. Their antennae point inward rather than staying upright on a rectangular screen. Angular cells get physically narrower near the centre, while the LED bar determines radial spacing. A constant angular velocity covers different physical distances at different radii. Put critical text near the rim and decide whether movement means angle or depth. A garden arranged around the disc lets people tend the whole circumference.
 
-Source: [Circular geometry and sprite orientation](../../docs/vs2/tutorial/display.html). Image: the SDK desktop renderer with Dream Garden's actual assets.
+Source: [Circular geometry and sprite orientation](../../docs/vs2/tutorial/display.html). Image: the emulator’s WebGL display backend with Dream Garden's actual assets.
 
 ---
 
@@ -84,21 +84,21 @@ Source: [Circular geometry and sprite orientation](../../docs/vs2/tutorial/displ
 <div class="split">
 <div>
 <p>Drift around the rim and catch seeds to grow flowers.</p>
-<p>Either player can hold A to <strong>slow the shared flow</strong>.</p>
+<p>Either player can hold A to <strong>slow the shared seed flow</strong>.</p>
 <p>Passing seeds do no harm. Watching is welcome.</p>
 <p class="caption">Inspired by Dream No Return</p>
 </div>
-<img src="assets/dream-garden.png" alt="Two dream creatures on the rim, golden seeds drifting outward and a ring of pink, mint and lavender flowers">
+<img src="assets/dream-garden.png" alt="Two dream creatures on the rim, golden seeds above blue-gray clouds and pink, mint and lavender flowers drifting inward">
 </div>
 
 Notes:
-**4:45–6:00.** Overkill's 2026 theme gives us a design prompt about dreaming and rest, with chapters including Time, Shape Shifting, Escape and Lullabies. This game is our response. A pink dreamer catches seeds. A mint friend can join. A catch creates a flower and a miss simply passes. Holding A slows both players' world. There is no score, death, countdown or difficulty ramp. B chooses a still resting scene. Ask the audience what happens when time becomes something players can share rather than a resource they must beat. Then move straight into making it.
+**4:00–5:15.** Overkill's 2026 theme gives us a design prompt about dreaming and rest, with chapters including Time, Shape Shifting, Escape and Lullabies. This game is our response. A pink dreamer catches seeds. A mint friend can join. A catch creates a flower and a miss simply passes. Holding A slows the shared seed flow. Clouds keep moving at their normal pace. The garden starts empty, and flowers drift slowly inward after planting. There is no score, death, countdown or difficulty ramp. B chooses a still resting scene. Ask the audience what happens when time becomes something players can share rather than a resource they must beat. Then move straight into making it.
 
-Sources: [Sickhouse's theme](https://www.sickhouse.nl/festival/dream-no-return-2026), [finished game source](examples/dream_garden.py). Screenshot: a populated game state rendered by the SDK desktop renderer.
+Sources: [Sickhouse's theme](https://www.sickhouse.nl/festival/dream-no-return-2026), [finished game source](examples/dream_garden.py). Screenshot: a populated game state rendered by the emulator’s WebGL display backend.
 
 ---
 
-<!-- .slide: id="desktop"  data-timing="90" -->
+<!-- .slide: id="desktop"  data-timing="75" -->
 
 ## The desktop development loop
 
@@ -119,7 +119,7 @@ Edit local files, rerun, watch the terminal.
 Windows uses `vs-emu.bat`. <!-- .element: class="caption" -->
 
 Notes:
-**6:00–7:30.** Prepare dependencies before the live demonstration. The setup guide covers Linux, macOS and Windows, including MicroPython and FFmpeg. The desktop host uses CPython, while game code runs in MicroPython. Do not initialize the Retro-Go firmware submodule just to make a game. The terminal shows game prints and tracebacks. The emulator rebuilds changed image ROMs at launch. Dream Garden is included in the SDK checkout, or can be installed from the complete game download. WASD are the directions, Space is A, B is B, N is X and 1 or M exits. F1 shows the keyboard layout. Two gamepads or the second keyboard controls support shared play. The Run this checkpoint button opens the finished game in the browser.
+**5:15–6:30.** Prepare dependencies before the live demonstration. The setup guide covers Linux, macOS and Windows, including MicroPython and FFmpeg. The desktop host uses CPython, while game code runs in MicroPython. Do not initialize the Retro-Go firmware submodule just to make a game. The terminal shows game prints and tracebacks. The emulator rebuilds changed image ROMs at launch. Dream Garden is included in the SDK checkout, or can be installed from the complete game download. WASD are the directions, Space is A, B is B, N toggles audio and 1 or M exits. F1 shows the keyboard layout. Two gamepads or the second keyboard controls support shared play. The Run this checkpoint button opens the finished game in the browser.
 
 Sources: [Desktop setup](../../docs/guides/desktop.html), [complete Dream Garden download](examples/dream-garden.zip), [game instructions](examples/dream-garden-guide.html).
 
@@ -147,7 +147,7 @@ games/myname/mygame/
 `main()` returns a scene. The menu icon is 64 × 30 pixels.
 
 Notes:
-**7:30–8:45.** The code module has the same name as its game folder. Group and folder form the launch name, myname.mygame. The metadata explicitly declares the current API. The launcher discovers the folder without a central application list. Copy dreamer.png and menu.png from the downloaded sample, list only dreamer.png with frames: 8 in the starter YAML, and copy the starter source to code/mygame.py. The finished sample uses demos/dream_garden and code/dream_garden.py. The game download includes its code, images, YAML, icon, sound and source credits. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**6:30–7:45.** The code module has the same name as its game folder. Group and folder form the launch name, myname.mygame. The metadata explicitly declares the current API. The launcher discovers the folder without a central application list. Copy dreamer.png and menu.png from the downloaded sample, list only dreamer.png with frames: 8 in the starter YAML, and copy the starter source to code/mygame.py. The finished sample uses demos/dream_garden and code/dream_garden.py. The game download includes its code, images, YAML, icon, sound and source credits. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter source](examples/first_game.py), [complete game](examples/dream-garden.zip).
 
@@ -155,16 +155,19 @@ Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter so
 
 <!-- .slide: id="sprite-atlas" data-timing="45" -->
 
-## Dream Garden sprite atlas
+## Dreamers, seeds, flowers and clouds
 
-<img class="figure atlas-figure" src="assets/source-atlas.png" alt="The complete Dream Garden atlas: pink and mint creatures in four poses each, golden seed animation frames, four flowers with two frames each, and eight garden details">
+<div class="split">
+<img src="assets/source-atlas.png" alt="Pink and mint dreamers, golden seed frames and four flower species on the original source atlas">
+<img src="assets/cloud-atlas.png" alt="Six fluffy cloud shapes, packed at three sizes for the flying layer">
+</div>
 
-<p class="caption">Dreamers, seeds, flowers and garden details.</p>
+<p class="caption">Dreamers and flowers below. Clouds and seeds above.</p>
 
 Notes:
-**8:45–9:30.** Show the original artwork sheet before explaining its runtime format. The top row has four pink poses and the same four poses in mint for player two. Below are four seed frames, four flower species with two frames each, and eight sparse garden details. The source atlas was generated for this game and is included in the download. The preparation script crops its cells, corrects the leaning pose order, resizes them with nearest-neighbour sampling, makes alpha binary and packs horizontal strips. The dreamers become 19 × 19 pixel frames. Keep the artwork legible at that final size, especially on the moving physical display.
+**7:45–8:30.** Show the original artwork sheet before explaining its runtime format. The top row has four pink poses and the same four poses in mint for player two. Below are four seed frames, four flower species with two frames each, and eight sparse garden details. The source atlas was generated for this game and is included in the download. The preparation script crops its cells, corrects the leaning pose order, resizes them with nearest-neighbour sampling, makes alpha binary and packs horizontal strips. The fourth row is unused in this experiment; a separate six-cloud atlas supplies the flying layer. The dreamers become 19 × 19 pixel frames. Keep the artwork legible at that final size, especially on the moving physical display.
 
-Source: [Artwork provenance and preparation](examples/artwork.html). Image: Dream Garden's original `sources/source-atlas.png`, included unchanged.
+Source: [Artwork provenance and preparation](examples/artwork.html). Images: Dream Garden's original source and cloud atlases, included unchanged.
 
 ---
 
@@ -187,7 +190,7 @@ Source: [Artwork provenance and preparation](examples/artwork.html). Image: Drea
 </div>
 
 Notes:
-**9:30–10:30.** The console uses compiled strips rather than decoding PNGs during play. The full dreamer strip has eight 19-pixel frames, so it is 152 pixels wide. The picture shows its first four poses. The next four repeat those poses in mint for player two. YAML declares all eight frames. Related art shares a palette group. The full game adds seed, flower and garden strips plus the existing CP437 font in a separate text palette. You can replace the packed PNGs with your own pixel art. Rerun the emulator after editing assets. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**8:30–9:30.** The console uses compiled strips rather than decoding PNGs during play. The full dreamer strip has eight 19-pixel frames, so it is 152 pixels wide. The picture shows its first four poses. The next four repeat those poses in mint for player two. YAML declares all eight frames. Related art shares a palette group. The full game adds seed.png (4 frames), flowers.png (8), clouds.png (18) in its own palette group, and steel8x8.png (256) in a text palette. Add these entries to __images__.yaml as you introduce each asset. The download includes the complete YAML. You can replace the packed PNGs with your own pixel art. Rerun the emulator after editing assets. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Image setup](../../docs/vs2/tutorial/first-game.html), [artwork provenance and preparation](examples/artwork.html). Image: the actual packed dreamer strip, cropped to player one's poses.
 
@@ -206,7 +209,7 @@ Sources: [Image setup](../../docs/vs2/tutorial/first-game.html), [artwork proven
 
 
 Notes:
-**10:30–12:15.** This is the main architectural rule. Create layers, sprites, pools, tilemaps and labels in `build()`. Returning from build seals the scene. Update can move, animate, show and hide them, but creating a new sprite there raises `SceneSealedError`. Structural budgets fail at scene entry rather than in the middle of a run. Build runs again whenever the scene is re-entered, and previous drawable handles are no longer valid. State that should survive belongs in `__init__`. A nominal tick is 30 milliseconds, about 33 updates per second. Slow updates delay the next tick rather than catching up lost time.
+**9:30–11:15.** This is the main architectural rule. Create layers, sprites, pools, tilemaps and labels in `build()`. Returning from build seals the scene. Update can move, animate, show and hide them, but creating a new sprite there raises `SceneSealedError`. Structural budgets fail at scene entry rather than in the middle of a run. Build runs again whenever the scene is re-entered, and previous drawable handles are no longer valid. State that should survive belongs in `__init__`. A nominal tick is 30 milliseconds, about 33 updates per second. Slow updates delay the next tick rather than catching up lost time.
 
 Sources and diagram: [Scene lifecycle](../../docs/vs2/reference/scene.html), [runtime constraints](../../docs/vs2/tutorial/index.html).
 
@@ -237,7 +240,7 @@ def main():
 ```
 
 Notes:
-**12:15–13:45.** Read this as an engine interface rather than a Python lesson. Main returns the first scene. Build creates a TUNNEL layer and a sprite by image name. X is the sprite's edge, so subtracting half its width centres the dreamer on angle zero. Update reads stable controller levels. Left minus right gives a direction and cancels opposite inputs. Wrapping keeps the stored X bounded, and the renderer also handles images crossing the seam. This is complete code once the folder, assets and metadata exist. The download has a short docstring with installation instructions. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**11:15–12:45.** Read this as an engine interface rather than a Python lesson. Main returns the first scene. Build creates a TUNNEL layer and a sprite by image name. X is the sprite's edge, so subtracting half its width centres the dreamer on angle zero. Update reads stable controller levels. Left minus right gives a direction and cancels opposite inputs. Wrapping keeps the stored X bounded, and the renderer also handles images crossing the seam. This is complete code once the folder, assets and metadata exist. The download has a short docstring with installation instructions. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [First game](../../docs/vs2/tutorial/first-game.html), [circular display](../../docs/vs2/tutorial/display.html), [starter code](examples/first_game.py).
 
@@ -260,9 +263,9 @@ Sources: [First game](../../docs/vs2/tutorial/first-game.html), [circular displa
 </div>
 
 Notes:
-**13:45–15:00.** Switch to the prepared desktop starter. Hold left, cross the seam, then hold right. Show that opposite buttons cancel. Point out the terminal and source file, then return to the deck. The goal is to make the circular coordinate model tangible before adding rules. If the emulator is unavailable, use this real renderer capture and trace the position change aloud. It shows only the starter's one sprite. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**12:45–14:00.** Switch to the prepared desktop starter. Hold left, cross the seam, then hold right. Show that opposite buttons cancel. Point out the terminal and source file, then return to the deck. The goal is to make the circular coordinate model tangible before adding rules. If the emulator is unavailable, use this real renderer capture and trace the position change aloud. It shows only the starter's one sprite. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
-Sources: [Starter source](examples/first_game.py), [first-game instructions](../../docs/vs2/tutorial/first-game.html). Screenshot: actual game assets through the SDK renderer, with all other game drawables hidden.
+Sources: [Starter source](examples/first_game.py), [first-game instructions](../../docs/vs2/tutorial/first-game.html). Screenshot: actual game assets through the emulator’s WebGL display backend, running the actual steering checkpoint.
 
 ---
 
@@ -275,7 +278,7 @@ Sources: [Starter source](examples/first_game.py), [first-game instructions](../
 
 
 Notes:
-**15:00–16:15.** This is the main mental adjustment for developers used to rectangular screens. The logical display has 256 angular columns and 54 radial LEDs. X zero is the bottom, then 64 is left, 128 top, and 192 right. X wraps. Y zero is the outer rim, and positive Y goes inward. A sprite crossing the angular seam stays continuous. The physical width of an angular column decreases near the centre, so a rectangular image gets squeezed there. Use `vs2.display.width` and `.height` to read the geometry, but distinguish physical LED height from tunnel depth on the next slide.
+**14:00–15:15.** This is the main mental adjustment for developers used to rectangular screens. The logical display has 256 angular columns and 54 radial LEDs. X zero is the bottom, then 64 is left, 128 top, and 192 right. X wraps. Y zero is the outer rim, and positive Y goes inward. A sprite crossing the angular seam stays continuous. The physical width of an angular column decreases near the centre, so a rectangular image gets squeezed there. Use `vs2.display.width` and `.height` to read the geometry, but distinguish physical LED height from tunnel depth on the next slide.
 
 Source and diagram: [The circular display](../../docs/vs2/tutorial/display.html).
 
@@ -295,9 +298,9 @@ Source and diagram: [The circular display](../../docs/vs2/tutorial/display.html)
 </div>
 
 Notes:
-**16:15–17:45.** Choose a projection per layer. The finished Dream Garden uses two TUNNEL layers for the planted garden and flying objects, plus one HUD layer for text. These dreamers use Y values 0, 24 and 48 on TUNNEL above and HUD below. Decreasing tunnel depth moves a seed outward toward the players. HUD removes perspective scaling, though angular cells still narrow near the centre. FULLSCREEN draws a centred image whose X rotates it and whose Y follows the tunnel depth curve. It accepts sprites only. Layers paint in creation order, then drawables in creation order inside each layer. The lower layer draws flowers then dreamers; the middle draws flying accents then seeds; the HUD draws last. Physical height 54 is not a tunnel off-screen threshold.
+**15:15–16:45.** Choose a projection per layer. The finished Dream Garden uses two TUNNEL layers for the planted garden and flying objects, plus one HUD layer for text. These dreamers use Y values 0, 24 and 48 on TUNNEL above and HUD below. Decreasing tunnel depth moves a seed outward toward the players. HUD removes perspective scaling, though angular cells still narrow near the centre. FULLSCREEN draws a centred image whose X rotates it and whose Y follows the tunnel depth curve. It accepts sprites only. Layers paint in creation order, then drawables in creation order inside each layer. The lower layer draws flowers then dreamers; the middle draws clouds then seeds; the HUD draws last. Physical height 54 is not a tunnel off-screen threshold.
 
-Source: [Projections and draw order](../../docs/vs2/tutorial/display.html). Image: actual dreamer assets in two SDK scene layers.
+Source: [Projections and draw order](../../docs/vs2/tutorial/display.html). Image: actual dreamer assets in two scene layers through the emulator’s WebGL display backend.
 
 ---
 
@@ -307,24 +310,26 @@ Source: [Projections and draw order](../../docs/vs2/tutorial/display.html). Imag
 
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=02-poses" data-checkpoint="02-poses">Run this checkpoint</a>
 
-```python
-direction = joy1.held(LEFT) - joy1.held(RIGHT)
-self.dreamer.x = (self.dreamer.x + direction) % vs2.display.width
-
-if joy1.held(A):
-    self.dreamer.frame = ASLEEP
+<div class="split">
+<div>
+<pre><code class="language-python" data-trim>if sleeping:
+    dreamer.frame = ASLEEP
 elif direction > 0:
-    self.dreamer.frame = LEFT_POSE
+    dreamer.frame = LEFT_POSE
 elif direction < 0:
-    self.dreamer.frame = RIGHT_POSE
+    dreamer.frame = RIGHT_POSE
 else:
-    self.dreamer.frame = AWAKE
-```
-
-Player two uses the same poses, starting at frame 4.
+    dreamer.frame = AWAKE</code></pre>
+</div>
+<div>
+<p>Frame changes reuse the same sprite.</p>
+<p>Flowers alternate between paired frames.</p>
+<p>Golden seeds wait a random interval, then run a short glow sequence.</p>
+</div>
+</div>
 
 Notes:
-**17:45–19:15.** Property writes update existing renderer records. Frame picks artwork from the strip without creating a new sprite. Dreamers lean when moving and close their eyes while holding A. The finished helper takes a controller and a base frame, so the second player reuses the same behaviour. Flower pairs pulse using the garden's slow clock. Read available frame counts from sprite.image.frames. Frame and visibility are independent, useful for preparing the second player before joining. Invalid frames fail immediately. Think of the display as a retained graph whose properties change during play. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**16:45–18:15.** Property writes update existing renderer records. Frame picks artwork from the strip without creating a new sprite. Dreamers lean when moving and close their eyes while holding A. The finished helper takes a controller and a base frame, so the second player reuses the same behaviour. Flower pairs pulse using a steady clock. Early checkpoints cycle the seed frames together. The completed game gives every live seed its own random 90–240 tick wait, then plays frames 1, 2, 3, 2, 1, 0 for six ticks each. Reset the wait after a pulse and remove its state when the seed retires. This makes the seeds glow occasionally rather than flashing together. The final checkpoint includes that helper. Read available frame counts from sprite.image.frames. Frame and visibility are independent, useful for preparing the second player before joining. Invalid frames fail immediately. Think of the display as a retained graph whose properties change during play. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Sprites](../../docs/vs2/tutorial/sprites.html), [Dream Garden's steer helper](examples/dream_garden.py).
 
@@ -337,11 +342,11 @@ Sources: [Sprites](../../docs/vs2/tutorial/sprites.html), [Dream Garden's steer 
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=03-pools" data-checkpoint="03-pools">Run this checkpoint</a>
 
 ```python
-# In build():
-self.seeds = self.world.sprite_pool("seed.png", count=16)
+# In build(), before creating the dreamer:
 self.flowers = self.world.sprite_pool(
     "flowers.png", count=24, on_empty=vs2.RECYCLE
 )
+self.seeds = self.world.sprite_pool("seed.png", count=16)
 
 # During play:
 seed = self.seeds.spawn(x=100, y=160)
@@ -352,7 +357,7 @@ if seed is None:
 A full flower pool reuses its oldest live flower.
 
 Notes:
-**19:15–20:45.** Reservation happens once in build. Spawn reveals and positions a reserved sprite. A full seed pool returns None and drops that particular spawn. Flowers instead recycle their oldest live slot, so new growth continues without an ever-growing graph. Both choices are part of the design: the garden can keep changing, yet nothing demands a perfect catch rate. Pools count at their full reserved size, including hidden slots. Iteration visits live sprites and supports retiring the current one. Pooling renderer objects does not remove all unrelated Python allocations. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**18:15–19:45.** Reservation happens once in build. Flowers begin hidden, so the garden starts empty. Create the dreamer after the flowers to draw the player above the planted garden. The flying layer comes at the next step. Spawn reveals and positions a reserved sprite. A full seed pool returns None and drops that particular spawn. Flowers instead recycle their oldest live slot, so new growth continues without an ever-growing graph. Both choices are part of the design: the garden can keep changing, yet nothing demands a perfect catch rate. Pools count at their full reserved size, including hidden slots. Iteration visits live sprites and supports retiring the current one. Pooling renderer objects does not remove all unrelated Python allocations. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Source: [Sprite pools](../../docs/vs2/tutorial/pools.html), [sample source](examples/dream_garden.py).
 
@@ -377,10 +382,10 @@ def spawn_seed(self):
     self.call_later(self.spawn_ms, self.spawn_seed)
 ```
 
-1.8 seconds drifting. 4 seconds while holding A.
+A seed every 1.8 seconds. RELAX changes the gap later.
 
 Notes:
-**20:45–22:00.** The callback rearms itself with the current gap. A held A changes spawn_ms, but a seed that is already scheduled keeps its deadline. The next gap uses the slower rhythm. Seed movement reacts immediately in update. This avoids rebuilding or continually replacing timer records while a button is held. A full pool simply skips a spawn. Scene-owned timers disappear when the scene closes or suspends, so an old callback cannot plant into the rest screen. Timers suit occasional events, not the animation loop. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**19:45–21:00.** The callback rearms itself with the current gap. This checkpoint uses 1800 ms. At the HUD checkpoint, held A changes spawn_ms to 4000 ms, but a seed that is already scheduled keeps its deadline. The next gap uses the slower rhythm. Seed movement reacts immediately in update. This avoids rebuilding or continually replacing timer records while a button is held. A full pool simply skips a spawn. Scene-owned timers disappear when the scene closes or suspends, so an old callback cannot plant into the rest screen. Timers suit occasional events, not the animation loop. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Scene timers](../../docs/vs2/reference/scene.html), [sample spawn_seed](examples/dream_garden.py).
 
@@ -393,47 +398,88 @@ Sources: [Scene timers](../../docs/vs2/reference/scene.html), [sample spawn_seed
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" data-checkpoint="05-flowers">Run this checkpoint</a>
 
 ```python
+# In build(), in this order:
+self.world = self.layer("world", projection=vs2.TUNNEL)
+self.air = self.layer("air", projection=vs2.TUNNEL)
+self.flowers = self.world.sprite_pool(
+    "flowers.png", count=24, on_empty=vs2.RECYCLE
+)
+self.dreamer = self.world.sprite("dreamer.png", y=0)
+self.seeds = self.air.sprite_pool("seed.png", count=16)
+
+# In the seed movement loop:
 if seed.overlaps(self.dreamer):
     self.bloom(seed)
-elif seed.y < -seed.image.height:
-    self.seeds.despawn(seed)
 ```
 
-X wraps across column zero. Y does not wrap.
-
-The full game checks both active dreamers.
+Flowers below players. Flying seeds above both.
 
 Notes:
-**22:00–23:30.** Collision tests use axis-aligned bounds in a layer's circular coordinate system. They understand the angular seam, so a dreamer crossing zero can still catch a seed without a duplicate actor. They are not pixel-perfect physical tests on the fan. The actual loop first decreases seed depth, then checks either active dreamer. Bloom retires the seed and plants a flower at the dreamer’s depth. Its centre is displaced by 75% of the dreamer’s width in the direction they last moved toward. Each player remembers their own direction after stopping; opposite inputs cancel without changing it. Before moving, the fallback is left. Flowers drift toward the centre at only 8% of seed speed. A missed seed retires after passing the rim. The response changes the garden without ending play or recording failure. This is a small code change with a large effect on the experience. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**21:00–22:30.** Collision tests use axis-aligned bounds in a layer's circular coordinate system. They understand the angular seam, so a dreamer crossing zero can still catch a seed without a duplicate actor. They are not pixel-perfect physical tests on the fan. The actual loop first decreases seed depth, then checks either active dreamer. Bloom retires the seed and plants a flower at the dreamer’s depth. Its centre is displaced by 75% of the dreamer’s width. Moving catches plant in the current direction. After stopping, the first catch uses that direction, then later catches alternate sides. Moving again resets the sequence, separately for each player. Opposite inputs count as stopping. Before moving, the first catch defaults to left. The later planting slide shows the helper that implements this rule. Flowers drift toward the centre at only 8% of normal seed speed. A missed seed retires after passing the rim. The response changes the garden without ending play or recording failure. This is a small code change with a large effect on the experience. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Collision API](../../docs/vs2/tutorial/sprites.html), [Dream Garden's move_seeds and bloom](examples/dream_garden.py).
+
+---
+<!-- .slide: id="planting" class="compact" data-timing="75" -->
+
+## Planting follows the player's movement
+
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" data-checkpoint="05-flowers">Run this checkpoint</a>
+
+```python
+# Movement resets the next planting side.
+self.moving = bool(steer)
+if steer:
+    self.plant_side = steer
+
+# In bloom():
+centre = self.dreamer.x + self.dreamer.width // 2
+centre += self.plant_side * self.dreamer.width * 0.75
+self.flowers.spawn(
+    x=(centre - self.image("flowers.png").width // 2) % 256,
+    y=self.dreamer.y, frame=randrange(4) * 2
+)
+if not self.moving:
+    self.plant_side = -self.plant_side
+```
+
+Stopped catches alternate sides until movement resumes.
+
+Notes:
+**22:30–23:45.** This checkpoint has one player. Movement resets plant_side every tick. Once stationary, bloom flips it after each catch, so the first follows the last movement and subsequent catches alternate. When we add the second player, the finished source keeps separate plant_side1 and plant_side2 values. Catching plants at the same Y as that player, displaced by 75% of its width. The checkpoint starts without flowers. The 24-slot flower pool recycles the oldest when full, and missed seeds disappear harmlessly beyond the rim. Test catches across the angular seam as well as in the middle of a sprite. The player stays above the flowers because its sprite was created after the flower pool.
+
+Sources: [Allocation and target checks](../../docs/vs2/tutorial/budgets.html), [sample source](examples/dream_garden.py).
 
 ---
 
 <!-- .slide: id="tilemap"  data-timing="75" -->
 
-## The drifting garden is one tilemap
+## Fluffy clouds can span several tiles
 
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=06-tiles" data-checkpoint="06-tiles">Run this checkpoint</a>
 
 <div class="split">
 <div>
-<pre><code class="language-python" data-trim>self.ground = world.tilemap(
-    "garden.png",
-    columns=16, rows=16,
+<pre><code class="language-python" data-trim>self.ground = self.air.tilemap(
+    "clouds.png",
+    columns=16, rows=22,
     view_width=256,
     view_height=160
 )
-self.ground[1, 2] = vs2.EMPTY_TILE</code></pre>
-<p>Sparse accents leave room for the seeds.</p>
+# A large cloud uses frames 3–8 in a 3×2 block.
+self.ground[11, 4] = 3
+self.ground[12, 4] = 4
+# Reserve seeds after the clouds:
+self.seeds = self.air.sprite_pool("seed.png", count=16)</code></pre>
+<p>1×1, 2×1 or 3×2 cells. Seeds draw above clouds.</p>
 </div>
-<img src="assets/tilemaps.png" alt="Sparse mint roots, pink petals and lavender moons on a dark circular garden, with a pink dreamer at the rim">
+<img src="assets/tilemaps.png" alt="Muted fluffy clouds in different sizes drift over a dark circular garden, with a pink dreamer at the rim">
 </div>
 
 Notes:
-**23:30–24:45.** The garden tiles are frames in another strip. One byte per cell chooses a frame or EMPTY_TILE. Dimensions describe the stored grid and its viewport, not a conventional screen resolution. Build fills a sparse repeating pattern of roots, petals and moons. Transparent cells preserve dark space so seeds remain visible. The map comes first in the middle layer, followed by seeds; flowers and players sit below it. Smaller, slightly darker flying details distinguish this flow from the planted garden. A tilemap fits repeated terrain better than dozens of separate sprites, although its rendering cost still depends on the actual viewport and content. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**23:45–25:00.** Cloud tiles are frames in another strip, with a separate palette group. One byte per cell chooses a frame or EMPTY_TILE. Dimensions describe the stored grid and its viewport, not a conventional screen resolution. Build places six fluffy cloud shapes in a sparse repeating pattern. Source artwork is packed at 16×16, 32×16 and 48×32 pixels, then cut into adjoining 16-pixel tiles. Medium clouds use two cells; large clouds use a 3×2 block whose frames are placed row by row. There is no padding between the tiles, so the puffs stay continuous across cell boundaries. Transparent cells preserve dark space so seeds remain visible. The map comes first in the middle layer, followed by seeds; flowers and players sit below it. Subdued blue-gray clouds distinguish this flow from the planted garden, while golden seeds remain bright and catchable. A tilemap fits repeated terrain better than dozens of separate sprites, although its rendering cost still depends on the actual viewport and content. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
-Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the sample's ground tilemap and dreamer through the SDK renderer.
+Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the actual tilemap checkpoint through the emulator’s WebGL display backend.
 
 ---
 
@@ -444,26 +490,28 @@ Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the s
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=07-scroll" data-checkpoint="07-scroll">Run this checkpoint</a>
 
 ```python
-pattern_height = 6 * self.ground.tile_height
-self.scroll = (self.scroll + self.speed) % pattern_height
+pattern_height = 12 * self.ground.tile_height
+self.scroll = (self.scroll + 0.45) % pattern_height
 self.ground.view_y = self.scroll
 
 for seed in self.seeds:
-    seed.y -= self.speed
+    seed.y -= self.speed * 0.85
+for flower in self.flowers:
+    flower.y += 0.45 * 0.85 * 0.08
 ```
 
-The garden repeats every six tile rows.
+The clouds repeat every twelve tile rows.
 
-The seeds share its pace.
+Seeds move outward. Flowers drift inward at 8% of normal seed speed.
 
 Notes:
-**24:45–26:00.** The map is stored data plus a movable view. Wrapping a six-row pattern avoids rewriting cells every tick. Drift speed is 0.45 depth units per tick, and holding A reduces it to 0.12. Seeds decrease Y by the same speed, sharing the background's movement. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation also uses dream_time, advanced by the same speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**25:00–26:15.** The map is stored data plus a movable view. Wrapping a twelve-row pattern avoids rewriting cells every tick. Clouds keep scrolling at 0.45 depth units per tick. Seeds decrease Y at 0.3825 normally (85% of cloud speed), or 0.102 while holding A. Only the seeds slow down; clouds and planted flower motion stay steady. Seed sprites are created after the cloud tilemap, so they always paint on top. The stored map has 22 rows: ten for the viewport plus twelve for a complete scroll period, so wrapping cannot expose an empty tail. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation uses dream_time, advanced by the constant cloud speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Tilemap scrolling](../../docs/vs2/tutorial/tilemaps-and-text.html), [Dream Garden update](examples/dream_garden.py).
 
 ---
 
-<!-- .slide: id="mood"  data-timing="90" -->
+<!-- .slide: id="mood"  data-timing="75" -->
 
 ## The HUD sets the mood
 
@@ -484,7 +532,7 @@ Low Y keeps text legible.
 Both flips make top text upright.
 
 Notes:
-**26:00–27:30.** A label uses a tilemap record rather than a sprite per character. Five eight-column glyphs span forty columns, so x 108 centres the label on top angle 128. At the top, the native inward-facing orientation makes text upside down unless both axes flip. Y 1 keeps it near the rim. RELAX appears while A is held, then slides outward past the rim over 450 ms when released. A new request resets its position and cancels the exit animation. The final game adds a second HUD label for two-second sound feedback. This uses the SDK's existing full CP437 font. A short word also avoids making a large dashboard on a small disc. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**26:15–27:30.** A label uses a tilemap record rather than a sprite per character. Five eight-column glyphs span forty columns, so x 108 centres the label on top angle 128. At the top, the native inward-facing orientation makes text upside down unless both axes flip. Y 1 keeps it near the rim. RELAX appears while A is held, then slides outward past the rim over 450 ms when released. A new request resets its position and cancels the exit animation. The final game adds a second HUD label for two-second sound feedback. This uses the SDK's existing full CP437 font. A short word also avoids making a large dashboard on a small disc. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Source: [Labels and flips](../../docs/vs2/tutorial/tilemaps-and-text.html), [sample source](examples/dream_garden.py).
 
@@ -524,7 +572,7 @@ Sources: [Scene reference](../../docs/vs2/reference/scene.html), [Title, Garden 
 
 ```python
 joy1.held(LEFT)       # continuous steering
-joy2.held(A)          # the friend asks for slower time
+joy2.held(A)          # the friend asks for slower seeds
 joy1.just_pressed(B)  # choose the rest scene
 ```
 
@@ -533,7 +581,7 @@ The second dreamer joins an already reserved sprite.
 Y or Back returns to the launcher on either controller.
 
 Notes:
-**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to affect the whole garden. Y and Back remain the shared arcade's exit route. Keyboard player two uses Left/Right arrows to steer, numpad 0 for A, numpad 1 for B and numpad 2 for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to slow the seed flow for both players. Y and Back remain the shared arcade's exit route. Keyboard player two uses Left/Right arrows to steer, numpad 0 for A, numpad 1 for B and numpad 2 for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Controls reference](../../docs/vs2/reference/services.html#vs2-controls), [game controls](examples/dream-garden-guide.html).
 
@@ -564,6 +612,34 @@ Sources: [Audio API](../../docs/vs2/reference/services.html#vs2-audio), [origina
 
 ---
 
+<!-- .slide: id="seed-glow" data-timing="90" -->
+
+## Each seed has its own glow rhythm
+
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
+
+```python
+# Each live seed owns [waiting_ticks, glow_tick].
+state = self.seed_glows[seed]
+if state[0] > 0:
+    state[0] -= 1
+    seed.frame = 0
+else:
+    seed.frame = GLOW_FRAMES[state[1] // 6]
+    state[1] += 1
+```
+
+Wait 90–240 ticks, then pulse through frames 1, 2, 3, 2, 1, 0.
+
+Retiring a seed also removes its glow state.
+
+Notes:
+**31:00–32:30.** The first seed checkpoints cycle frames together to demonstrate animation. The finished game replaces that common clock with glow_seed, called once per live seed from move_seeds. A new seed gets [randrange(90, 241), 0]. The excerpt shows its waiting and active phases. Each frame lasts six ticks, so a pulse lasts 36 ticks. At the end, reset the wait to another random 90–240 ticks and the glow tick to zero. Otherwise the next frame lookup would exceed the six-element sequence. retire_seed removes the dictionary entry before returning the sprite to its pool, ensuring a reused slot gets a fresh wait. The wait and animation use game ticks, so holding A slows travel without synchronizing the glows. Flowers use a separate steady paired-frame clock. Seeds sit above clouds in the middle layer, so the small golden pulse stays visible. The final browser checkpoint runs exactly the completed source.
+
+Source: [Finished glow_seed and retire_seed helpers](examples/dream_garden.py).
+
+---
+
 <!-- .slide: id="shared-time"  data-timing="45" -->
 
 ## Players can change the pace
@@ -574,21 +650,21 @@ Sources: [Audio API](../../docs/vs2/reference/services.html#vs2-audio), [origina
 <div>
 <pre><code class="language-python" data-trim>slow = slow1 or slow2  # either active player
 # Arm held-A after releasing the start press.
-self.speed = 0.12 if slow else 0.45
+self.speed = 0.12 if slow else 0.45  # seeds only
 self.spawn_ms = 4000 if slow else 1800</code></pre>
-<p>One request changes the shared world.</p>
+<p>Either player can relax the shared seed flow.</p>
 </div>
 <img src="assets/shared-rest.png" alt="The populated garden with the pink dreamer asleep and RELAX visible at the top">
 </div>
 
 Notes:
-**31:00–31:45.** The final mechanic is deliberately small. Either player's request slows every seed, the background and flower animation. Spawn intervals adapt at the next scheduled callback. Steering stays responsive. Nothing raises the pace because of a score or elapsed time. For the festival, the interesting discussion is what this asks people to do together. They can catch seeds, make room for a friend, hold time slower or simply watch. Invite the audience to imagine another interaction with shared time. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**32:30–33:15.** The final mechanic is deliberately small. Either player's request slows every seed and lengthens future seed spawn gaps. Clouds and planted flowers retain their normal drift and animation; seeds remain above the clouds. Spawn intervals adapt at the next scheduled callback. Steering stays responsive. Nothing raises the pace because of a score or elapsed time. For the festival, the interesting discussion is what this asks people to do together. They can catch seeds, make room for a friend, hold time slower or simply watch. Invite the audience to imagine another interaction with shared time. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
-Source: [Garden update](examples/dream_garden.py). Screenshot: an actual held-A game state through the SDK renderer.
+Source: [Garden update](examples/dream_garden.py). Screenshot: an actual held-A game state through the emulator’s WebGL display backend.
 
 ---
 
-<!-- .slide: id="budgets"  data-timing="90" -->
+<!-- .slide: id="budgets"  data-timing="75" -->
 
 ## The display graph has explicit budgets
 
@@ -602,32 +678,9 @@ Source: [Garden update](examples/dream_garden.py). Screenshot: an actual held-A 
 Read the target limits from `vs2.limits`.
 
 Notes:
-**31:45–33:15.** Forty-two sprites means two reserved dreamers, sixteen seeds and twenty-four flowers. Hidden player two and empty pool slots still count. The flying accents, RELAX label and audio notice use three tilemap records. The lower layer draws planted flowers then dreamers; the middle draws flying accents then seeds; the HUD paints above both. Five strips include the full font shared by the other scenes. Layers and records are separate resources. VS2 checks the graph at entry and reports the layers contributing to an exceeded budget. Tilemaps can be costly even when their record count is low. Random seed glow uses a small state entry per live seed, removed on retirement. Our bounded garden can run indefinitely without growing its renderer graph. Target timing and heap still need measurement on the console.
+**33:15–34:30.** Forty-two sprites means two reserved dreamers, sixteen seeds and twenty-four flowers. Hidden player two and empty pool slots still count. The cloud tilemap, RELAX label and audio notice use three tilemap records. The lower layer draws planted flowers then dreamers; the middle draws clouds then seeds; the HUD paints above both. Five strips include the full font shared by the other scenes. Layers and records are separate resources. VS2 checks the graph at entry and reports the layers contributing to an exceeded budget. Tilemaps can be costly even when their record count is low. Random seed glow uses a small state entry per live seed, removed on retirement. Our bounded garden can run indefinitely without growing its renderer graph. Target timing and heap still need measurement on the console.
 
 Sources: [Resource limits](../../docs/vs2/reference/services.html#vs2-limits), [sample build](examples/dream_garden.py).
-
----
-
-<!-- .slide: id="heap"  data-timing="75" -->
-
-## Heap stability is part of game correctness
-
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
-
-```python
-seed.y -= self.speed
-self.flowers.spawn(x=angle, y=player.y, frame=kind * 2)
-self.seeds.despawn(seed)
-```
-
-Sealing controls render-object creation, not every Python allocation.
-
-Long play still needs a target check.
-
-Notes:
-**33:15–34:30.** A garden that welcomes watching should survive a long session. Pools bound the renderer graph, but Python temporaries can still accumulate on the target. Garbage collection happens around scene boundaries, while the desktop emulator has more headroom and collects automatically. Keep the update loop short and reuse handles. The sample bounds scroll and dream_time and rewrites its mood label only on a state change. Each live seed has a bounded glow timer state, removed when it retires. It snapshots flower angles, depths and frames only when leaving for Rest. Those choices do not prove zero heap growth or sufficient hardware frame timing. Measure sustained play and the full garden on the rotor before an exhibition. The Run this checkpoint button opens the finished game in the browser.
-
-Sources: [Allocation and target checks](../../docs/vs2/tutorial/budgets.html), [sample source](examples/dream_garden.py).
 
 ---
 
@@ -645,9 +698,9 @@ Sources: [Allocation and target checks](../../docs/vs2/tutorial/budgets.html), [
 </div>
 
 Notes:
-**34:30–36:00.** The emulator preserves renderer semantics, but cannot judge physical brightness or enforce the real output's column deadline. These copies of RELAX use HUD positions 1 and 35. The inner word compresses because angular cells have less circumference. Keep critical instructions near the rim and let the centre convey depth or drifting effects. Our leaves, blossoms and seeds are deliberately sparse. Test their contrast and recognizability on the real LEDs, along with a crowded garden and a sustained session. This is how the display geometry feeds back into the game rather than remaining an introduction slide.
+**34:30–36:00.** The emulator preserves renderer semantics, but cannot judge physical brightness or enforce the real output's column deadline. These copies of RELAX use HUD positions 1 and 35. The inner word compresses because angular cells have less circumference. Keep critical instructions near the rim and let the centre convey depth or drifting effects. Our clouds, blossoms and seeds are deliberately sparse. Test their contrast and recognizability on the real LEDs, along with a crowded garden and a sustained session. This is how the display geometry feeds back into the game rather than remaining an introduction slide.
 
-Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: actual font labels through the SDK renderer.
+Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: actual font labels through the emulator’s WebGL display backend.
 
 ---
 
@@ -668,9 +721,9 @@ Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: 
 </div>
 
 Notes:
-**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers at the same depth, on the side the player last moved toward. Stop and catch another to show that the direction is remembered. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower background. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second NOISY/QUIET notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
+**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers at the same depth, on the side the player last moved toward. Stop and catch several: the first follows the last movement direction, then plants alternate sides. Move again to reset the sequence. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower seeds against steadily moving clouds. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second NOISY/QUIET notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
 
-Sources: [Finished source](examples/dream_garden.py), [game instructions](examples/dream-garden-guide.html), [complete download](examples/dream-garden.zip). Screenshot: the actual Rest scene through the SDK renderer.
+Sources: [Finished source](examples/dream_garden.py), [game instructions](examples/dream-garden-guide.html), [complete download](examples/dream-garden.zip). Screenshot: the actual Rest scene through the emulator’s WebGL display backend.
 
 ---
 
