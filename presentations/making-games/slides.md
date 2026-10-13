@@ -84,7 +84,7 @@ Source: [Circular geometry and sprite orientation](../../docs/vs2/tutorial/displ
 <div class="split">
 <div>
 <p>Drift around the rim and catch seeds to grow flowers.</p>
-<p>Either player can hold A to <strong>slow the shared flow</strong>.</p>
+<p>Either player can hold A to <strong>slow the shared seed flow</strong>.</p>
 <p>Passing seeds do no harm. Watching is welcome.</p>
 <p class="caption">Inspired by Dream No Return</p>
 </div>
@@ -404,7 +404,7 @@ X wraps across column zero. Y does not wrap.
 The full game checks both active dreamers.
 
 Notes:
-**22:00–23:30.** Collision tests use axis-aligned bounds in a layer's circular coordinate system. They understand the angular seam, so a dreamer crossing zero can still catch a seed without a duplicate actor. They are not pixel-perfect physical tests on the fan. The actual loop first decreases seed depth, then checks either active dreamer. Bloom retires the seed and plants a flower at the dreamer’s depth. Its centre is displaced by 75% of the dreamer’s width in the direction they last moved toward. Each player remembers their own direction after stopping; opposite inputs cancel without changing it. Before moving, the fallback is left. Flowers drift toward the centre at only 8% of seed speed. A missed seed retires after passing the rim. The response changes the garden without ending play or recording failure. This is a small code change with a large effect on the experience. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**22:00–23:30.** Collision tests use axis-aligned bounds in a layer's circular coordinate system. They understand the angular seam, so a dreamer crossing zero can still catch a seed without a duplicate actor. They are not pixel-perfect physical tests on the fan. The actual loop first decreases seed depth, then checks either active dreamer. Bloom retires the seed and plants a flower at the dreamer’s depth. Its centre is displaced by 75% of the dreamer’s width. Moving catches plant in the current direction. After stopping, the first catch uses that direction, then later catches alternate sides. Moving again resets the sequence, separately for each player. Opposite inputs count as stopping. Before moving, the first catch defaults to left. Flowers drift toward the centre at only 8% of normal seed speed. A missed seed retires after passing the rim. The response changes the garden without ending play or recording failure. This is a small code change with a large effect on the experience. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Collision API](../../docs/vs2/tutorial/sprites.html), [Dream Garden's move_seeds and bloom](examples/dream_garden.py).
 
@@ -447,7 +447,7 @@ Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the s
 
 ```python
 pattern_height = 12 * self.ground.tile_height
-self.scroll = (self.scroll + self.speed) % pattern_height
+self.scroll = (self.scroll + 0.45) % pattern_height
 self.ground.view_y = self.scroll
 
 for seed in self.seeds:
@@ -456,10 +456,10 @@ for seed in self.seeds:
 
 The clouds repeat every twelve tile rows.
 
-Seeds drift 15% slower than clouds.
+Seeds drift 15% slower normally; A slows only seeds.
 
 Notes:
-**24:45–26:00.** The map is stored data plus a movable view. Wrapping a twelve-row pattern avoids rewriting cells every tick. Drift speed is 0.45 depth units per tick, and holding A reduces it to 0.12. Clouds scroll at that speed; seeds decrease Y at 85% of it. Seeds lag gently behind the clouds at both normal and relaxed paces. The stored map has 22 rows: ten for the viewport plus twelve for a complete scroll period, so wrapping cannot expose an empty tail. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation also uses dream_time, advanced by the same speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**24:45–26:00.** The map is stored data plus a movable view. Wrapping a twelve-row pattern avoids rewriting cells every tick. Clouds keep scrolling at 0.45 depth units per tick. Seeds decrease Y at 0.3825 normally (85% of cloud speed), or 0.102 while holding A. Only the seeds slow down; clouds and planted flower motion stay steady. Seed sprites are created after the cloud tilemap, so they always paint on top. The stored map has 22 rows: ten for the viewport plus twelve for a complete scroll period, so wrapping cannot expose an empty tail. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation uses dream_time, advanced by the constant cloud speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Tilemap scrolling](../../docs/vs2/tutorial/tilemaps-and-text.html), [Dream Garden update](examples/dream_garden.py).
 
@@ -535,7 +535,7 @@ The second dreamer joins an already reserved sprite.
 Y or Back returns to the launcher on either controller.
 
 Notes:
-**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to affect the whole garden. Y and Back remain the shared arcade's exit route. Keyboard player two uses Left/Right arrows to steer, numpad 0 for A, numpad 1 for B and numpad 2 for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**29:00–30:00.** Both controllers expose stable level and edge reads for the tick. The second player's first steering input or A press reveals the mint dreamer reserved in build. No new sprite allocation is needed. Either active player can hold A to slow the seed flow for both players. Y and Back remain the shared arcade's exit route. Keyboard player two uses Left/Right arrows to steer, numpad 0 for A, numpad 1 for B and numpad 2 for the X action, while two gamepads use their normal mappings. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Controls reference](../../docs/vs2/reference/services.html#vs2-controls), [game controls](examples/dream-garden-guide.html).
 
@@ -576,15 +576,15 @@ Sources: [Audio API](../../docs/vs2/reference/services.html#vs2-audio), [origina
 <div>
 <pre><code class="language-python" data-trim>slow = slow1 or slow2  # either active player
 # Arm held-A after releasing the start press.
-self.speed = 0.12 if slow else 0.45
+self.speed = 0.12 if slow else 0.45  # seeds only
 self.spawn_ms = 4000 if slow else 1800</code></pre>
-<p>One request changes the shared world.</p>
+<p>Either player can relax the shared seed flow.</p>
 </div>
 <img src="assets/shared-rest.png" alt="The populated garden with the pink dreamer asleep and RELAX visible at the top">
 </div>
 
 Notes:
-**31:00–31:45.** The final mechanic is deliberately small. Either player's request slows every seed, the background and flower animation. Spawn intervals adapt at the next scheduled callback. Steering stays responsive. Nothing raises the pace because of a score or elapsed time. For the festival, the interesting discussion is what this asks people to do together. They can catch seeds, make room for a friend, hold time slower or simply watch. Invite the audience to imagine another interaction with shared time. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**31:00–31:45.** The final mechanic is deliberately small. Either player's request slows every seed and lengthens future seed spawn gaps. Clouds and planted flowers retain their normal drift and animation; seeds remain above the clouds. Spawn intervals adapt at the next scheduled callback. Steering stays responsive. Nothing raises the pace because of a score or elapsed time. For the festival, the interesting discussion is what this asks people to do together. They can catch seeds, make room for a friend, hold time slower or simply watch. Invite the audience to imagine another interaction with shared time. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Source: [Garden update](examples/dream_garden.py). Screenshot: an actual held-A game state through the SDK renderer.
 
@@ -670,7 +670,7 @@ Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: 
 </div>
 
 Notes:
-**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers at the same depth, on the side the player last moved toward. Stop and catch another to show that the direction is remembered. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower background. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second NOISY/QUIET notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
+**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers at the same depth, on the side the player last moved toward. Stop and catch several: the first follows the last movement direction, then plants alternate sides. Move again to reset the sequence. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower seeds against steadily moving clouds. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second NOISY/QUIET notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
 
 Sources: [Finished source](examples/dream_garden.py), [game instructions](examples/dream-garden-guide.html), [complete download](examples/dream-garden.zip). Screenshot: the actual Rest scene through the SDK renderer.
 

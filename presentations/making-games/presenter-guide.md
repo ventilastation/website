@@ -42,7 +42,7 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 | Action | Player 1 | Player 2 |
 | --- | --- | --- |
 | Steer | A / D | Left / Right arrows |
-| Begin / join / slow time | Space | Numpad 0 |
+| Begin / join / slow seeds | Space | Numpad 0 |
 | Rest | B | Numpad 1 |
 | Toggle audio | N | Numpad 2 |
 | Exit | 1 or M | Numpad + or 3 |
@@ -76,8 +76,8 @@ capture if you need to present without the emulator.
 
 Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
-hold A to slow the shared flow. Point out RELAX, fluffy clouds in varied sizes, seeds moving 15% slower than clouds, and the much slower inward flower drift.
-Plants appear on the side each dreamer last moved toward, even after stopping. Seeds pulse independently at random.
+hold A to slow the seeds while clouds and planted flowers keep their normal pace. Point out RELAX, fluffy clouds in varied sizes, seeds normally moving 15% slower than clouds and slowing further under A, and the much slower inward flower drift.
+Plants follow current movement; after stopping, the first follows that direction, then later catches alternate sides until movement resumes. Seeds pulse independently at random.
 Toggle the quiet audio and show NOISY/QUIET holding for two seconds before sliding out. RELAX slides out when A is released. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.
 
