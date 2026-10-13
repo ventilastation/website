@@ -77,7 +77,7 @@ capture if you need to present without the emulator.
 Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
 hold A to slow the shared flow. Point out RELAX, slower flying seeds and the much slower inward flower drift.
-Plants alternate sides of each dreamer. Seeds pulse independently at random.
+Plants appear on the side each dreamer last moved toward, even after stopping. Seeds pulse independently at random.
 Toggle the quiet audio and show NOISY/QUIET holding for two seconds before sliding out. RELAX slides out when A is released. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.
 
