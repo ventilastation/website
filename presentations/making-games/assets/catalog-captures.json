@@ -1,0 +1,122 @@
+[
+  {
+    "file": "catalog-vyruss.png",
+    "slug": "alecu.vyruss_vs2",
+    "title": "Vyruss VS2",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "dc3980d6624726b3a6596b5c9b2b9f698e36a79e03c7328649c51fb6542e19af"
+  },
+  {
+    "file": "catalog-ventap.png",
+    "slug": "alecu.ventap",
+    "title": "Ventap",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "c64c3e698922340c331ada397cc590a23211926fffb078904e05ddf8310296f8"
+  },
+  {
+    "file": "catalog-vixeous.png",
+    "slug": "alecu.vixeous",
+    "title": "Vixeous",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "be0a150acc9a03495fd89bdd86b0e74871b34aeeb82b8d0b29276eab9bddef86"
+  },
+  {
+    "file": "catalog-vortris.png",
+    "slug": "vsjam-may25.vortris",
+    "title": "Vortris",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "e0d64e2e764daebc0cfd81d7b2eac02acf2bf13d4b7c70f94e05e793dabb7095"
+  },
+  {
+    "file": "catalog-fanphibious.png",
+    "slug": "vsjam-oct25.fanphibious_danger",
+    "title": "Fanphibious Danger",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "ca751a383212fc0524721c00581fe4caab3a10c0bab6755267180248fe885b8e"
+  },
+  {
+    "file": "catalog-vzumaki.png",
+    "slug": "vsjam-may25.vzumaki",
+    "title": "Vzumaki",
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "408e91b13fdc53bfbd3471216b97926ca7114218c211817875073b359c486ec8"
+  }
+]

@@ -2,6 +2,16 @@
   "sourceSha256": "c2ed572c63a5cf8d4935104a1df49251239306182b9686eb08e66ae6ca688373",
   "captures": [
     {
+      "file": "garden-title.png",
+      "description": "Actual title scene of the finished game.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "87b278c70c12d432aa3e8930d2c7113b428b9f069317d56f5c3267d3e1562e52"
+    },
+    {
       "file": "garden-start.png",
       "description": "Finished game starts with no planted flowers.",
       "displayBackend": "WebGL2",
@@ -62,6 +72,16 @@
       "sha256": "7de9abb9d67b6ff1f99b83d8d5d25c6bc2dd04ad5ebde726ff8f81973cc53533"
     },
     {
+      "file": "garden-planting.png",
+      "description": "Actual seed-catching and planting checkpoint, before clouds and HUD.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "267fdee5f98168cb959c8b00e45ced23bf2e086b81632d0fbfec27920b903737"
+    },
+    {
       "file": "display-angles.png",
       "description": "Geometry example using real Dream Garden assets.",
       "displayBackend": "WebGL2",
@@ -90,6 +110,16 @@
       "width": 900,
       "height": 900,
       "sha256": "4bba014d74818400a154f16fb488c697ef7a779e634aa203c8c172021f4638f1"
+    },
+    {
+      "file": "display-arxels.png",
+      "description": "Geometry example using real Dream Garden assets.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "80790b1752dbaaec7f5c44f150d333db422bd725b6214316542ab7e6e45f28d7"
     }
   ]
 }

@@ -9,7 +9,10 @@ The festival's [Dream No Return theme](https://www.sickhouse.nl/festival/dream-n
 inspired a garden whose players can choose a slower pace. This is an original
 sample game, not a festival commission or an official festival game.
 
-[Download the complete game](dream-garden.zip). While these changes are under review, use the SDK branch `feat/dream-garden-clouds`. Extract the archive at the root of that SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. After merging, the same archive works in an updated main checkout.
+[Download the complete game](dream-garden.zip). Use an up-to-date SDK main
+checkout. Extract the archive at its root to create `games/demos/dream_garden/`.
+The source, packed assets, audio and rebuilding recipes are included, along with
+`tests/test_dream_garden.py`.
 
 [Small first-game starter](first_game.py) · [Back to the slides](../)
 
@@ -81,29 +84,25 @@ base and never go into the rotor ROM. The sample follows the repository's GPLv3
 license. [Artwork sources and rebuilding](artwork.html) record the new art and
 original sound synthesis. The general SDK tutorial remains a separate example.
 
-## Build this garden step by step
+## Three stages for the short talk
 
-Each stage is a complete, cumulative source file inside the download at
-`code/checkpoints/`. The slides explain the changes and launch the matching
-version in the web emulator. The last stage matches `code/dream_garden.py` exactly.
+The presentation launches three complete, cumulative versions. Their sources
+are inside the download at `code/checkpoints/`.
 
-| Stage | Adds |
-| --- | --- |
-| 01-steering | One pink dreamer moving around the rim |
-| 02-poses | Leaning and sleeping poses |
-| 03-pools | Reserved seed and flower slots |
-| 04-timer | Periodic random seed spawning |
-| 05-flowers | Collisions, directional planting and inward flower drift |
-| 06-tiles | Fluffy clouds in the middle layer, behind seeds |
-| 07-scroll | Steady scrolling clouds, slower outward seeds |
-| 08-hud | Seed-only RELAX and a label that slides out |
-| 09-scenes | Title and voluntary rest, preserving flowers |
-| 10-shared | A second player, independent planting sequences and random seed glow |
-| 11-audio | Default-on lullaby and bloom sounds, timed NOISY/QUIET notices |
+| Stage | Source | Adds |
+| --- | --- | --- |
+| 1 | `01-steering.py` | One pink dreamer around the rim |
+| 2 | `05-flowers.py` | Timed seeds, catching, directional planting and inward flower drift |
+| 3 | `11-audio.py` | The completed shared cloud garden, HUD, scenes, glow and audio |
 
-A new garden starts without flowers. The planting direction follows movement,
-then alternates after stopping. Every stage keeps the same packed artwork,
-with unused strips available for the later steps.
+The final stage matches `code/dream_garden.py` exactly. Additional fine-grained
+checkpoints remain available in the SDK for independent study. The short talk
+shows only these three launchable progressions.
+
+A new garden starts without flowers. Planting follows movement, then alternates
+after stopping. All stages use the same packed artwork, with unused strips
+available for later features.
+
 
 ## Checks
 

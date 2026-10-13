@@ -16,7 +16,7 @@ Reveal.initialize({
   controlsTutorial: false,
   progress: true,
   slideNumber: 'c/t',
-  totalTime: 45 * 60,
+  totalTime: 27 * 60,
   pdfSeparateFragments: false,
   pdfMaxPagesPerSlide: 1,
   highlight: { highlightOnLoad: true },
