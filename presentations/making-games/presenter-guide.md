@@ -25,7 +25,7 @@ links provide references rather than dependencies for the presentation.
 ## Before the talk
 
 Follow the [desktop setup]({{ '/docs/guides/desktop.html' | relative_url }}) in a
-current SDK checkout. During branch review, use `feat/overkill-dream-garden` or
+current SDK checkout. During branch review, use `feat/dream-garden-layers` or
 extract the [complete game download](examples/dream-garden.zip) at the SDK root.
 The download creates `games/demos/dream_garden/` and includes the source, packed
 PNGs, YAML, menu icon, MP3s, artwork provenance and rebuild recipes.
@@ -47,7 +47,7 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 | Toggle audio | N | Numpad 2 |
 | Exit | 1 or M | Numpad + or 3 |
 
-Sound starts off. Check the room's volume before opting in. Use 1 or M to leave a demonstration. F1 shows the keyboard layout.
+Sound starts on. Check the room's volume before launching; N toggles music and bloom sounds together, with a two-second notice. Use 1 or M to leave a demonstration. F1 shows the keyboard layout.
 
 ## First demonstration
 
@@ -76,8 +76,9 @@ capture if you need to present without the emulator.
 
 Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
-hold A to slow the shared flow. Point out the mood label, seed speed and garden
-movement. Toggle the quiet audio. B chooses a still rest scene that keeps the
+hold A to slow the shared flow. Point out RELAX, slower flying seeds and the much slower inward flower drift.
+Plants alternate sides of each dreamer. Seeds pulse independently at random.
+Toggle the quiet audio and show the two-second notice. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.
 
 Keep [the finished source](examples/dream_garden.py) open at `build`, `update`
@@ -119,8 +120,8 @@ emulator with a cumulative version of the game at that slide,
 using the same packed assets as the desktop game. The stages are steering,
 poses, pools, timers, flowers, tiles, scrolling, HUD, scenes, shared play and
 audio. The early stages start directly; from the scenes checkpoint onward,
-press Space (A) at the title. Arrows steer, Space slows time when that mechanic
-appears, O rests after scenes are introduced, and P toggles the final audio.
+press Space (A) at the title. A/D steer, Space relaxes time when that mechanic
+appears, B rests after scenes are introduced, and N toggles the final audio.
 Use the browser’s Back action to return to the same slide, or open the link
 in another tab using your browser’s usual modifier key.
 Reload the checkpoint URL to start fresh. Keep the desktop setup ready as a

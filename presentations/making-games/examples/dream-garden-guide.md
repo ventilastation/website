@@ -9,7 +9,7 @@ The festival's [Dream No Return theme](https://www.sickhouse.nl/festival/dream-n
 inspired a garden whose players can choose a slower pace. This is an original
 sample game, not a festival commission or an official festival game.
 
-[Download the complete game](dream-garden.zip). While this PR is under review, use the SDK branch `feat/overkill-dream-garden`, which includes the runtime fixes used by this sample. Extract the archive at the root of that SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. After merging, the same archive works in an updated main checkout.
+[Download the complete game](dream-garden.zip). While these changes are under review, use the SDK branch `feat/dream-garden-layers`. Extract the archive at the root of that SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. After merging, the same archive works in an updated main checkout.
 
 [Small first-game starter](first_game.py) · [Back to the slides](../)
 
@@ -32,15 +32,20 @@ Windows uses `vs-emu.bat --game demos.dream_garden`.
 | Slow everyone's garden | Hold A | Hold Space | Hold Numpad 0 |
 | Rest and keep the flowers on screen | B | B | Numpad 1 |
 | Toggle the quiet lullaby and bloom sound | X | N | Numpad 2 |
-| Return to the launcher | Y / Back | M / 1 | Numpad 3 / + |
+| Return to the launcher | Y / Back / Home | M / 1 / Escape | Numpad 3 / + / Escape |
 
-Catch a golden seed to plant a flower. Missing a seed has no penalty. A second
+The garden starts empty. Catch a golden seed to plant a flower at the catching
+player’s depth, alternating sides at a centre offset of 75% of the player’s width.
+Flowers drift inward at 8% of seed speed and disappear at the centre.
+Smaller, subdued golden seeds occasionally pulse with a randomly triggered glow.
+Missing a seed has no penalty. A second
 player joins by steering or pressing A, using an already reserved mint dreamer.
 Either player can slow seed movement, the drifting background and flower
 animation. New spawn intervals also lengthen, after the pending seed deadline.
 Flowers gradually replace the oldest ones when the garden fills up.
 
-There is no death, score, countdown or difficulty ramp. Watching is welcome. Sound starts off. B stops the music and keeps the current flowers in a still garden.
+There is no death, score, countdown or difficulty ramp. Watching is welcome. Music and bloom sounds start on. X toggles both, showing SOUND ON or SOUND OFF
+for two seconds; another toggle restarts that notice. B stops the music and keeps the current flowers in a still garden.
 A starts a new garden from the Rest scene.
 
 ## How the example works
@@ -51,10 +56,12 @@ objects in `update()`. A collision grows a flower instead of ending a run.
 Pools cap seeds at 16 and flowers at 24, with explicit recycling for flowers.
 The second player costs one reserved sprite even before joining.
 
-The Garden graph uses **42 sprites, 2 tilemaps, 2 layers and 5 image strips**.
+The Garden graph uses **42 sprites, 3 tilemaps, 3 layers and 5 image strips**.
 The flower pool counts toward that cost even when its slots are hidden. The
-ground uses sparse, mostly transparent 16-pixel tiles. The HUD says DRIFT or
-SLOW near the top rim, with both flips so the letters read upright.
+lower layer draws flowers first and players above them. The middle layer draws
+smaller, darker flying accents in 16-pixel tiles, followed by 9-pixel seeds.
+The top HUD shows RELAX only while A is held, plus temporary audio feedback.
+Both flips keep the top text upright.
 
 The full CP437 font comes from the existing tutorial example. PNGs and YAML
 compile into a generated image ROM. MP3s stay on the emulator host or console
@@ -72,4 +79,4 @@ mpy-cross games/demos/dream_garden/code/dream_garden.py -o /tmp/dream_garden.mpy
 ```
 
 The tests exercise seam collisions, both controllers, shared slow time, safe
-pool exhaustion, long play, opt-in audio, voluntary rest and the exit path.
+pool exhaustion, long play, default-on audio and timed toggle feedback, voluntary rest and the exit path.
