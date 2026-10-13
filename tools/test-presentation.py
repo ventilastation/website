@@ -29,6 +29,7 @@ class References(HTMLParser):
 def check_pacing():
     slides = (TALK / 'slides.md').read_text().split('\n---\n')
     elapsed = 0
+    parts = {'intro': 0, 'coding': 0}
     identifiers = set()
     for slide in slides:
         identifier = re.search(r'\.slide: id="([^"]+)"', slide)[1]
@@ -36,15 +37,19 @@ def check_pacing():
         identifiers.add(identifier)
         duration = int(re.search(r'data-timing="(\d+)"', slide)[1])
         assert duration > 0, identifier
+        part = re.search(r'data-talk-part="([^"]+)"', slide)[1]
+        parts[part] += duration
+        if part == 'intro':
+            assert '```python' not in slide.split('\nNotes:\n')[0], identifier
         notes = slide.split('\nNotes:\n', 1)[1]
         cue = re.search(r'\*\*(\d+):(\d+)–(\d+):(\d+)\.\*\*', notes)
         start = int(cue[1]) * 60 + int(cue[2])
         end = int(cue[3]) * 60 + int(cue[4])
         assert (start, end) == (elapsed, elapsed + duration), identifier
         elapsed = end
-    assert elapsed == 45 * 60, elapsed
-    assert int(re.search(r'data-timing="(\d+)"', slides[-1])[1]) == 5 * 60
-    print(f'{len(slides)} slides: 40-minute talk and 5 minutes of questions')
+    assert parts == {'intro': 12 * 60, 'coding': 15 * 60}, parts
+    assert elapsed == 27 * 60, elapsed
+    print(f'{len(slides)} slides: 12-minute introduction and 15-minute coding section')
 
 
 def check_site(site, baseurl, sdk):
@@ -111,19 +116,23 @@ def check_starter(sdk):
 
 def check_checkpoints(site, sdk):
     stages = set()
+    launches = 0
     for slide in (TALK / 'slides.md').read_text().split('\n---\n'):
         content = slide.split('\nNotes:\n')[0]
         if '```python' in content or 'language-python' in content:
-            assert 'class="checkpoint-launch"' in content, content[:160]
+            progression = re.search(r'data-progression="([^"]+)"', content)[1]
+            assert progression in {'01-steering', '05-flowers', '11-audio'}, progression
         for checkpoint in re.findall(r'data-checkpoint="([^"]+)"', content):
+            launches += 1
             path = Path('games/demos/dream_garden/code/checkpoints') / (checkpoint + '.py')
             assert (sdk / path).is_file(), checkpoint
             assert (site / 'emulator' / path).read_bytes() == (sdk / path).read_bytes(), checkpoint
             stages.add(checkpoint)
-    assert len(stages) == 11, stages
+    assert stages == {'01-steering', '05-flowers', '11-audio'}, stages
+    assert launches == 3, launches
     assert (sdk / 'games/demos/dream_garden/code/checkpoints/11-audio.py').read_bytes() == (sdk / 'games/demos/dream_garden/code/dream_garden.py').read_bytes()
     assert 'idle_timeout' not in (TALK / 'slides.md').read_text()
-    print('All Python slides launch a published cumulative checkpoint; 11 stages match the SDK')
+    print('Exactly three cumulative launch stages match the SDK, including the completed game')
 
 
 def check_webgl_captures(sdk):
@@ -134,13 +143,25 @@ def check_webgl_captures(sdk):
     captures = {item['file']: item for item in record['captures']}
     expected = {'dream-garden.png', 'shared-rest.png', 'dream-rest.png',
                 'first-game.png', 'tilemaps.png', 'display-angles.png',
-                'display-projections.png', 'budgets-legibility.png', 'garden-start.png'}
+                'display-projections.png', 'budgets-legibility.png', 'garden-start.png',
+                'garden-title.png', 'garden-planting.png', 'display-arxels.png'}
     assert set(captures) == expected
     for filename, capture in captures.items():
         assert capture['displayBackend'] == 'WebGL2', filename
         assert capture['sceneBackend'] == 'WebGL shader', filename
         assert capture['sha256'] == hashlib.sha256((assets / filename).read_bytes()).hexdigest(), filename
     print('All game and display captures match the recorded WebGL output and completed game source')
+
+
+def check_catalog_captures():
+    assets = TALK / 'assets'
+    captures = json.loads((assets / 'catalog-captures.json').read_text())
+    assert len(captures) == 6
+    for capture in captures:
+        assert capture['displayBackend'] in ('WebGL', 'WebGL2'), capture['file']
+        assert capture['runtime']['adapterSource'] != 'error', capture['file']
+        assert capture['sha256'] == hashlib.sha256((assets / capture['file']).read_bytes()).hexdigest()
+    print('Existing alecu and community game images match their recorded WebGL captures')
 
 
 if __name__ == '__main__':
@@ -154,3 +175,4 @@ if __name__ == '__main__':
     check_starter(options.sdk.resolve())
     check_checkpoints(options.site.resolve(), options.sdk.resolve())
     check_webgl_captures(options.sdk.resolve())
+    check_catalog_captures()

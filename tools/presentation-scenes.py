@@ -73,6 +73,11 @@ def capture(scene, name, description):
 
 
 garden = start()
+garden.switch(__import__('games.demos.dream_garden.code.dream_garden',
+                         fromlist=['Title']).Title())
+step()
+capture(director.scene_stack[-1], 'garden-title.png', 'Actual title scene of the finished game.')
+garden = start()
 capture(garden, 'garden-start.png', 'Finished game starts with no planted flowers.')
 step(0, fixture.LEFT)
 for index in range(12):
@@ -91,6 +96,15 @@ step(fixture.B)
 capture(director.scene_stack[-1], 'dream-rest.png', 'Actual final Rest scene preserves the planted flowers.')
 capture(start('01-steering'), 'first-game.png', 'Actual first steering checkpoint, with only one dreamer.')
 capture(start('06-tiles'), 'tilemaps.png', 'Actual cloud tilemap checkpoint before scrolling.')
+garden = start('05-flowers')
+for index in range(5):
+    garden.dreamer.x = index * 34
+    garden.bloom(garden.seeds.spawn(x=garden.dreamer.x, y=10))
+    step(count=90)
+garden.dreamer.x = 247
+for index, y in enumerate((35, 70, 110, 150)):
+    garden.seeds.spawn(x=30 + index * 51, y=y)
+capture(garden, 'garden-planting.png', 'Actual seed-catching and planting checkpoint, before clouds and HUD.')
 
 
 class Angles(vs2.Scene):
@@ -116,9 +130,18 @@ class Legibility(vs2.Scene):
                       flip_x=True, flip_y=True, text='RELAX')
 
 
+class Arxels(vs2.Scene):
+    def build(self):
+        hud = self.layer('hud', projection=vs2.HUD)
+        for y in (1, 21, 41):
+            # CP437's full block is the same 8×8 image at every radius.
+            hud.sprite('steel8x8.png', x=124, y=y, frame=219)
+
+
 for cls, filename in ((Angles, 'display-angles.png'),
                       (Projections, 'display-projections.png'),
-                      (Legibility, 'budgets-legibility.png')):
+                      (Legibility, 'budgets-legibility.png'),
+                      (Arxels, 'display-arxels.png')):
     start().switch(cls())
     step()
     capture(director.scene_stack[-1], filename, 'Geometry example using real Dream Garden assets.')
