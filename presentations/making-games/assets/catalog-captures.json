@@ -1,8 +1,124 @@
 [
   {
+    "file": "catalog-senile-command.png",
+    "slug": "vsjam-oct25.2bam_sencom",
+    "title": "Senile command",
+    "playback": {
+      "startKeys": [
+        "Space"
+      ],
+      "heldKeys": [],
+      "elapsedAfterInputMs": 7000
+    },
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "9728e04b3a8a3f990e4c281b32084229b7535971448cb77fe91bf9437fd95fd7"
+  },
+  {
+    "file": "catalog-vasura-espacial.png",
+    "slug": "vsjam-may25.vasura_espacial",
+    "title": "Vasura Espacial",
+    "playback": {
+      "startKeys": [],
+      "heldKeys": [
+        "Space"
+      ],
+      "elapsedAfterInputMs": 6000
+    },
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 16,
+      "currentInput": {
+        "joy1": 16,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "f4c3830f4d47ca51b14101d209d5e74e8bf4fdcb016bbef9d028d3b6150ed9fe"
+  },
+  {
+    "file": "catalog-tincho.png",
+    "slug": "vsjam-oct25.tincho_vrunner",
+    "title": "Tincho el Carpincho",
+    "playback": {
+      "startKeys": [
+        "Space"
+      ],
+      "heldKeys": [],
+      "elapsedAfterInputMs": 4500
+    },
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "d4bb811089b42b99dff9c25c73cb26387b6a7c079e0bdc48362352c95ebc97b6"
+  },
+  {
+    "file": "catalog-super-ventilagon.png",
+    "slug": "alecu.ventilagon_game",
+    "title": "Super Ventilagon",
+    "playback": {
+      "startKeys": [
+        "Space"
+      ],
+      "heldKeys": [],
+      "elapsedAfterInputMs": 6500
+    },
+    "displayBackend": "WebGL2",
+    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+    "runtime": {
+      "adapterName": "MicroPython WASM",
+      "adapterSource": "wasm",
+      "editorOpen": false,
+      "pollingHalted": false,
+      "currentButtons": 0,
+      "currentInput": {
+        "joy1": 0,
+        "joy2": 0,
+        "extra": 0
+      }
+    },
+    "sha256": "c27b26d3f6385a9cd12693aee34ea7a488ced2f6e53ca940c6d2a9320ecc2222"
+  },
+  {
     "file": "catalog-vyruss.png",
     "slug": "alecu.vyruss_vs2",
-    "title": "Vyruss VS2",
+    "title": "Vyruss",
+    "playback": {
+      "startKeys": [],
+      "heldKeys": [
+        "Space",
+        "d"
+      ],
+      "elapsedAfterInputMs": 8500
+    },
     "displayBackend": "WebGL2",
     "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
     "runtime": {
@@ -10,113 +126,13 @@
       "adapterSource": "wasm",
       "editorOpen": false,
       "pollingHalted": false,
-      "currentButtons": 0,
+      "currentButtons": 18,
       "currentInput": {
-        "joy1": 0,
+        "joy1": 18,
         "joy2": 0,
         "extra": 0
       }
     },
-    "sha256": "dc3980d6624726b3a6596b5c9b2b9f698e36a79e03c7328649c51fb6542e19af"
-  },
-  {
-    "file": "catalog-ventap.png",
-    "slug": "alecu.ventap",
-    "title": "Ventap",
-    "displayBackend": "WebGL2",
-    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
-    "runtime": {
-      "adapterName": "MicroPython WASM",
-      "adapterSource": "wasm",
-      "editorOpen": false,
-      "pollingHalted": false,
-      "currentButtons": 0,
-      "currentInput": {
-        "joy1": 0,
-        "joy2": 0,
-        "extra": 0
-      }
-    },
-    "sha256": "c64c3e698922340c331ada397cc590a23211926fffb078904e05ddf8310296f8"
-  },
-  {
-    "file": "catalog-vixeous.png",
-    "slug": "alecu.vixeous",
-    "title": "Vixeous",
-    "displayBackend": "WebGL2",
-    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
-    "runtime": {
-      "adapterName": "MicroPython WASM",
-      "adapterSource": "wasm",
-      "editorOpen": false,
-      "pollingHalted": false,
-      "currentButtons": 0,
-      "currentInput": {
-        "joy1": 0,
-        "joy2": 0,
-        "extra": 0
-      }
-    },
-    "sha256": "be0a150acc9a03495fd89bdd86b0e74871b34aeeb82b8d0b29276eab9bddef86"
-  },
-  {
-    "file": "catalog-vortris.png",
-    "slug": "vsjam-may25.vortris",
-    "title": "Vortris",
-    "displayBackend": "WebGL2",
-    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
-    "runtime": {
-      "adapterName": "MicroPython WASM",
-      "adapterSource": "wasm",
-      "editorOpen": false,
-      "pollingHalted": false,
-      "currentButtons": 0,
-      "currentInput": {
-        "joy1": 0,
-        "joy2": 0,
-        "extra": 0
-      }
-    },
-    "sha256": "e0d64e2e764daebc0cfd81d7b2eac02acf2bf13d4b7c70f94e05e793dabb7095"
-  },
-  {
-    "file": "catalog-fanphibious.png",
-    "slug": "vsjam-oct25.fanphibious_danger",
-    "title": "Fanphibious Danger",
-    "displayBackend": "WebGL2",
-    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
-    "runtime": {
-      "adapterName": "MicroPython WASM",
-      "adapterSource": "wasm",
-      "editorOpen": false,
-      "pollingHalted": false,
-      "currentButtons": 0,
-      "currentInput": {
-        "joy1": 0,
-        "joy2": 0,
-        "extra": 0
-      }
-    },
-    "sha256": "ca751a383212fc0524721c00581fe4caab3a10c0bab6755267180248fe885b8e"
-  },
-  {
-    "file": "catalog-vzumaki.png",
-    "slug": "vsjam-may25.vzumaki",
-    "title": "Vzumaki",
-    "displayBackend": "WebGL2",
-    "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
-    "runtime": {
-      "adapterName": "MicroPython WASM",
-      "adapterSource": "wasm",
-      "editorOpen": false,
-      "pollingHalted": false,
-      "currentButtons": 0,
-      "currentInput": {
-        "joy1": 0,
-        "joy2": 0,
-        "extra": 0
-      }
-    },
-    "sha256": "408e91b13fdc53bfbd3471216b97926ca7114218c211817875073b359c486ec8"
+    "sha256": "e9912ac446a47aad31cf17ad57211e3dac6b84476df2407cf88350705c80addd"
   }
 ]

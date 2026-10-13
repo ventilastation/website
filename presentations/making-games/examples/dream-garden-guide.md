@@ -84,23 +84,23 @@ base and never go into the rotor ROM. The sample follows the repository's GPLv3
 license. [Artwork sources and rebuilding](artwork.html) record the new art and
 original sound synthesis. The general SDK tutorial remains a separate example.
 
-## Three stages for the short talk
+## Three parts for the short talk
 
 The presentation launches three complete, cumulative versions. Their sources
 are inside the download at `code/checkpoints/`.
 
-| Stage | Source | Adds |
+| Part | Source | Adds |
 | --- | --- | --- |
 | 1 | `01-steering.py` | One pink dreamer around the rim |
 | 2 | `05-flowers.py` | Timed seeds, catching, directional planting and inward flower drift |
 | 3 | `11-audio.py` | The completed shared cloud garden, HUD, scenes, glow and audio |
 
-The final stage matches `code/dream_garden.py` exactly. Additional fine-grained
+The final part matches `code/dream_garden.py` exactly. Additional fine-grained
 checkpoints remain available in the SDK for independent study. The short talk
 shows only these three launchable progressions.
 
 A new garden starts without flowers. Planting follows movement, then alternates
-after stopping. All stages use the same packed artwork, with unused strips
+after stopping. All parts use the same packed artwork, with unused strips
 available for later features.
 
 

@@ -132,7 +132,7 @@ def check_checkpoints(site, sdk):
     assert launches == 3, launches
     assert (sdk / 'games/demos/dream_garden/code/checkpoints/11-audio.py').read_bytes() == (sdk / 'games/demos/dream_garden/code/dream_garden.py').read_bytes()
     assert 'idle_timeout' not in (TALK / 'slides.md').read_text()
-    print('Exactly three cumulative launch stages match the SDK, including the completed game')
+    print('Exactly three cumulative launch parts match the SDK, including the completed game')
 
 
 def check_webgl_captures(sdk):
@@ -156,10 +156,14 @@ def check_webgl_captures(sdk):
 def check_catalog_captures():
     assets = TALK / 'assets'
     captures = json.loads((assets / 'catalog-captures.json').read_text())
-    assert len(captures) == 6
+    assert {capture['slug'] for capture in captures} == {
+        'alecu.ventilagon_game', 'alecu.vyruss_vs2', 'vsjam-oct25.2bam_sencom',
+        'vsjam-may25.vasura_espacial', 'vsjam-oct25.tincho_vrunner'}
+    assert len(captures) == 5
     for capture in captures:
         assert capture['displayBackend'] in ('WebGL', 'WebGL2'), capture['file']
         assert capture['runtime']['adapterSource'] != 'error', capture['file']
+        assert capture['playback']['elapsedAfterInputMs'] > 2000, capture['file']
         assert capture['sha256'] == hashlib.sha256((assets / capture['file']).read_bytes()).hexdigest()
     print('Existing alecu and community game images match their recorded WebGL captures')
 

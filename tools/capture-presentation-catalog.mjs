@@ -11,12 +11,11 @@ const { chromium } = createRequire(import.meta.url)('playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'presentations/making-games/assets');
 const games = [
-  {slug:'alecu.vyruss_vs2', file:'catalog-vyruss.png', title:'Vyruss VS2', keys:['Space'], wait:4500},
-  {slug:'alecu.ventap', file:'catalog-ventap.png', title:'Ventap', keys:[], wait:1400},
-  {slug:'alecu.vixeous', file:'catalog-vixeous.png', title:'Vixeous', keys:['Space'], wait:3500},
-  {slug:'vsjam-may25.vortris', file:'catalog-vortris.png', title:'Vortris', keys:[], wait:1200},
-  {slug:'vsjam-oct25.fanphibious_danger', file:'catalog-fanphibious.png', title:'Fanphibious Danger', keys:[], wait:1500},
-  {slug:'vsjam-may25.vzumaki', file:'catalog-vzumaki.png', title:'Vzumaki', keys:[], wait:6000},
+  {slug:'alecu.ventilagon_game', file:'catalog-super-ventilagon.png', title:'Super Ventilagon', keys:['Space'], wait:6500},
+  {slug:'alecu.vyruss_vs2', file:'catalog-vyruss.png', title:'Vyruss', keys:[], held:['Space','d'], wait:8500},
+  {slug:'vsjam-oct25.2bam_sencom', file:'catalog-senile-command.png', title:'Senile command', keys:['Space'], wait:7000},
+  {slug:'vsjam-may25.vasura_espacial', file:'catalog-vasura-espacial.png', title:'Vasura Espacial', keys:[], held:['Space'], wait:6000},
+  {slug:'vsjam-oct25.tincho_vrunner', file:'catalog-tincho.png', title:'Tincho el Carpincho', keys:['Space'], wait:4500},
 ];
 const server = http.createServer((req, res) => {
   let file = path.resolve(root, '.' + new URL(req.url,'http://localhost').pathname);
@@ -47,6 +46,7 @@ try {
     await page.addStyleTag({content:'.stage-fullscreen-toggle,.base-preview{display:none!important}.stage-display::after{display:none!important}#frame-canvas-gl{width:900px!important;height:900px!important;max-width:none!important;max-height:none!important}.stage-display{width:900px!important;height:900px!important;background:#0b1016!important}'});
     await page.waitForTimeout(1800);
     for (const key of game.keys) await page.keyboard.press(key,{delay:90});
+    for (const key of game.held || []) await page.keyboard.down(key);
     await page.waitForTimeout(game.wait);
     const info = await page.evaluate(() => {
       const canvas = document.querySelector('#frame-canvas-gl');
@@ -69,7 +69,8 @@ try {
     await page.waitForTimeout(100);
     await page.locator('#frame-canvas-gl').screenshot({path:path.join(out,game.file)});
     const sha256 = crypto.createHash('sha256').update(fs.readFileSync(path.join(out,game.file))).digest('hex');
-    records.push({file:game.file,slug:game.slug,title:game.title,...info,sha256});
+    records.push({file:game.file,slug:game.slug,title:game.title,
+      playback:{startKeys:game.keys,heldKeys:game.held || [],elapsedAfterInputMs:game.wait},...info,sha256});
     const previous = path.join(out,'catalog-captures.json');
     const existing = fs.existsSync(previous)?JSON.parse(fs.readFileSync(previous,'utf8')):[];
     fs.writeFileSync(previous,JSON.stringify([...existing.filter(e=>e.slug!==game.slug),records.at(-1)],null,2)+'\n');
@@ -78,7 +79,7 @@ try {
   }
   const previous = path.join(out,'catalog-captures.json');
   const existing = fs.existsSync(previous)?JSON.parse(fs.readFileSync(previous,'utf8')):[];
-  const updated = [...existing.filter(e=>!records.some(r=>r.slug===e.slug)),...records];
+  const updated = [...existing.filter(e=>games.some(g=>g.slug===e.slug) && !records.some(r=>r.slug===e.slug)),...records];
   fs.writeFileSync(previous,JSON.stringify(updated,null,2)+'\n');
 } finally {
   if (browser) await browser.close();
