@@ -1,6 +1,6 @@
 ---
 layout: presentation-page
-title: Presenting Ventilastation at Circular Arcades
+title: Presenting Ventilastation at COLLIDERS Meet-up – Circular Arcades
 lang: en
 ---
 
@@ -8,13 +8,14 @@ lang: en
 
 This English talk has two parts: a **12-minute introduction for everyone** and
 **15 minutes of coding**. Questions and open play follow the timed 27 minutes.
-The event is Sickhouse’s [Circular Arcades meetup on October 14, 2026](https://www.sickhouse.nl/events/colliders-meet-up-circular-arcades).
+The event is Sickhouse’s [COLLIDERS Meet-up – Circular Arcades on October 14, 2026](https://www.sickhouse.nl/events/colliders-meet-up-circular-arcades).
 
 ## The introduction
 
 Introduce Cybercirujas and its reuse of technology, then explain the fan display
-through motion, arxels and transformed artwork. Show existing games made by
-alecu and by the community. Explain two-player controls and audio, then scenes
+through motion, arxels and transformed artwork. Show Super Ventilagon and Vyruss
+as my sample games, then Senile command, Vasura Espacial and Tincho el Carpincho
+as past jam creations. Explain two-player controls and audio, then scenes
 and the visual pieces of a game without showing code. Close with the
 [Ventilastation × The Overkill Jam](https://itch.io/jam/ventilastation-overkill-jam).
 It starts October 14, and its page lists November 11 as the submission end date.
@@ -34,7 +35,7 @@ analysis stay in the linked guides. The final game still includes those features
 
 There are exactly three launch buttons, each opening a new tab:
 
-| Stage | Slide | Runnable source in the game download |
+| Part | Slide | Runnable source in the game download |
 | --- | --- | --- |
 | One creature around the rim | `#/first-game-code` | `code/checkpoints/01-steering.py` |
 | Catching and planting | `#/planting` | `code/checkpoints/05-flowers.py` |
@@ -43,7 +44,7 @@ There are exactly three launch buttons, each opening a new tab:
 The last file matches `code/dream_garden.py` exactly. Earlier fine-grained
 checkpoints remain in the SDK and complete download, but this talk uses only
 these three versions. Reserve about one minute of live play for each of the
-first two stages and two minutes for the completed game. Return to the
+first two parts and two minutes for the completed game. Return to the
 presentation tab after each launch.
 
 ## Before the talk
@@ -91,7 +92,8 @@ margins and with background graphics enabled. The reading view is printable too.
 
 ## Sources and images
 
-The Cybercirujas photo was supplied by Alejandro Cura from his local collection.
+The Cybercirujas and vs_gameon photos were supplied by Alejandro J. Cura
+from his local collection.
 The [UNQ account](https://agencia.unq.edu.ar/?p=7125) supports the collective’s
 repair, recirculation and knowledge-sharing work. The official jam and Sickhouse
 pages support the event information. Individual game source folders are linked

@@ -4,9 +4,11 @@
 
 Games on a fan
 
-Alejandro Cura <!-- .element: class="byline" -->
+Alejandro J. Cura - alecu@protocultura.net <!-- .element: class="byline" -->
 
-Circular Arcades at Sickhouse, 14 October 2026
+COLLIDERS Meet-up – Circular Arcades
+
+14 October 2026
 
 Notes:
 **0:00–0:20.** Introduce the console and the people around it before showing any code. The first twelve minutes are for everyone, including people who do not program. The following fifteen minutes focus on making a circular game. We will launch only three cumulative Garden versions. Questions and open play follow the timed talk.
@@ -15,7 +17,7 @@ Source: [Sickhouse’s Circular Arcades meetup](https://www.sickhouse.nl/events/
 
 ---
 
-<!-- .slide: id="cybercirujas" data-talk-part="intro" data-timing="80" -->
+<!-- .slide: id="cybercirujas" data-talk-part="intro" data-timing="70" -->
 
 ## Cybercirujas
 
@@ -29,9 +31,22 @@ Source: [Sickhouse’s Circular Arcades meetup](https://www.sickhouse.nl/events/
 </div>
 
 Notes:
-**0:20–1:40.** Cirujeo means finding useful things among what others discard. Cybercirujas extend that practice to computers and electronics, and share the knowledge needed to keep them useful. People contribute repairs, parts, software, teaching and curiosity. Connect this to Ventilastation: an unexpected object becomes a place for shared play. Explain the relationship personally rather than presenting it as a commercial sponsor. Do not imply that this photo shows a specific event or identify people in it.
+**0:20–1:30.** Cirujeo means finding useful things among what others discard. Cybercirujas extend that practice to computers and electronics, and share the knowledge needed to keep them useful. People contribute repairs, parts, software, teaching and curiosity. Connect this to Ventilastation: an unexpected object becomes a place for shared play. Explain the relationship personally rather than presenting it as a commercial sponsor. Do not imply that this photo shows a specific event or identify people in it.
 
 Source: [UNQ’s account of Cybercirujas](https://agencia.unq.edu.ar/?p=7125), including its interviews with the collective. Photo supplied by Alejandro Cura as cybercirujas.jpg.
+
+---
+
+<!-- .slide: id="what-is-ventilastation" data-talk-part="intro" data-timing="40" -->
+
+## What is Ventilastation?
+
+<img class="figure" src="assets/vs-gameon.jpg" alt="A player holding a joystick in front of Ventilastation’s glowing fan display">
+
+Notes:
+**1:30–2:10.** A playable arcade console inside a fan. Point to the controller, the circular image and the player: this is an unusual display people can make games for. The next slide looks inside the console.
+
+Photo supplied by Alejandro J. Cura as vs_gameon.jpg.
 
 ---
 
@@ -49,13 +64,13 @@ Source: [UNQ’s account of Cybercirujas](https://agencia.unq.edu.ar/?p=7125), i
 </div>
 
 Notes:
-**1:40–2:40.** Point to the moving arm, electronics and fan rather than listing components. It is a console people can write games for, not just a video loop. The code runs on the rotating board. A separate base handles sound and controllers. People can develop on a laptop without building their own hardware.
+**2:10–3:10.** Point to the moving arm, electronics and fan rather than listing components. It is a console people can write games for, not just a video loop. The code runs on the rotating board. A separate base handles sound and controllers. People can develop on a laptop without building their own hardware.
 
 Sources: [Ventilastation](../../en/), [current SDK introduction](../../docs/vs2/tutorial/index.html). Photo: this website’s images/pic01.jpg.
 
 ---
 
-<!-- .slide: id="display-in-time" data-talk-part="intro" data-timing="70" -->
+<!-- .slide: id="display-in-time" data-talk-part="intro" data-timing="60" -->
 
 ## Light becomes a screen through motion
 
@@ -69,7 +84,7 @@ Sources: [Ventilastation](../../en/), [current SDK introduction](../../docs/vs2/
 </div>
 
 Notes:
-**2:40–3:50.** Play the physical display clip and trace the arm’s rotation with your hand. Each LED follows a circle. Changing its light as it rotates makes a coloured arc. Persistence of vision joins the successive angles into the image. Unlike a stationary rectangular panel, positions on the screen arrive at different instants. The game update and motor rotation are separate clocks. Keep this intuitive for the non-coding audience.
+**3:10–4:10.** Play the physical display clip and trace the arm’s rotation with your hand. Each LED follows a circle. Changing its light as it rotates makes a coloured arc. Persistence of vision joins the successive angles into the image. Unlike a stationary rectangular panel, positions on the screen arrive at different instants. The game update and motor rotation are separate clocks. Keep this intuitive for the non-coding audience.
 
 Sources: [Physical display](../../docs/vs2/tutorial/index.html), [display geometry](../../docs/vs2/tutorial/display.html). Video: this website’s images/banner.mp4.
 
@@ -89,13 +104,13 @@ Sources: [Physical display](../../docs/vs2/tutorial/index.html), [display geomet
 </div>
 
 Notes:
-**3:50–5:00.** Arxel combines arc and pixel. These three blocks use the same eight angular columns and eight radial LEDs. Their angular width stays constant, but their physical width shrinks at the smaller radii. Radial LED spacing stays fixed. Distinguish the size of a light cell from an actor shrinking through a tunnel projection. The image uses the HUD projection to isolate the radial geometry. Explain why small lettering and fine artwork become hard to read near the centre. No maths is needed here.
+**4:10–5:20.** Arxel combines arc and pixel. These three blocks use the same eight angular columns and eight radial LEDs. Their angular width stays constant, but their physical width shrinks at the smaller radii. Radial LED spacing stays fixed. Distinguish the size of a light cell from an actor shrinking through a tunnel projection. The image uses the HUD projection to isolate the radial geometry. Explain why small lettering and fine artwork become hard to read near the centre. No maths is needed here.
 
 Source: [Current display geometry](../../docs/vs2/tutorial/display.html). Image: actual font block cells rendered through the WebGL display backend.
 
 ---
 
-<!-- .slide: id="curved-art" data-talk-part="intro" data-timing="60" -->
+<!-- .slide: id="curved-art" data-talk-part="intro" data-timing="50" -->
 
 ## Ordinary artwork bends around the disc
 
@@ -109,7 +124,7 @@ Source: [Current display geometry](../../docs/vs2/tutorial/display.html). Image:
 </div>
 
 Notes:
-**5:00–6:00.** Show the original flat art and then the four copies around the rim. The renderer maps its horizontal pixels to angular columns and its vertical pixels to radial positions. The result bends and changes proportions. Its local upright direction rotates around the disc. The dreamer’s antennae point inward at every angle. Critical details need to survive that transformation, and a conventional game screen pasted into a circle will not behave like its rectangular original. Invite artists to treat this as a design material.
+**5:20–6:10.** Show the original flat art and then the four copies around the rim. The renderer maps its horizontal pixels to angular columns and its vertical pixels to radial positions. The result bends and changes proportions. Its local upright direction rotates around the disc. The dreamer’s antennae point inward at every angle. Critical details need to survive that transformation, and a conventional game screen pasted into a circle will not behave like its rectangular original. Invite artists to treat this as a design material.
 
 Source: [Sprite geometry](../../docs/vs2/tutorial/display.html). Images: the real dreamer strip and a WebGL rendering of those assets.
 
@@ -126,7 +141,7 @@ Games can compete, cooperate or share a space.
 Speakers carry **music, effects and feedback** beyond the disc.
 
 Notes:
-**6:00–7:00.** Hold up or point to the two physical controllers. Explain that the player input has the familiar joystick directions and buttons, with room for one- and two-player games. The screen is unusual, but those inputs do not require inventing new controllers. Music and effects play through the base station, not through a speaker on the spinning arm. Audio can carry mood, rhythm and events that the crowded centre cannot show clearly. Keyboard controls and the desktop emulator substitute for the hardware during development.
+**6:10–7:10.** Hold up or point to the two physical controllers. Explain that the player input has the familiar joystick directions and buttons, with room for one- and two-player games. The screen is unusual, but those inputs do not require inventing new controllers. Music and effects play through the base station, not through a speaker on the spinning arm. Audio can carry mood, rhythm and events that the crowded centre cannot show clearly. Keyboard controls and the desktop emulator substitute for the hardware during development.
 
 Sources: [Controllers and audio](../../docs/vs2/reference/services.html), [base station](../../en/).
 
@@ -134,35 +149,34 @@ Sources: [Controllers and audio](../../docs/vs2/reference/services.html), [base 
 
 <!-- .slide: id="alecu-games" data-talk-part="intro" data-timing="60" -->
 
-## Games made by alecu
+## My sample games
 
-<div class="game-gallery">
-<figure><img src="assets/catalog-vyruss.png" alt="Vyruss VS2 played on the circular WebGL display"><figcaption>Vyruss<br><span>Space shooter</span></figcaption></figure>
-<figure><img src="assets/catalog-ventap.png" alt="Ventap’s orbiting ball and targets on the circular WebGL display"><figcaption>Ventap<br><span>Timing and orbits</span></figcaption></figure>
-<figure><img src="assets/catalog-vixeous.png" alt="Vixeous terrain and aircraft on the circular WebGL display"><figcaption>Vixeous<br><span>Scrolling shooter</span></figcaption></figure>
+<div class="game-gallery two-games">
+<figure><img src="assets/catalog-super-ventilagon.png" alt="Super Ventilagon during play, with circular obstacles approaching the player"><figcaption>Super Ventilagon</figcaption></figure>
+<figure><img src="assets/catalog-vyruss.png" alt="Vyruss during play, with the player firing at enemy ships"><figcaption>Vyruss</figcaption></figure>
 </div>
 
 Notes:
-**7:00–8:00.** Use these as examples of different ways to inhabit a disc: orbiting a target, moving through depth and flying over terrain. Mention Super Ventilagon as an earlier circular obstacle game and ancestor of this console. Keep game history brief. These are existing games, not promises about what the new jam will produce. The screenshots come from their runnable implementations in the SDK’s alecu group.
+**7:10–8:10.** Show two of my sample games. Super Ventilagon turns rotation and approaching obstacles into an arcade survival game. Vyruss puts a space shooter on the circular display. The screenshots show play rather than their starting screens. Keep the history brief and point out how each uses the disc.
 
-Sources: [Vyruss VS2](https://github.com/ventilastation/vsdk/tree/main/games/alecu/vyruss_vs2), [Ventap](https://github.com/ventilastation/vsdk/tree/main/games/alecu/ventap), [Vixeous](https://github.com/ventilastation/vsdk/tree/main/games/alecu/vixeous), [Super Ventilagon](https://ventilagon.protocultura.net/). Images: real games captured with the WebGL display backend.
+Sources: [Super Ventilagon](https://github.com/ventilastation/vsdk/tree/main/games/alecu/ventilagon_game), [Vyruss](https://github.com/ventilastation/vsdk/tree/main/games/alecu/vyruss_vs2). Images: actual gameplay captured with the WebGL display backend.
 
 ---
 
 <!-- .slide: id="community-games" data-talk-part="intro" data-timing="70" -->
 
-## The community expands what a disc can do
+## Past jam creations
 
 <div class="game-gallery">
-<figure><img src="assets/catalog-vortris.png" alt="Vortris’s circular falling-block board"><figcaption>Vortris<br><span>Falling blocks</span></figcaption></figure>
-<figure><img src="assets/catalog-fanphibious.png" alt="Fanphibious Danger’s frog and circular lanes"><figcaption>Fanphibious Danger<br><span>Frog crossing</span></figcaption></figure>
-<figure><img src="assets/catalog-vzumaki.png" alt="Vzumaki’s words spiralling through the circular display"><figcaption>Vzumaki<br><span>Spiralling poetry</span></figcaption></figure>
+<figure><img src="assets/catalog-senile-command.png" alt="Senile command during play, defending the fan core against incoming fingers"><figcaption>Senile command</figcaption></figure>
+<figure><img src="assets/catalog-vasura-espacial.png" alt="Vasura Espacial during play, with the ship defending a planet"><figcaption>Vasura Espacial</figcaption></figure>
+<figure><img src="assets/catalog-tincho.png" alt="Tincho el Carpincho running through a circular obstacle course"><figcaption>Tincho el Carpincho</figcaption></figure>
 </div>
 
 Notes:
-**8:00–9:10.** These examples came from earlier community game jams. Vortris adapts falling blocks to a circular board. Fanphibious Danger makes the crossing lanes circular. Vzumaki uses text and motion for a poetic experience, broadening the idea of a game on this console. Credit the makers collectively and point to the original source folders for their work. Do not infer individual author names from commit history. There are also other community games in the SDK. The point is to invite new approaches, not prescribe a single genre.
+**8:10–9:20.** These games came from earlier community jams. Senile command defends the fan’s core against incoming fingers. Vasura Espacial is a space shooter defending a planet. Tincho el Carpincho turns a running and jumping course into a circle. Credit the makers collectively and link to their original source folders. These are playable creations, not a prescribed genre for the new jam.
 
-Sources: [Vortris](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-may25/vortris), [Fanphibious Danger](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-oct25/fanphibious_danger), [Vzumaki](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-may25/vzumaki). Images: actual games captured with the WebGL display backend.
+Sources: [Senile command](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-oct25/2bam_sencom), [Vasura Espacial](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-may25/vasura_espacial), [Tincho el Carpincho](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-oct25/tincho_vrunner). Images: actual gameplay captured with the WebGL display backend.
 
 ---
 
@@ -177,13 +191,13 @@ Sources: [Vortris](https://github.com/ventilastation/vsdk/tree/main/games/vsjam-
 </div>
 
 Notes:
-**9:10–10:00.** A scene is one active moment: a title, the playable garden, a pause, a result or a rest. It can have its own pictures, controls and sound decisions. This need not mean lives and a game-over screen. Garden voluntarily switches to Rest, preserving what players planted. Explain the concept before its Python interface so artists and designers can plan an experience too.
+**9:20–10:10.** A scene is one active moment: a title, the playable garden, a pause, a result or a rest. It can have its own pictures, controls and sound decisions. This need not mean lives and a game-over screen. Garden voluntarily switches to Rest, preserving what players planted. Explain the concept before its Python interface so artists and designers can plan an experience too.
 
 Source: [Dream Garden’s Title, Garden and Rest](examples/dream_garden.py). Images: those actual scenes through the WebGL display backend.
 
 ---
 
-<!-- .slide: id="visual-pieces" data-talk-part="intro" data-timing="70" -->
+<!-- .slide: id="visual-pieces" data-talk-part="intro" data-timing="60" -->
 
 ## The pieces of a game image
 
@@ -199,7 +213,7 @@ Source: [Dream Garden’s Title, Garden and Rest](examples/dream_garden.py). Ima
 </div>
 
 Notes:
-**10:00–11:10.** Point at the image while naming the pieces. Flowers and dreamers form the lower layer. Clouds and golden seeds occupy the middle layer. RELAX is a label on the top layer. The creatures are sprites, and a large cloud spans several tilemap cells. A full-screen image is another option for a backdrop or illustration covering the disc; this garden instead uses sparse clouds. These are tools for visual composition. Avoid explaining constructors, reserve sizes or projection constants in the non-coder section.
+**10:10–11:10.** Point at the image while naming the pieces. Flowers and dreamers form the lower layer. Clouds and golden seeds occupy the middle layer. RELAX is a label on the top layer. The creatures are sprites, and a large cloud spans several tilemap cells. A full-screen image is another option for a backdrop or illustration covering the disc; this garden instead uses sparse clouds. These are tools for visual composition. Avoid explaining constructors, reserve sizes or projection constants in the non-coder section.
 
 Sources: [Drawables](../../docs/vs2/reference/drawables.html), [projections](../../docs/vs2/tutorial/display.html). Image: the completed garden while holding A, captured through WebGL.
 
@@ -224,7 +238,16 @@ Sources: [Official jam page](https://itch.io/jam/ventilastation-overkill-jam), [
 
 ---
 
-<!-- .slide: id="desktop" data-talk-part="coding" data-timing="75" -->
+<!-- .slide: id="how-to-code" data-talk-part="coding" data-timing="20" class="cover" -->
+
+# How to code for Ventilastation
+
+Notes:
+**12:00–12:20.** Open the coding part. The next fifteen minutes cover the display-specific ideas needed to make a first game, with three playable versions of Dream Garden.
+
+---
+
+<!-- .slide: id="desktop" data-talk-part="coding" data-timing="55" -->
 
 ## A game is a folder on your laptop
 
@@ -241,10 +264,10 @@ games/myname/mygame/
 ./vs-emu.sh --game myname.mygame
 ```
 
-MicroPython runs your app or game in the desktop emulator.
+Edit local Python files and test with the desktop emulator.
 
 Notes:
-**12:00–13:15.** Start the coding section at minute twelve. Use an up-to-date SDK main checkout, where Dream Garden is already included. Dependencies should be installed before the session; link to the desktop guide rather than spending the fifteen minutes on setup. Windows uses vs-emu.bat. Explain the folder name, matching Python module and images manifest. main() returns the starting scene. Metadata declares api: vs2 and api_revision: 2. The menu icon is 64×30. Artists can edit the PNGs without changing game logic, and audio lives as MP3s on the host or console base. The complete Garden download includes the assets and runnable code.
+**12:20–13:15.** Continue from the coding title slide. Use an up-to-date SDK main checkout, where Dream Garden is already included. Dependencies should be installed before the session; link to the desktop guide rather than spending the fifteen minutes on setup. Windows uses vs-emu.bat. Explain the folder name, matching Python module and images manifest. main() returns the starting scene. Metadata declares api: vs2 and api_revision: 2. The menu icon is 64×30. Artists can edit the PNGs without changing game logic, and audio lives as MP3s on the host or console base. The complete Garden download includes the assets and runnable code.
 
 Sources: [Desktop setup](../../docs/guides/desktop.html), [complete Garden download](examples/dream-garden.zip).
 
@@ -252,9 +275,9 @@ Sources: [Desktop setup](../../docs/guides/desktop.html), [complete Garden downl
 
 <!-- .slide: id="first-game-code" data-talk-part="coding" data-timing="150" class="compact" data-progression="01-steering" -->
 
-## Stage 1: one creature around the rim
+## Part 1: one creature around the rim
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering" target="_blank" rel="noopener">Play stage 1</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=01-steering" data-checkpoint="01-steering" target="_blank" rel="noopener">Play part 1</a>
 
 ```python
 import vs2
@@ -275,7 +298,7 @@ def main():
 A / D steer. Crossing column zero stays continuous.
 
 Notes:
-**13:15–15:45.** This is the whole starter’s behaviour, with x=-9 centring the 19-pixel dreamer at angle zero. The downloadable starter derives that offset from its width. The runnable stage uses the same result. Explain the unusual part: X is an angular position and wraps, while Y zero sits at the outer rim. Held directions are stable controller states; opposite directions cancel. Open stage one in its own tab, move across the seam and return to the deck. Reserve about one minute for this demonstration. The packed dreamer image and current metadata complete the folder. Everyone can replace its artwork; programmers can change the movement.
+**13:15–15:45.** This is the whole starter’s behaviour, with x=-9 centring the 19-pixel dreamer at angle zero. The downloadable starter derives that offset from its width. The runnable part uses the same result. Explain the unusual part: X is an angular position and wraps, while Y zero sits at the outer rim. Held directions are stable controller states; opposite directions cancel. Open part one in its own tab, move across the seam and return to the deck. Reserve about one minute for this demonstration. The packed dreamer image and current metadata complete the folder. Everyone can replace its artwork; programmers can change the movement.
 
 Sources: [Starter source](examples/first_game.py), [display model](../../docs/vs2/tutorial/display.html).
 
@@ -319,7 +342,7 @@ def update(self):
 `update()` changes its existing objects every 30 ms.
 
 Notes:
-**17:15–18:45.** This is the runtime rule worth retaining from the longer presentation. Build the layers and reserve sprites, pools, tilemaps and labels at scene entry. Returning from build seals that graph. A catch reuses a reserved flower slot rather than creating a fresh renderer object. Spawn reveals a slot and despawn retires it. The finished Garden reserves sixteen seed slots and twenty-four flowers, recycling the oldest flower when full. We do not need a budget table or Python allocation lecture on stage; those details remain in the reference. The excerpt uses the finished game’s air layer. Ordinary game state and drawable handles are separate when a scene is rebuilt.
+**17:15–18:45.** This is the runtime rule worth retaining from the longer presentation. Build the layers and reserve sprites, pools, tilemaps and labels at scene entry. Returning from build seals that graph. A catch reuses a reserved flower slot rather than creating a fresh renderer object. Spawn reveals a slot and despawn retires it. The finished Garden reserves sixteen seed slots and twenty-four flowers, recycling the oldest flower when full. We do not need a budget table or Python allocation lecture on part; those details remain in the reference. The excerpt uses the finished game’s air layer. Ordinary game state and drawable handles are separate when a scene is rebuilt.
 
 Sources: [Scene lifecycle](../../docs/vs2/reference/scene.html), [pools](../../docs/vs2/tutorial/pools.html), [finished Garden](examples/dream_garden.py).
 
@@ -327,9 +350,9 @@ Sources: [Scene lifecycle](../../docs/vs2/reference/scene.html), [pools](../../d
 
 <!-- .slide: id="planting" data-talk-part="coding" data-timing="150" data-progression="05-flowers" -->
 
-## Stage 2: catching seeds grows flowers
+## Part 2: catching seeds grows flowers
 
-<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" data-checkpoint="05-flowers" target="_blank" rel="noopener">Play stage 2</a>
+<a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=05-flowers" data-checkpoint="05-flowers" target="_blank" rel="noopener">Play part 2</a>
 
 <div class="split">
 <div>
@@ -340,7 +363,7 @@ Sources: [Scene lifecycle](../../docs/vs2/reference/scene.html), [pools](../../d
 <p>The overlap test understands the angular seam.</p>
 <p>Flowers start at the player’s depth and drift inward.</p>
 </div>
-<img src="assets/garden-planting.png" alt="Stage two’s pink dreamer catches golden seeds and grows flowers, before clouds or HUD text are introduced">
+<img src="assets/garden-planting.png" alt="Part two’s pink dreamer catches golden seeds and grows flowers, before clouds or HUD text are introduced">
 </div>
 
 Notes:
@@ -393,7 +416,7 @@ Sources: [Draw order and projections](../../docs/vs2/tutorial/display.html), [ti
 
 <!-- .slide: id="finished-demo" data-talk-part="coding" data-timing="130" data-progression="11-audio" -->
 
-## Stage 3: the completed shared garden
+## Part 3: the completed shared garden
 
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio" target="_blank" rel="noopener">Play the finished game</a>
 
