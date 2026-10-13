@@ -25,7 +25,7 @@ links provide references rather than dependencies for the presentation.
 ## Before the talk
 
 Follow the [desktop setup]({{ '/docs/guides/desktop.html' | relative_url }}) in a
-current SDK checkout. During branch review, use `feat/dream-garden-layers` or
+current SDK checkout. During branch review, use `feat/dream-garden-clouds` or
 extract the [complete game download](examples/dream-garden.zip) at the SDK root.
 The download creates `games/demos/dream_garden/` and includes the source, packed
 PNGs, YAML, menu icon, MP3s, artwork provenance and rebuild recipes.
@@ -76,7 +76,7 @@ capture if you need to present without the emulator.
 
 Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
-hold A to slow the shared flow. Point out RELAX, slower flying seeds and the much slower inward flower drift.
+hold A to slow the shared flow. Point out RELAX, fluffy clouds in varied sizes, seeds moving 15% slower than clouds, and the much slower inward flower drift.
 Plants appear on the side each dreamer last moved toward, even after stopping. Seeds pulse independently at random.
 Toggle the quiet audio and show NOISY/QUIET holding for two seconds before sliding out. RELAX slides out when A is released. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.

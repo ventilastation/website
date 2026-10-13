@@ -162,7 +162,7 @@ Sources: [Your first game](../../docs/vs2/tutorial/first-game.html), [starter so
 <p class="caption">Dreamers, seeds, flowers and garden details.</p>
 
 Notes:
-**8:45–9:30.** Show the original artwork sheet before explaining its runtime format. The top row has four pink poses and the same four poses in mint for player two. Below are four seed frames, four flower species with two frames each, and eight sparse garden details. The source atlas was generated for this game and is included in the download. The preparation script crops its cells, corrects the leaning pose order, resizes them with nearest-neighbour sampling, makes alpha binary and packs horizontal strips. The dreamers become 19 × 19 pixel frames. Keep the artwork legible at that final size, especially on the moving physical display.
+**8:45–9:30.** Show the original artwork sheet before explaining its runtime format. The top row has four pink poses and the same four poses in mint for player two. Below are four seed frames, four flower species with two frames each, and eight sparse garden details. The source atlas was generated for this game and is included in the download. The preparation script crops its cells, corrects the leaning pose order, resizes them with nearest-neighbour sampling, makes alpha binary and packs horizontal strips. The fourth row is unused in this experiment; a separate six-cloud atlas supplies the flying layer. The dreamers become 19 × 19 pixel frames. Keep the artwork legible at that final size, especially on the moving physical display.
 
 Source: [Artwork provenance and preparation](examples/artwork.html). Image: Dream Garden's original `sources/source-atlas.png`, included unchanged.
 
@@ -295,7 +295,7 @@ Source and diagram: [The circular display](../../docs/vs2/tutorial/display.html)
 </div>
 
 Notes:
-**16:15–17:45.** Choose a projection per layer. The finished Dream Garden uses two TUNNEL layers for the planted garden and flying objects, plus one HUD layer for text. These dreamers use Y values 0, 24 and 48 on TUNNEL above and HUD below. Decreasing tunnel depth moves a seed outward toward the players. HUD removes perspective scaling, though angular cells still narrow near the centre. FULLSCREEN draws a centred image whose X rotates it and whose Y follows the tunnel depth curve. It accepts sprites only. Layers paint in creation order, then drawables in creation order inside each layer. The lower layer draws flowers then dreamers; the middle draws flying accents then seeds; the HUD draws last. Physical height 54 is not a tunnel off-screen threshold.
+**16:15–17:45.** Choose a projection per layer. The finished Dream Garden uses two TUNNEL layers for the planted garden and flying objects, plus one HUD layer for text. These dreamers use Y values 0, 24 and 48 on TUNNEL above and HUD below. Decreasing tunnel depth moves a seed outward toward the players. HUD removes perspective scaling, though angular cells still narrow near the centre. FULLSCREEN draws a centred image whose X rotates it and whose Y follows the tunnel depth curve. It accepts sprites only. Layers paint in creation order, then drawables in creation order inside each layer. The lower layer draws flowers then dreamers; the middle draws clouds then seeds; the HUD draws last. Physical height 54 is not a tunnel off-screen threshold.
 
 Source: [Projections and draw order](../../docs/vs2/tutorial/display.html). Image: actual dreamer assets in two SDK scene layers.
 
@@ -412,28 +412,30 @@ Sources: [Collision API](../../docs/vs2/tutorial/sprites.html), [Dream Garden's 
 
 <!-- .slide: id="tilemap"  data-timing="75" -->
 
-## The drifting garden is one tilemap
+## Fluffy clouds can span several tiles
 
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=06-tiles" data-checkpoint="06-tiles">Run this checkpoint</a>
 
 <div class="split">
 <div>
 <pre><code class="language-python" data-trim>self.ground = world.tilemap(
-    "garden.png",
-    columns=16, rows=16,
+    "clouds.png",
+    columns=16, rows=22,
     view_width=256,
     view_height=160
 )
-self.ground[1, 2] = vs2.EMPTY_TILE</code></pre>
-<p>Sparse accents leave room for the seeds.</p>
+# A large cloud uses frames 3–8 in a 3×2 block.
+self.ground[11, 4] = 3
+self.ground[12, 4] = 4</code></pre>
+<p>Whole clouds occupy 1×1, 2×1 or 3×2 cells.</p>
 </div>
-<img src="assets/tilemaps.png" alt="Sparse mint roots, pink petals and lavender moons on a dark circular garden, with a pink dreamer at the rim">
+<img src="assets/tilemaps.png" alt="Muted fluffy clouds in different sizes drift over a dark circular garden, with a pink dreamer at the rim">
 </div>
 
 Notes:
-**23:30–24:45.** The garden tiles are frames in another strip. One byte per cell chooses a frame or EMPTY_TILE. Dimensions describe the stored grid and its viewport, not a conventional screen resolution. Build fills a sparse repeating pattern of roots, petals and moons. Transparent cells preserve dark space so seeds remain visible. The map comes first in the middle layer, followed by seeds; flowers and players sit below it. Smaller, slightly darker flying details distinguish this flow from the planted garden. A tilemap fits repeated terrain better than dozens of separate sprites, although its rendering cost still depends on the actual viewport and content. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**23:30–24:45.** Cloud tiles are frames in another strip, with a separate palette group. One byte per cell chooses a frame or EMPTY_TILE. Dimensions describe the stored grid and its viewport, not a conventional screen resolution. Build places six fluffy cloud shapes in a sparse repeating pattern. Source artwork is packed at 16×16, 32×16 and 48×32 pixels, then cut into adjoining 16-pixel tiles. Medium clouds use two cells; large clouds use a 3×2 block whose frames are placed row by row. There is no padding between the tiles, so the puffs stay continuous across cell boundaries. Transparent cells preserve dark space so seeds remain visible. The map comes first in the middle layer, followed by seeds; flowers and players sit below it. Subdued blue-gray clouds distinguish this flow from the planted garden, while golden seeds remain bright and catchable. A tilemap fits repeated terrain better than dozens of separate sprites, although its rendering cost still depends on the actual viewport and content. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
-Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the sample's ground tilemap and dreamer through the SDK renderer.
+Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the sample's cloud tilemap and dreamer through the SDK renderer.
 
 ---
 
@@ -444,20 +446,20 @@ Source: [Tilemaps](../../docs/vs2/tutorial/tilemaps-and-text.html). Image: the s
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=07-scroll" data-checkpoint="07-scroll">Run this checkpoint</a>
 
 ```python
-pattern_height = 6 * self.ground.tile_height
+pattern_height = 12 * self.ground.tile_height
 self.scroll = (self.scroll + self.speed) % pattern_height
 self.ground.view_y = self.scroll
 
 for seed in self.seeds:
-    seed.y -= self.speed
+    seed.y -= self.speed * 0.85
 ```
 
-The garden repeats every six tile rows.
+The clouds repeat every twelve tile rows.
 
-The seeds share its pace.
+Seeds drift 15% slower than clouds.
 
 Notes:
-**24:45–26:00.** The map is stored data plus a movable view. Wrapping a six-row pattern avoids rewriting cells every tick. Drift speed is 0.45 depth units per tick, and holding A reduces it to 0.12. Seeds decrease Y by the same speed, sharing the background's movement. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation also uses dream_time, advanced by the same speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**24:45–26:00.** The map is stored data plus a movable view. Wrapping a twelve-row pattern avoids rewriting cells every tick. Drift speed is 0.45 depth units per tick, and holding A reduces it to 0.12. Clouds scroll at that speed; seeds decrease Y at 85% of it. Seeds lag gently behind the clouds at both normal and relaxed paces. The stored map has 22 rows: ten for the viewport plus twelve for a complete scroll period, so wrapping cannot expose an empty tail. This ties the visible world's rhythm to the player's choice. A non-repeating world would refill a row when a tile passes. Flower animation also uses dream_time, advanced by the same speed and wrapped to keep it bounded. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Tilemap scrolling](../../docs/vs2/tutorial/tilemaps-and-text.html), [Dream Garden update](examples/dream_garden.py).
 
@@ -602,7 +604,7 @@ Source: [Garden update](examples/dream_garden.py). Screenshot: an actual held-A 
 Read the target limits from `vs2.limits`.
 
 Notes:
-**31:45–33:15.** Forty-two sprites means two reserved dreamers, sixteen seeds and twenty-four flowers. Hidden player two and empty pool slots still count. The flying accents, RELAX label and audio notice use three tilemap records. The lower layer draws planted flowers then dreamers; the middle draws flying accents then seeds; the HUD paints above both. Five strips include the full font shared by the other scenes. Layers and records are separate resources. VS2 checks the graph at entry and reports the layers contributing to an exceeded budget. Tilemaps can be costly even when their record count is low. Random seed glow uses a small state entry per live seed, removed on retirement. Our bounded garden can run indefinitely without growing its renderer graph. Target timing and heap still need measurement on the console.
+**31:45–33:15.** Forty-two sprites means two reserved dreamers, sixteen seeds and twenty-four flowers. Hidden player two and empty pool slots still count. The cloud tilemap, RELAX label and audio notice use three tilemap records. The lower layer draws planted flowers then dreamers; the middle draws clouds then seeds; the HUD paints above both. Five strips include the full font shared by the other scenes. Layers and records are separate resources. VS2 checks the graph at entry and reports the layers contributing to an exceeded budget. Tilemaps can be costly even when their record count is low. Random seed glow uses a small state entry per live seed, removed on retirement. Our bounded garden can run indefinitely without growing its renderer graph. Target timing and heap still need measurement on the console.
 
 Sources: [Resource limits](../../docs/vs2/reference/services.html#vs2-limits), [sample build](examples/dream_garden.py).
 
@@ -615,7 +617,7 @@ Sources: [Resource limits](../../docs/vs2/reference/services.html#vs2-limits), [
 <a class="checkpoint-launch" href="../../emulator/?game=demos.dream_garden&amp;checkpoint=11-audio" data-checkpoint="11-audio">Run this checkpoint</a>
 
 ```python
-seed.y -= self.speed
+seed.y -= self.speed * 0.85
 self.flowers.spawn(x=angle, y=player.y, frame=kind * 2)
 self.seeds.despawn(seed)
 ```
@@ -645,7 +647,7 @@ Sources: [Allocation and target checks](../../docs/vs2/tutorial/budgets.html), [
 </div>
 
 Notes:
-**34:30–36:00.** The emulator preserves renderer semantics, but cannot judge physical brightness or enforce the real output's column deadline. These copies of RELAX use HUD positions 1 and 35. The inner word compresses because angular cells have less circumference. Keep critical instructions near the rim and let the centre convey depth or drifting effects. Our leaves, blossoms and seeds are deliberately sparse. Test their contrast and recognizability on the real LEDs, along with a crowded garden and a sustained session. This is how the display geometry feeds back into the game rather than remaining an introduction slide.
+**34:30–36:00.** The emulator preserves renderer semantics, but cannot judge physical brightness or enforce the real output's column deadline. These copies of RELAX use HUD positions 1 and 35. The inner word compresses because angular cells have less circumference. Keep critical instructions near the rim and let the centre convey depth or drifting effects. Our clouds, blossoms and seeds are deliberately sparse. Test their contrast and recognizability on the real LEDs, along with a crowded garden and a sustained session. This is how the display geometry feeds back into the game rather than remaining an introduction slide.
 
 Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: actual font labels through the SDK renderer.
 

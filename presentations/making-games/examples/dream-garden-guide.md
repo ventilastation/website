@@ -9,7 +9,7 @@ The festival's [Dream No Return theme](https://www.sickhouse.nl/festival/dream-n
 inspired a garden whose players can choose a slower pace. This is an original
 sample game, not a festival commission or an official festival game.
 
-[Download the complete game](dream-garden.zip). While these changes are under review, use the SDK branch `feat/dream-garden-layers`. Extract the archive at the root of that SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. After merging, the same archive works in an updated main checkout.
+[Download the complete game](dream-garden.zip). While these changes are under review, use the SDK branch `feat/dream-garden-clouds`. Extract the archive at the root of that SDK checkout to create `games/demos/dream_garden/`. The source, packed assets, audio and rebuilding recipes are included, along with `tests/test_dream_garden.py` so the checks below also work when installing into a current SDK checkout. After merging, the same archive works in an updated main checkout.
 
 [Small first-game starter](first_game.py) · [Back to the slides](../)
 
@@ -43,7 +43,7 @@ Flowers drift inward at 8% of seed speed and disappear at the centre.
 Smaller, subdued golden seeds occasionally pulse with a randomly triggered glow.
 Missing a seed has no penalty. A second
 player joins by steering or pressing A, using an already reserved mint dreamer.
-Either player can slow seed movement, the drifting background and flower
+Either player can slow seed movement, the drifting clouds and flower
 animation. New spawn intervals also lengthen, after the pending seed deadline.
 Flowers gradually replace the oldest ones when the garden fills up.
 
@@ -63,7 +63,10 @@ The second player costs one reserved sprite even before joining.
 The Garden graph uses **42 sprites, 3 tilemaps, 3 layers and 5 image strips**.
 The flower pool counts toward that cost even when its slots are hidden. The
 lower layer draws flowers first and players above them. The middle layer draws
-smaller, darker flying accents in 16-pixel tiles, followed by 9-pixel seeds.
+six subdued fluffy cloud shapes, followed by 9-pixel golden seeds. Clouds
+occupy 1 × 1, 2 × 1 or 3 × 2 tile cells, packed at 16 × 16, 32 × 16
+and 48 × 32 pixels. Clouds scroll at the shared world speed; seeds move
+15% slower (0.3825 depth units per tick, or 0.102 while relaxing).
 The top HUD shows RELAX while A is held, then slides it out on release,
 plus temporary audio feedback.
 Both flips keep the top text upright.
