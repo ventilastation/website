@@ -1,0 +1,95 @@
+{
+  "sourceSha256": "c2ed572c63a5cf8d4935104a1df49251239306182b9686eb08e66ae6ca688373",
+  "captures": [
+    {
+      "file": "garden-start.png",
+      "description": "Finished game starts with no planted flowers.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "7de9abb9d67b6ff1f99b83d8d5d25c6bc2dd04ad5ebde726ff8f81973cc53533"
+    },
+    {
+      "file": "dream-garden.png",
+      "description": "Populated final game, grown through its bloom handler.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "30a7e554d2869f491aa9b78408e05299ab9af2b8dcaf4e43ee860708b8245014"
+    },
+    {
+      "file": "shared-rest.png",
+      "description": "Player one holds A: RELAX, sleeping pose and slower seeds.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "2eef293f519d23a66ae245ad5fbdaf5bd24b296342df534eba3702a904216ee6"
+    },
+    {
+      "file": "dream-rest.png",
+      "description": "Actual final Rest scene preserves the planted flowers.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "f078d873fd75b85fc9d360f68c66177c521d115ab76fb539ef4601a6db90b4bf"
+    },
+    {
+      "file": "first-game.png",
+      "description": "Actual first steering checkpoint, with only one dreamer.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "dbc86956d2ed20a8f6f493bb3e7b22153a4ac9d8ae44c6c65f9b0690e594cfd2"
+    },
+    {
+      "file": "tilemaps.png",
+      "description": "Actual cloud tilemap checkpoint before scrolling.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "7de9abb9d67b6ff1f99b83d8d5d25c6bc2dd04ad5ebde726ff8f81973cc53533"
+    },
+    {
+      "file": "display-angles.png",
+      "description": "Geometry example using real Dream Garden assets.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "a64ed83ee165d56ec6a8af4b020a78f451cbed6eedc49f26d9142bb014d9cf85"
+    },
+    {
+      "file": "display-projections.png",
+      "description": "Geometry example using real Dream Garden assets.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "bb3f47930b9b34347ef15f0b65a969d8d0da6bd44f452033388b5b88857a08b8"
+    },
+    {
+      "file": "budgets-legibility.png",
+      "description": "Geometry example using real Dream Garden assets.",
+      "displayBackend": "WebGL2",
+      "sceneBackend": "WebGL shader",
+      "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
+      "width": 900,
+      "height": 900,
+      "sha256": "4bba014d74818400a154f16fb488c697ef7a779e634aa203c8c172021f4638f1"
+    }
+  ]
+}

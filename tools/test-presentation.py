@@ -2,6 +2,8 @@
 """Check talk pacing, hosted assets, and the runnable first-game example."""
 import argparse
 import importlib.util
+import hashlib
+import json
 from html.parser import HTMLParser
 from pathlib import Path
 import re
@@ -124,6 +126,23 @@ def check_checkpoints(site, sdk):
     print('All Python slides launch a published cumulative checkpoint; 11 stages match the SDK')
 
 
+def check_webgl_captures(sdk):
+    assets = TALK / 'assets'
+    record = json.loads((assets / 'captures.json').read_text())
+    source = sdk / 'games/demos/dream_garden/code/dream_garden.py'
+    assert record['sourceSha256'] == hashlib.sha256(source.read_bytes()).hexdigest()
+    captures = {item['file']: item for item in record['captures']}
+    expected = {'dream-garden.png', 'shared-rest.png', 'dream-rest.png',
+                'first-game.png', 'tilemaps.png', 'display-angles.png',
+                'display-projections.png', 'budgets-legibility.png', 'garden-start.png'}
+    assert set(captures) == expected
+    for filename, capture in captures.items():
+        assert capture['displayBackend'] == 'WebGL2', filename
+        assert capture['sceneBackend'] == 'WebGL shader', filename
+        assert capture['sha256'] == hashlib.sha256((assets / filename).read_bytes()).hexdigest(), filename
+    print('All game and display captures match the recorded WebGL output and completed game source')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', type=Path, required=True)
@@ -134,3 +153,4 @@ if __name__ == '__main__':
     check_site(options.site.resolve(), options.baseurl.rstrip('/'), options.sdk.resolve())
     check_starter(options.sdk.resolve())
     check_checkpoints(options.site.resolve(), options.sdk.resolve())
+    check_webgl_captures(options.sdk.resolve())

@@ -84,7 +84,7 @@ flowers. A begins a new garden. Y/Back returns to the launcher.
 Keep [the finished source](examples/dream_garden.py) open at `build`, `update`
 and `move_seeds`. `#/finished-demo` shows the resting scene if a live demo is
 unavailable. The display geometry slides use the same game's actual sprites
-and font through the SDK desktop renderer. The general API tutorial remains a
+and font through the emulator’s WebGL display backend. The general API tutorial remains a
 separate Trench Run walkthrough.
 
 ## Editing, hosting and printing
@@ -108,7 +108,7 @@ Sickhouse's theme announcement informed the new game direction.
 
 Cover and console photographs come from this website. Circular-coordinate and
 scene-lifecycle diagrams come from the existing SDK documentation. New game
-captures come from the SDK desktop renderer. The [artwork and sound record](examples/artwork.html)
+captures come from the emulator’s WebGL display backend. The [artwork and sound record](examples/artwork.html)
 contains the built-in image generation prompt and the original tone recipes.
 The source and download accompany the slides. Reveal.js 6.0.2 is vendored with
 its MIT license and version record in `vendor/reveal/`.
@@ -126,3 +126,21 @@ Use the browser’s Back action to return to the same slide, or open the link
 in another tab using your browser’s usual modifier key.
 Reload the checkpoint URL to start fresh. Keep the desktop setup ready as a
 backup for poor network conditions.
+
+## Rebuilding the WebGL captures
+
+All nine game and display captures use the SDK's WebGL scene compositor and
+LED display backend, including its glow. The geometry examples use the same
+packed assets. Photographs, source atlases and explanatory diagrams retain
+their original files. The capture script requires Playwright and Chromium,
+and fails if WebGL2 is unavailable rather than switching to Canvas 2D.
+
+```sh
+python3 tools/presentation-scenes.py --sdk vsdk --out /tmp/garden-scenes.json
+node tools/capture-presentation.mjs vsdk /tmp/garden-scenes.json
+```
+
+Run from the website repository after `make publish`. Set `CHROMIUM` to an
+installed Chrome executable if necessary. `assets/captures.json` records the
+backend and image hashes. The populated garden grows flowers through the real
+game's bloom handler; the starter and tilemap images run their actual checkpoints.

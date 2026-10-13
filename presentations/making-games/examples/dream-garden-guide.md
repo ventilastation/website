@@ -53,6 +53,8 @@ for two seconds before the text slides outward past the rim over 450 ms.
 Another toggle resets the position and restarts the notice. B stops the music and keeps the current flowers in a still garden.
 A starts a new garden from the Rest scene.
 
+![The finished garden begins empty, with a pink dreamer below the clouds](../assets/garden-start.png)
+
 ## How the example works
 
 `code/dream_garden.py` contains the whole game. `main()` returns Title, which
@@ -78,6 +80,30 @@ compile into a generated image ROM. MP3s stay on the emulator host or console
 base and never go into the rotor ROM. The sample follows the repository's GPLv3
 license. [Artwork sources and rebuilding](artwork.html) record the new art and
 original sound synthesis. The general SDK tutorial remains a separate example.
+
+## Build this garden step by step
+
+Each stage is a complete, cumulative source file inside the download at
+`code/checkpoints/`. The slides explain the changes and launch the matching
+version in the web emulator. The last stage matches `code/dream_garden.py` exactly.
+
+| Stage | Adds |
+| --- | --- |
+| 01-steering | One pink dreamer moving around the rim |
+| 02-poses | Leaning and sleeping poses |
+| 03-pools | Reserved seed and flower slots |
+| 04-timer | Periodic random seed spawning |
+| 05-flowers | Collisions, directional planting and inward flower drift |
+| 06-tiles | Fluffy clouds in the middle layer, behind seeds |
+| 07-scroll | Steady scrolling clouds, slower outward seeds |
+| 08-hud | Seed-only RELAX and a label that slides out |
+| 09-scenes | Title and voluntary rest, preserving flowers |
+| 10-shared | A second player, independent planting sequences and random seed glow |
+| 11-audio | Default-on lullaby and bloom sounds, timed NOISY/QUIET notices |
+
+A new garden starts without flowers. The planting direction follows movement,
+then alternates after stopping. Every stage keeps the same packed artwork,
+with unused strips available for the later steps.
 
 ## Checks
 
