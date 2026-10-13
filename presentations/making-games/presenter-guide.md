@@ -47,7 +47,7 @@ tracebacks. Test two gamepads if available. One keyboard also works:
 | Toggle audio | N | Numpad 2 |
 | Exit | 1 or M | Numpad + or 3 |
 
-Sound starts on. Check the room's volume before launching; N toggles music and bloom sounds together, with a two-second notice. Use 1 or M to leave a demonstration. F1 shows the keyboard layout.
+Sound starts on. Check the room's volume before launching; N toggles music and bloom sounds together, with a two-second NOISY/QUIET notice that slides out past the rim. Use 1 or M to leave a demonstration. F1 shows the keyboard layout.
 
 ## First demonstration
 
@@ -78,7 +78,7 @@ Run `demos.dream_garden` again. Start with A, catch a seed to grow a flower, and
 let another pass harmlessly. Invite a second person to join. Either player can
 hold A to slow the shared flow. Point out RELAX, slower flying seeds and the much slower inward flower drift.
 Plants alternate sides of each dreamer. Seeds pulse independently at random.
-Toggle the quiet audio and show the two-second notice. B chooses a still rest scene that keeps the
+Toggle the quiet audio and show NOISY/QUIET holding for two seconds before sliding out. RELAX slides out when A is released. B chooses a still rest scene that keeps the
 flowers. A begins a new garden. Y/Back returns to the launcher.
 
 Keep [the finished source](examples/dream_garden.py) open at `build`, `update`

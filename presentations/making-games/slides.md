@@ -475,8 +475,8 @@ self.mood = self.hud.label(
     flip_x=True, flip_y=True, text="RELAX", visible=False
 )
 
-# When the shared state changes:
-self.mood.visible = slow
+# On release, animate y outward until the text clears the rim.
+slide_text_out(self.mood, 1, started)
 ```
 
 Low Y keeps text legible.
@@ -484,7 +484,7 @@ Low Y keeps text legible.
 Both flips make top text upright.
 
 Notes:
-**26:00–27:30.** A label uses a tilemap record rather than a sprite per character. Five eight-column glyphs span forty columns, so x 108 centres the label on top angle 128. At the top, the native inward-facing orientation makes text upside down unless both axes flip. Y 1 keeps it near the rim. RELAX appears while A is held, and disappears when released. Change label visibility only when the shared state changes. The final game adds a second HUD label for two-second sound feedback. This uses the SDK's existing full CP437 font. A short word also avoids making a large dashboard on a small disc. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**26:00–27:30.** A label uses a tilemap record rather than a sprite per character. Five eight-column glyphs span forty columns, so x 108 centres the label on top angle 128. At the top, the native inward-facing orientation makes text upside down unless both axes flip. Y 1 keeps it near the rim. RELAX appears while A is held, then slides outward past the rim over 450 ms when released. A new request resets its position and cancels the exit animation. The final game adds a second HUD label for two-second sound feedback. This uses the SDK's existing full CP437 font. A short word also avoids making a large dashboard on a small disc. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Source: [Labels and flips](../../docs/vs2/tutorial/tilemaps-and-text.html), [sample source](examples/dream_garden.py).
 
@@ -553,12 +553,12 @@ vs2.audio.stop_music()
 
 Sound starts on. X toggles music and bloom sounds.
 
-SOUND ON / OFF appears for two seconds.
+NOISY / QUIET stays for two seconds, then slides past the rim.
 
 MP3s play on the base or desktop host.
 
 Notes:
-**30:00–31:00.** The game includes an original soft tone loop and a short bloom chime. Music and bloom sounds start enabled. X stops both, and another X press enables them again. A top-layer notice shows the new state for two seconds; rapid toggles restart that duration. Bloom sound only plays while sound is on. B also stops music before resting. Names resolve to MP3s in this game's sounds folder. Audio does not go into image ROMs or rotor RAM. The ESP32 sends commands to the Raspberry Pi base or emulator host. Music can continue across scenes in the same application and stops when returning to the launcher, so we deliberately stop it sooner at rest. Check the room's volume before the demonstration. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
+**30:00–31:00.** The game includes an original soft tone loop and a short bloom chime. Music and bloom sounds start enabled. X stops both, and another X press enables them again. A top-layer NOISY or QUIET notice shows the new state for two seconds, then slides outward past the rim over 450 ms; rapid toggles reset its position and restart that duration. Bloom sound only plays while sound is on. B also stops music before resting. Names resolve to MP3s in this game's sounds folder. Audio does not go into image ROMs or rotor RAM. The ESP32 sends commands to the Raspberry Pi base or emulator host. Music can continue across scenes in the same application and stops when returning to the launcher, so we deliberately stop it sooner at rest. Check the room's volume before the demonstration. Use the Run this checkpoint button to open this stage in the browser; it contains only the features covered so far.
 
 Sources: [Audio API](../../docs/vs2/reference/services.html#vs2-audio), [original audio recipe](examples/artwork.html), [game source](examples/dream_garden.py).
 
@@ -668,7 +668,7 @@ Source: [Hardware and legibility](../../docs/vs2/tutorial/budgets.html). Image: 
 </div>
 
 Notes:
-**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers on alternating sides at the same depth. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower background. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second SOUND ON/OFF notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
+**36:00–38:00.** Run the finished game. A begins. Start with no flowers. Show the dreamer moving and deliberately catch seeds to grow flowers on alternating sides at the same depth. Point out their slow inward drift and the flying seeds’ occasional glow. Let another seed pass to show that it causes no harm. Invite a second person or use Left/Right arrows and numpad 0 to reveal the mint friend. Have either player hold A and point out the RELAX label and slower background. The lullaby starts on; use X or keyboard N to toggle it and the bloom sounds. Show the two-second NOISY/QUIET notice. B chooses Rest, preserving the flowers while stopping audio. A begins a fresh dream. M or 1 returns to the launcher. If hardware is available, show the same game without spending the demo on flashing. Otherwise use the screenshots. Keep source open at build, move_seeds and update. The Run this checkpoint button opens the finished game in the browser.
 
 Sources: [Finished source](examples/dream_garden.py), [game instructions](examples/dream-garden-guide.html), [complete download](examples/dream-garden.zip). Screenshot: the actual Rest scene through the SDK renderer.
 
