@@ -11,7 +11,7 @@ const { chromium } = createRequire(import.meta.url)('playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'presentations/making-games/assets');
 const games = [
-  {slug:'alecu.ventilagon_game', file:'catalog-super-ventilagon.png', title:'Super Ventilagon', keys:['Space'], wait:6500},
+  {slug:'alecu.ventilagon_game', file:'catalog-super-ventilagon.png', title:'Super Ventilagon', keys:['Space'], wait:8500},
   {slug:'alecu.vyruss_vs2', file:'catalog-vyruss.png', title:'Vyruss', keys:[], held:['Space','d'], wait:8500},
   {slug:'vsjam-oct25.2bam_sencom', file:'catalog-senile-command.png', title:'Senile command', keys:['Space'], wait:7000},
   {slug:'vsjam-may25.vasura_espacial', file:'catalog-vasura-espacial.png', title:'Vasura Espacial', keys:[], held:['Space'], wait:6000},
