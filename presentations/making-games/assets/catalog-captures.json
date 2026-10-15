@@ -89,7 +89,8 @@
         "Space"
       ],
       "heldKeys": [],
-      "elapsedAfterInputMs": 6500
+      "elapsedAfterInputMs": 8734,
+      "gameState": "RUNNING GAME"
     },
     "displayBackend": "WebGL2",
     "gpu": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) Iris(TM) Plus Graphics, Unspecified Version)",
@@ -105,7 +106,7 @@
         "extra": 0
       }
     },
-    "sha256": "c27b26d3f6385a9cd12693aee34ea7a488ced2f6e53ca940c6d2a9320ecc2222"
+    "sha256": "b272974a24a7c28640030959319ad021401059ccc5bf4cb21a3253d6e35608d3"
   },
   {
     "file": "catalog-vyruss.png",
