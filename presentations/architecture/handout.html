@@ -1,0 +1,10 @@
+---
+layout: presentation-page
+title: Ventilastation architecture — slides and speaker notes
+lang: en
+presentation_root: /presentations/architecture
+---
+<p>A 30-minute technical presentation about Ventilastation's hardware and software components, their interactions, custom protocols and transports. Current architecture comes first; a short comparison explains its evolution.</p>
+<p><a href="./">Open the slides</a> · <a href="slides.md" download>Download the Markdown</a> · <a href="protocol-reference.html">Protocol reference</a> · <a href="sources.html">Sources</a></p>
+{% capture content %}{% include_relative slides.md %}{% endcapture %}
+{{ content | replace: 'Notes:', '### Speaker notes' | markdownify }}
