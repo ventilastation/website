@@ -1,0 +1,10 @@
+---
+layout: presentation-page
+title: Ventilastation architecture — slides and speaker notes
+lang: en
+presentation_root: /presentations/architecture
+---
+<p>The hardware and software architecture of Ventilastation, from the 2012 inspiration to the October 2026 SDK. A 30-minute talk with source references and speaker notes.</p>
+<p><a href="./">Open the slides</a> · <a href="slides.md" download>Download the Markdown</a> · <a href="sources.html">Research and source history</a></p>
+{% capture content %}{% include_relative slides.md %}{% endcapture %}
+{{ content | replace: 'Notes:', '### Speaker notes' | markdownify }}

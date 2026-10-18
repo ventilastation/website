@@ -12,9 +12,11 @@
   <main>
     <nav aria-label="Presentation resources">
       <a href="{{ '/en/' | relative_url }}">Ventilastation</a>
-      <a href="{{ '/presentations/making-games/' | relative_url }}">Slides</a>
-      <a href="{{ '/presentations/making-games/handout.html' | relative_url }}">Reading view &amp; notes</a>
-      <a href="{{ '/presentations/making-games/presenter-guide.html' | relative_url }}">Presenter guide</a>
+      <a href="{{ '/presentations/' | relative_url }}">Presentations</a>
+      {% assign presentation_root = page.presentation_root | default: '/presentations/making-games' %}
+      <a href="{{ presentation_root | append: '/' | relative_url }}">Slides</a>
+      <a href="{{ presentation_root | append: '/handout.html' | relative_url }}">Reading view &amp; notes</a>
+      <a href="{{ presentation_root | append: '/presenter-guide.html' | relative_url }}">Presenter guide</a>
     </nav>
     <h1>{{ page.title }}</h1>
     {{ content }}
