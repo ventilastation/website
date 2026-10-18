@@ -4,11 +4,11 @@ title: Presentations
 lang: en
 ---
 
-## Ventilastation architecture, 2012–2026
+## Ventilastation system architecture
 
-A 30-minute presentation tracing the hardware and software from Super Ventilagon to the current MicroPython console, SDK, emulators and hardware workbench.
+A 30-minute technical presentation mapping hardware boards, software components, custom protocols and transports across the console, emulators, workbench and update system. Includes a brief architectural comparison with earlier generations.
 
-[Open the slides](architecture/) · [Read the slides and notes](architecture/handout.html) · [Presenter guide](architecture/presenter-guide.html) · [Sources](architecture/sources.html)
+[Open the slides](architecture/) · [Read the slides and notes](architecture/handout.html) · [Protocol reference](architecture/protocol-reference.html) · [Presenter guide](architecture/presenter-guide.html) · [Sources](architecture/sources.html)
 
 ## Making games for Ventilastation
 
